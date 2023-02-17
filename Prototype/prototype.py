@@ -6,7 +6,7 @@ GRID_HEIGHT = 6
 
 WINDOW_WIDTH = 7 * 100
 WINDOW_HEIGHT = 6 * 100
-BACKGROUND_COLOR = "#D05090"
+BACKGROUND_COLOR = "#E1DEDD"
 
 window = tk.Tk()
 
@@ -59,9 +59,9 @@ def game_mouse(event):
 	token_color = ""
 
 	if turn:
-		token_color = "yellow"
+		token_color = "#FF927B"
 	else:
-		token_color = "red"
+		token_color = "#92C22C"
 
 	column = int(event.x * GRID_WIDTH / WINDOW_WIDTH)
 	row = GRID_HEIGHT - 1
