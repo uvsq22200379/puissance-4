@@ -5,7 +5,7 @@ def create_rectangle(box: Rectangle):
 	return canvas.create_rectangle(box.pos.x, box.pos.y, box.pos.x + box.size.x, box.pos.y + box.size.y)
 
 def create_oval(box: Rectangle):
-	return canvas.create_oval(box.pos.x, box.pos.y, box.pos.x + box.size.x, box.pos.y + box.size.y)
+	return canvas.create_oval(box.pos.x, box.pos.y, box.pos.x + box.size.x, box.pos.y + box.size.y, outline = "")
 
 def get_pos(shape):
 	return Vector(canvas.coords(shape)[0], canvas.coords(shape)[1])

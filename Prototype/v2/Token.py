@@ -5,10 +5,10 @@ from tools import *
 class Token:
 
 	def __init__(self, column, color):
-		self.pos = Vector(GRID_RECT.pos.x + column * (GRID_RECT.size.x / GRID_DIMS.x), GRID_RECT.pos.y - (GRID_RECT.size.y / GRID_DIMS.y))
+		self.pos = Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y)/8 + Vector(GRID_RECT.pos.x + column * (GRID_RECT.size.x / GRID_DIMS.x), GRID_RECT.pos.y - (GRID_RECT.size.y / GRID_DIMS.y))
 		self.color = color
 		self.speed = Vector(0, 0)
-		self.visual = create_oval(Rectangle(self.pos, Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y)))
+		self.visual = create_oval(Rectangle(self.pos + Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y)/8, Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y) * 6/8))
 		canvas.itemconfig(self.visual, fill = color)
 		self.falling = True
 		self.GRAVITY = 2

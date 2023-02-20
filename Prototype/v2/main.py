@@ -3,6 +3,7 @@ from global_variables import *
 from shapes import *
 from tools import *
 from math import *
+from PIL import Image, ImageTk
 
 def main():
 
@@ -10,10 +11,20 @@ def main():
 	tokens = []
 	team = [True]
 
+
+	slot_image = Image.open("case.png")
+	slot_image = slot_image.resize((int(GRID_RECT.size.x / GRID_DIMS.x), int(GRID_RECT.size.y / GRID_DIMS.y)))
+
+	slot_texture = ImageTk.PhotoImage(slot_image)
+
+
 	for x in range(GRID_DIMS.x):
 		for y in range(GRID_DIMS.y):
-			grid_visual.append(create_oval(Rectangle(Vector(GRID_RECT.pos.x + x * GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.pos.y + y * GRID_RECT.size.y / GRID_DIMS.y),
-													 Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y))))
+			#grid_visual.append(create_oval(Rectangle(Vector(GRID_RECT.pos.x + x * GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.pos.y + y * GRID_RECT.size.y / GRID_DIMS.y),
+			#										 Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y))))
+			grid_visual.append(canvas.create_image(GRID_RECT.pos.x + x * GRID_RECT.size.x / GRID_DIMS.x + GRID_RECT.size.x / (2*GRID_DIMS.x), GRID_RECT.pos.y + y * GRID_RECT.size.y / GRID_DIMS.y + GRID_RECT.size.y / (2*GRID_DIMS.y), image=slot_texture))
+
+
 	def canvas_clicked(event):
 
 		color = "red"
@@ -21,6 +32,10 @@ def main():
 			color = "yellow"
 
 		tokens.append(Token( int((event.x - GRID_RECT.pos.x)/(GRID_RECT.size.x / GRID_DIMS.x)) , color))
+		#canvas.lower(tokens[len(tokens) - 1])
+
+		for i in range(len(grid_visual)):
+			canvas.lift(grid_visual[i])
 
 		team[0] = not team[0]
 

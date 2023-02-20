@@ -5,7 +5,7 @@ WINDOW_SIZE = Vector(800, 800)
 BACKGROUND  = "#EE60AA" 
 GRID_DIMS = Vector(7, 6)
 GRID_RECT = Rectangle(Vector(100, 100), Vector(600, 600 * 6/7))
-
+GRID_MARGIN = 8
 
 game_running = True
 
