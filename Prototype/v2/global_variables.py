@@ -3,8 +3,9 @@ from tools import *
 
 WINDOW_SIZE = Vector(800, 800)
 BACKGROUND  = "#EE60AA" 
-GRID_RECT = Rectangle(Vector(100, 100), Vector(700, 600))
 GRID_DIMS = Vector(7, 6)
+GRID_RECT = Rectangle(Vector(100, 100), Vector(600, 600 * 6/7))
+
 
 game_running = True
 

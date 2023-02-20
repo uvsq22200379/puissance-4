@@ -10,14 +10,23 @@ class Token:
 		self.speed = Vector(0, 0)
 		self.visual = create_oval(Rectangle(self.pos, Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y)))
 		canvas.itemconfig(self.visual, fill = color)
-		self.GRAVITY = 1
+		self.falling = True
+		self.GRAVITY = 2
 
 	def move(self):
-		self.speed.y += self.GRAVITY
+		if self.falling:
+			self.speed.y += self.GRAVITY
 
-		self.pos += self.speed
+			self.pos += self.speed
+			set_pos(self.visual, self.pos)
+		else:
+			self.speed.x = 0
+			self.speed.y = 0
+
+	def set_pos(self, v: Vector):
+		self.pos = v
 		set_pos(self.visual, self.pos)
 
-
 	def get_rect(self):
-		return Rectangle(self.pos, Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y))
+		size = Vector(GRID_RECT.size.x / GRID_DIMS.x, GRID_RECT.size.y / GRID_DIMS.y)
+		return Rectangle(self.pos + Vector(size.x/8, 0), size - Vector(size.x * 6/8, 0))
