@@ -4,7 +4,7 @@ import numpy as np
 #Options
 
 WINDOW_SIZE = np.array([700, 700])
-BACKGROUND  = "#%02x%02x%02x" % (175, 30, 100)
+BACKGROUND  = "royalblue" 
 GRID_POS    = WINDOW_SIZE / 4
 GRID_SIZE   = WINDOW_SIZE / 2
 GRID_DIMS   = np.array([7, 6])
@@ -112,6 +112,13 @@ def main_menu_clicks(event):
 def main_menu_visu():
 
 	canvas.delete("all")
+
+
+	ma_variable=tk.Button(canvas,text="PLAY",fg="black")
+	ma_variable.pack() 
+
+	b1=tk.Button(canvas,text="quitter le jeu",fg="black")
+	b1.pack()
 
 
 def main_menu():
