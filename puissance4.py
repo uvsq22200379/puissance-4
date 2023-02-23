@@ -17,6 +17,8 @@ GRAVITY     = 2
 root = tk.Tk()
 root.geometry(str(WINDOW_SIZE[0])+'x'+str(WINDOW_SIZE[1]) + "+0+0")
 root.title("Puissance 4")
+root.resizable(False, False)
+root.iconbitmap(default = "uey.ico")
 
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
 canvas.pack()
