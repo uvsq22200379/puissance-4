@@ -112,15 +112,19 @@ def main_menu_clicks(event):
 	root.after(1, game)
 
 def main_menu_visu():
+	#instruction pour les joueurs 
+	instruction=tk.Label(root, text="Avant de cliquer sur «play» veuillez entrer vos noms de joueurs", fg="black")
+	instruction.grid()
+
+	#zone de saisie pour que les joueurs rentrent leurs noms 
+	saisie=tk.Entry()	
+	joueur1=saisie.get()
+
+	saisie2=tk.Entry()
+	joueur2=saisie2.get()
 
 	canvas.delete("all")
 
-
-	ma_variable=tk.Button(canvas,text="PLAY",fg="black")
-	ma_variable.pack() 
-
-	b1=tk.Button(canvas,text="quitter le jeu",fg="black")
-	b1.pack()
 
 
 def main_menu():
