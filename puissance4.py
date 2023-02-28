@@ -60,9 +60,9 @@ def game_clicks(event):
 	pos = np.array((event.x, event.y)) - SLOT_SIZE/2
 	visu = oval(pos, SLOT_SIZE)
 	if turn:
-		canvas.itemconfig(visu, fill = "red")
+		canvas.itemconfig(visu, fill = "fire brick")
 	else:
-		canvas.itemconfig(visu, fill = "yellow")
+		canvas.itemconfig(visu, fill = "gold")
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
