@@ -10,17 +10,19 @@
 
 import tkinter as tk
 import numpy as np
+from math import *
 
 #Options
 
-WINDOW_SIZE = np.array([700, 700])
-BACKGROUND  = "royalblue" 
-GRID_POS    = WINDOW_SIZE / 4
-GRID_SIZE   = WINDOW_SIZE / 2
-GRID_DIMS   = np.array([7, 6])
-SLOT_SIZE   = GRID_SIZE / GRID_DIMS
-TOKEN_BOX   = SLOT_SIZE * 4/5
-GRAVITY     = 2
+WINDOW_SIZE            = np.array([700, 600])
+BACKGROUND             = "royalblue" 
+GRID_POS               = WINDOW_SIZE / 4
+GRID_SIZE              = WINDOW_SIZE / 2
+GRID_DIMS              = np.array([7, 6])
+SLOT_SIZE              = GRID_SIZE / GRID_DIMS
+TOKEN_BOX              = SLOT_SIZE * 4/5
+TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
+GRAVITY                = 2
 
 #Variables globales
 
@@ -37,6 +39,7 @@ widgets = [] #Toutes les widget crées doivent être dans cette liste afin de po
 tokens_pos = [] #position des jetons dans le monde physique
 tokens_speed = [] #vitesse des jetons
 tokens_visu = [] #Representation graphique des jetons
+is_static = [] #Définit si un jeton est un objet physique ou non
 
 #Outils
 
@@ -63,6 +66,7 @@ def game_keys(event):
 		tokens_pos.clear()
 		tokens_speed.clear()
 		tokens_visu.clear()
+		is_static.clear()
 
 		root.after(1, main_menu)
 
@@ -71,7 +75,9 @@ def game_clicks(event):
 
 	turn = not turn
 
-	pos = np.array((event.x, event.y)) - SLOT_SIZE/2
+	#pos = np.array((event.x, event.y)) - SLOT_SIZE/2
+	
+	pos = np.array((GRID_POS[0] + SLOT_SIZE[0] * int((event.x - GRID_POS[0])/SLOT_SIZE[0]), GRID_POS[1] - SLOT_SIZE[1])) # On met le jeton dans la bonne colonne
 	visu = oval(pos, SLOT_SIZE)
 	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
@@ -81,18 +87,39 @@ def game_clicks(event):
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
 	tokens_visu.append(visu)
+	is_static.append(False)
 
 
 def game_physics():
 	global playing
 
 	for i in range(len(tokens_pos)):
-		
-		if tokens_pos[i][1] + tokens_speed[i][1] + SLOT_SIZE[1] <= GRID_POS[1] + GRID_SIZE[1]:
+
+		if is_static[i]:
+			continue # Nous n'appliquons pas le comportement physique à un jeton statique
+
+		collides_another = False
+
+		for j in range(len(tokens_pos)):
+			if i==j or tokens_pos[j][1] < tokens_pos[i][1]:
+				continue # On évite de tester si le jeton se collisione lui même ou avec un jeton plus haut
+
+
+			if tokens_pos[i][0] > tokens_pos[j][0] + SLOT_SIZE[0]-1 or tokens_pos[i][0] + SLOT_SIZE[0]-1 < tokens_pos[j][0]:
+				pass
+			elif tokens_pos[i][1] + SLOT_SIZE[1] + tokens_speed[i][1] > tokens_pos[j][1] + tokens_speed[j][1]:
+				collides_another = True
+				break
+			
+
+		if not collides_another and tokens_pos[i][1] + tokens_speed[i][1] + SLOT_SIZE[1] <= GRID_POS[1] + GRID_SIZE[1]:
 			tokens_pos[i] += tokens_speed[i]
 		else:
 			tokens_speed[i][1] = -3/4 * tokens_speed[i][1]
-		
+			if abs(tokens_speed[i][1]) < 1:
+				tokens_pos[i] = GRID_POS + SLOT_SIZE * np.array( (tokens_pos[i] - GRID_POS) / SLOT_SIZE, dtype = int)
+				is_static[i] = True
+
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
 
