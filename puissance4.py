@@ -21,7 +21,7 @@ root.resizable(False, False)
 root.iconbitmap(default = "uey.ico")
 
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
-canvas.pack()
+canvas.grid()
 
 tokens_pos = [] #position des jetons dans le monde physique
 tokens_speed = [] #vitesse des jetons
@@ -60,7 +60,7 @@ def game_clicks(event):
 	pos = np.array((event.x, event.y)) - SLOT_SIZE/2
 	visu = oval(pos, SLOT_SIZE)
 	if turn:
-		canvas.itemconfig(visu, fill = "fire brick")
+		canvas.itemconfig(visu, fill = "firebrick")
 	else:
 		canvas.itemconfig(visu, fill = "gold")
 
