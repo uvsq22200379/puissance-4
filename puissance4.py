@@ -1,3 +1,13 @@
+'''
+	Puissance 4
+
+	JOURDAIN Anaïs
+	CAICEDO LEMOS Vanessa
+	GHARIB ALI BARURA Sama
+
+	Programme réalisé dans le cadre du projet d'IN200
+'''
+
 import tkinter as tk
 import numpy as np
 
