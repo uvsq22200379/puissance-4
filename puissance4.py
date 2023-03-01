@@ -18,7 +18,6 @@ root = tk.Tk()
 root.geometry(str(WINDOW_SIZE[0])+'x'+str(WINDOW_SIZE[1]) + "+0+0")
 root.title("Puissance 4")
 root.resizable(False, False)
-root.iconbitmap(default = "uey.ico")
 
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
 canvas.grid()
@@ -113,8 +112,9 @@ def main_menu_clicks(event):
 
 def main_menu_visu():
 	#instruction pour les joueurs 
-	instruction=tk.Label(root, text="Avant de cliquer sur «play» veuillez entrer vos noms de joueurs", fg="black")
-	instruction.grid()
+	instruction=tk.Label(canvas, text = "Nom des joueurs : ", fg="black")
+	#instruction.grid(row = 0, column = 0)
+	instruction.place(x = 10, y = 10)
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie=tk.Entry()	
