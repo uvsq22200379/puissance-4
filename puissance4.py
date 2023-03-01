@@ -32,6 +32,8 @@ root.resizable(False, False)
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
 canvas.grid()
 
+widgets = [] #Toutes les widget crées doivent être dans cette liste afin de pouvoir les supprimer
+
 tokens_pos = [] #position des jetons dans le monde physique
 tokens_speed = [] #vitesse des jetons
 tokens_visu = [] #Representation graphique des jetons
@@ -44,6 +46,9 @@ def oval(pos, size):
 	return canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
 def set_pos(obj, pos, size):
 	canvas.coords(obj, pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
+def delete_widgets():
+	for i in range(len(widgets)):
+		widgets[i].place_forget()
 
 #Jeu
 
@@ -118,24 +123,33 @@ def game():
 
 def main_menu_clicks(event):
 	
+	delete_widgets()
+
 	root.after(1, game)
 
 def main_menu_visu():
-	#instruction pour les joueurs 
-	instruction=tk.Label(canvas, text = "Nom des joueurs : ", fg="black")
-	#instruction.grid(row = 0, column = 0)
-	instruction.place(x = 10, y = 10)
-
-	#zone de saisie pour que les joueurs rentrent leurs noms 
-	saisie=tk.Entry()	
-	joueur1=saisie.get()
-
-	saisie2=tk.Entry()
-	joueur2=saisie2.get()
 
 	canvas.delete("all")
 
+	#instruction pour les joueurs
 
+	font_size = int(WINDOW_SIZE[1]/16)
+
+	instruction = tk.Label(canvas, text = "Nom des joueurs : ", fg="black", font = ("Comic Sans MS", font_size), bg = "firebrick")
+	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/100)
+
+	#zone de saisie pour que les joueurs rentrent leurs noms 
+	saisie1 = tk.Entry(canvas)
+	saisie1.insert(0, "Turing")
+	saisie1.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6)
+
+	saisie2 = tk.Entry(canvas)
+	saisie2.insert(0, "Conway")
+	saisie2.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 + 20)
+
+	widgets.append(instruction)
+	widgets.append(saisie1)
+	widgets.append(saisie2)
 
 def main_menu():
 
