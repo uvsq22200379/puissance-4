@@ -49,6 +49,13 @@ slot_image = Image.open("slot.png")
 slot_image = slot_image.resize(np.array(SLOT_SIZE + (1, 1), dtype = int))
 slot_imagetk = ImageTk.PhotoImage(slot_image)
 
+logo_image = Image.open("puiss4nce.jpg")
+logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
+logo_imagetk = ImageTk.PhotoImage(logo_image)
+
+fade_delay = 1500
+fade_duration = 500
+
 #Outils
 
 def rectangle(pos, size):
@@ -208,11 +215,35 @@ def main_menu_visu():
 	widgets.append(saisie1)
 	widgets.append(saisie2)
 
+
 def main_menu():
 
 	canvas.bind("<Button-1>", main_menu_clicks)
 	main_menu_visu()
 
-main_menu()
+#Ecran de lancement
+
+logo = canvas.create_image(WINDOW_SIZE[0] / 2, WINDOW_SIZE[1] / 2, image = logo_imagetk)
+fade = rectangle((0, 0), WINDOW_SIZE)
+canvas.itemconfig(fade, fill = "")
+
+def process_fade():
+	global fade
+	
+	root.after(0, lambda : canvas.itemconfig(fade, fill = "black", stipple = "gray12"))
+
+	root.after(1 * fade_duration // 5, lambda : canvas.itemconfig(fade, stipple = "gray25"))
+
+	root.after(2 * fade_duration // 5, lambda : canvas.itemconfig(fade, stipple = "gray50"))
+
+	root.after(3 * fade_duration //5, lambda : canvas.itemconfig(fade, stipple = "gray75"))
+
+	root.after(4 * fade_duration //5, lambda : canvas.itemconfig(fade, stipple = ""))
+
+	root.after(fade_duration, main_menu)
+
+root.after(fade_delay, process_fade)
+
+#main_menu()
 
 root.mainloop()
