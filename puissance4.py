@@ -11,6 +11,7 @@
 import tkinter as tk
 import numpy as np
 from math import *
+import time
 
 #Options
 
@@ -40,6 +41,8 @@ tokens_pos = [] #position des jetons dans le monde physique
 tokens_speed = [] #vitesse des jetons
 tokens_visu = [] #Representation graphique des jetons
 is_static = [] #Définit si un jeton est un objet physique ou non
+
+click_time = 0
 
 #Outils
 
@@ -72,12 +75,24 @@ def game_keys(event):
 
 def game_clicks(event):
 	global turn
+	global click_time
+
+	if event.x < GRID_POS[0] or event.x > GRID_POS[0] + GRID_SIZE[0]:
+		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
 
 	turn = not turn
-
-	#pos = np.array((event.x, event.y)) - SLOT_SIZE/2
 	
 	pos = np.array((GRID_POS[0] + SLOT_SIZE[0] * int((event.x - GRID_POS[0])/SLOT_SIZE[0]), GRID_POS[1] - SLOT_SIZE[1])) # On met le jeton dans la bonne colonne
+	
+	for t in tokens_pos:
+		if pos[0] + SLOT_SIZE[0] <= t[0]\
+		or pos[0] >= t[0] + SLOT_SIZE[0]\
+		or pos[1] + SLOT_SIZE[1] * 2 <= t[1]\
+		or pos[1] >= t[1] + SLOT_SIZE[1]:
+			pass # Il n'y a pas de jeton qui obstrue le point d'appartition du nouveau jeton
+		else:
+			return # Un jeton obstrue le point d'apparition
+
 	visu = oval(pos, SLOT_SIZE)
 	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
@@ -89,6 +104,7 @@ def game_clicks(event):
 	tokens_visu.append(visu)
 	is_static.append(False)
 
+	click_time = time.time()
 
 def game_physics():
 	global playing
@@ -115,7 +131,7 @@ def game_physics():
 		if not collides_another and tokens_pos[i][1] + tokens_speed[i][1] + SLOT_SIZE[1] <= GRID_POS[1] + GRID_SIZE[1]:
 			tokens_pos[i] += tokens_speed[i]
 		else:
-			tokens_speed[i][1] = -3/4 * tokens_speed[i][1]
+			tokens_speed[i][1] = -1/2 * tokens_speed[i][1]
 			if abs(tokens_speed[i][1]) < 1:
 				tokens_pos[i] = GRID_POS + SLOT_SIZE * np.array( (tokens_pos[i] - GRID_POS) / SLOT_SIZE, dtype = int)
 				is_static[i] = True
