@@ -79,8 +79,6 @@ def game_clicks(event):
 
 	if event.x < GRID_POS[0] or event.x > GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
-
-	turn = not turn
 	
 	pos = np.array((GRID_POS[0] + SLOT_SIZE[0] * int((event.x - GRID_POS[0])/SLOT_SIZE[0]), GRID_POS[1] - SLOT_SIZE[1])) # On met le jeton dans la bonne colonne
 	
@@ -92,6 +90,8 @@ def game_clicks(event):
 			pass # Il n'y a pas de jeton qui obstrue le point d'appartition du nouveau jeton
 		else:
 			return # Un jeton obstrue le point d'apparition
+
+	turn = not turn
 
 	visu = oval(pos, SLOT_SIZE)
 	if turn:
