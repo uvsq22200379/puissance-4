@@ -89,6 +89,7 @@ def game_keys(event):
 
 	if event.keysym == "Escape":
 		playing = False
+		turn = False
 		tokens_pos.clear()
 		tokens_speed.clear()
 		tokens_visu.clear()
@@ -140,8 +141,6 @@ def game_physics():
 	global playing
 
 	for i in range(len(tokens_pos)):
-
-		#canvas.lower(tokens_visu[i])
 
 		if is_static[i]:
 			continue # Nous n'appliquons pas le comportement physique à un jeton statique
