@@ -56,6 +56,9 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 fade_delay = 1500
 fade_duration = 500
 
+player1 = ""
+player2 = ""
+
 #Outils
 
 def rectangle(pos, size):
@@ -74,6 +77,7 @@ def set_pos(obj, pos, size):
 def delete_widgets():
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
+	widgets.clear()
 
 #Jeu
 
@@ -90,11 +94,15 @@ def game_keys(event):
 		tokens_visu.clear()
 		is_static.clear()
 
+		delete_widgets()
+
 		root.after(1, main_menu)
 
 def game_clicks(event):
 	global turn
 	global click_time
+	global player1
+	global player2
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -113,10 +121,13 @@ def game_clicks(event):
 	turn = not turn
 
 	visu = oval(pos, SLOT_SIZE)
+
 	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
+		widgets[0]["text"] = "Au tour de " + player2
 	else:
 		canvas.itemconfig(visu, fill = "gold")
+		widgets[0]["text"] = "Au tour de " + player1
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -172,6 +183,12 @@ def game_visu():
 		for x in range(GRID_DIMS[0]):
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
 			create_slot((x, y) * SLOT_SIZE + GRID_POS)
+
+	turn_info = tk.Label(canvas, text = "Au tour de " + player1, font = ("Comic Sans MS", WINDOW_SIZE[1]//16), bg = BACKGROUND)
+	turn_info.place(x = 10, y = 10)
+
+	widgets.append(turn_info)
+
 def game():
 	global playing
 
@@ -186,7 +203,12 @@ def game():
 #Menu principal
 
 def main_menu_clicks(event):
-	
+	global player1
+	global player2
+
+	player1 = widgets[1].get()
+	player2 = widgets[2].get()
+
 	delete_widgets()
 
 	root.after(1, game)
