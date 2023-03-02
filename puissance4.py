@@ -12,6 +12,7 @@ import tkinter as tk
 import numpy as np
 from math import *
 import time
+from PIL import Image, ImageTk
 
 #Options
 
@@ -44,12 +45,23 @@ is_static = [] #Définit si un jeton est un objet physique ou non
 
 click_time = 0
 
+slot_image = Image.open("slot.png")
+slot_image = slot_image.resize(np.array(SLOT_SIZE + (1, 1), dtype = int))
+slot_imagetk = ImageTk.PhotoImage(slot_image)
+
 #Outils
 
 def rectangle(pos, size):
 	return canvas.create_rectangle(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
 def oval(pos, size):
-	return canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
+	oval = canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], width = 0)
+	canvas.lower(oval) # On dessine les ovales derrière les images
+	return oval
+def create_slot(pos):
+	pos += SLOT_SIZE/2
+	slot = canvas.create_image(pos[0], pos[1], image = slot_imagetk)
+	canvas.tkraise(slot) # On dessine les images devant les ovales
+	return slot
 def set_pos(obj, pos, size):
 	canvas.coords(obj, pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
 def delete_widgets():
@@ -77,7 +89,7 @@ def game_clicks(event):
 	global turn
 	global click_time
 
-	if event.x < GRID_POS[0] or event.x > GRID_POS[0] + GRID_SIZE[0]:
+	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
 	
 	pos = np.array((GRID_POS[0] + SLOT_SIZE[0] * int((event.x - GRID_POS[0])/SLOT_SIZE[0]), GRID_POS[1] - SLOT_SIZE[1])) # On met le jeton dans la bonne colonne
@@ -110,6 +122,8 @@ def game_physics():
 	global playing
 
 	for i in range(len(tokens_pos)):
+
+		#canvas.lower(tokens_visu[i])
 
 		if is_static[i]:
 			continue # Nous n'appliquons pas le comportement physique à un jeton statique
@@ -149,8 +163,8 @@ def game_visu():
 
 	for y in range(GRID_DIMS[1]):
 		for x in range(GRID_DIMS[0]):
-			oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
-
+			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
+			create_slot((x, y) * SLOT_SIZE + GRID_POS)
 def game():
 	global playing
 
