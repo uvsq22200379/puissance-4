@@ -216,6 +216,13 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
+	#bouton de lancement
+	monimage=Image.open("play.gif")
+	monimage=monimage.resize((100,100))
+	monimagetk=ImageTk.PhotoImage(monimage)
+	monimagetk=canvas.create_image(200,200,image=monimagetk)
+
+
 	#instruction pour les joueurs
 
 	font_size = int(WINDOW_SIZE[1]/23)
