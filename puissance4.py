@@ -17,7 +17,7 @@ from PIL import Image, ImageTk
 #Options
 
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "royalblue" 
+BACKGROUND             = "steelblue2" 
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
 GRID_DIMS              = np.array([7, 6])
@@ -218,19 +218,19 @@ def main_menu_visu():
 
 	#instruction pour les joueurs
 
-	font_size = int(WINDOW_SIZE[1]/16)
+	font_size = int(WINDOW_SIZE[1]/23)
 
-	instruction = tk.Label(canvas, text = "Nom des joueurs : ", fg="black", font = ("Comic Sans MS", font_size), bg = "firebrick")
-	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/100)
+	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs avant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
+	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 +200)
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie1 = tk.Entry(canvas)
-	saisie1.insert(0, "Turing")
-	saisie1.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6)
+	saisie1.insert(0, "Joueur 1")
+	saisie1.place(x=WINDOW_SIZE[0]/100+10, y=WINDOW_SIZE[1]/6 +300)
 
 	saisie2 = tk.Entry(canvas)
-	saisie2.insert(0, "Conway")
-	saisie2.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 + 20)
+	saisie2.insert(0, "Joueur 2")
+	saisie2.place(x=WINDOW_SIZE[0]/10 +400, y=WINDOW_SIZE[1]/6 +300)
 
 	widgets.append(instruction)
 	widgets.append(saisie1)
