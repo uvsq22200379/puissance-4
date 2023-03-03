@@ -59,6 +59,9 @@ fade_duration = 500
 player1 = ""
 player2 = ""
 
+matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
+
+
 #Outils
 
 def rectangle(pos, size):
@@ -100,13 +103,12 @@ def game_keys(event):
 		root.after(1, main_menu)
 
 
-matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
-
-
 def game_clicks(event):
 	global turn
 	global click_time
 	global matrice_base
+	global player1
+	global player2
 
 	#cree une "matrice" (liste imbriquée) des coordonnées des jetons
 	coordonnees_jetons_statiques = np.array([])
@@ -121,9 +123,6 @@ def game_clicks(event):
 	matrice_coordonées = []
 	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
 		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
-
-	global player1
-	global player2
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -305,6 +304,8 @@ root.after(fade_delay, process_fade)
 #main_menu()
 
 
+
+#Fonctions pour vérifier le gagnant
 
 def linea4_rojo_horizontal(): #vérifie s'il y a 4 jetons rouges de suite horizontalement
 	for y in range (len(matrice_base)):
