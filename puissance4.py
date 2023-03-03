@@ -247,7 +247,7 @@ main_menu()
 
 
 
-def linea4_rojo_horizontal():
+def linea4_rojo_horizontal(): #vérifie s'il y a 4 jetons rouges de suite horizontalement
 	for y in range (len(matrice_base)):
 		counter = 0
 		for x in range (len(matrice_base[0])):
@@ -259,7 +259,7 @@ def linea4_rojo_horizontal():
 		if counter == 4: 
 			print("Linea 4 rojo horizontal")
 
-def linea4_rojo_vertical():
+def linea4_rojo_vertical(): #vérifie s'il y a 4 jetons rouges de suite verticalement
 	for x in range (len(matrice_base[0])):
 		counter = 0
 		for y in range (len(matrice_base)):
@@ -271,7 +271,7 @@ def linea4_rojo_vertical():
 		if counter == 4: 
 			print("Linea 4 rojo vertical")
 
-def linea4_amarillo_horizontal():
+def linea4_amarillo_horizontal(): #vérifie s'il y a 4 jetons jaunes de suite horizontalement
 	for y in range (len(matrice_base)):
 		counter = 0
 		for x in range (len(matrice_base[0])):
@@ -283,7 +283,7 @@ def linea4_amarillo_horizontal():
 		if counter == 4: 
 			print("Linea 4 amarillo horizontal")
 
-def linea4_amarillo_vertical():
+def linea4_amarillo_vertical(): #vérifie s'il y a 4 jetons jaunes de suite horizontalement
 	for x in range (len(matrice_base[0])):
 		counter = 0
 		for y in range (len(matrice_base)):
