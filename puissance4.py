@@ -85,9 +85,28 @@ def game_keys(event):
 
 		root.after(1, main_menu)
 
+
+matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
+
+
 def game_clicks(event):
 	global turn
 	global click_time
+	global matrice_base
+
+	#cree une "matrice" (liste imbriquée) des coordonnées des jetons
+	coordonnees_jetons_statiques = np.array([])
+	for y in range (400,50,-50): #coordonnées en y des jetons lorsqu'ils sont statiques 
+		for x in range(175,525,50): #coordonnées en x des jetons lorsqu'ils sont statiques
+			coordonnees_jetons_statiques = np.append(coordonnees_jetons_statiques,([x,y]))
+
+	coordonnees_en_paires = []
+	for i in range (0, len(coordonnees_jetons_statiques)-1, 2): #couple les coordonnées x et y de chaque position
+		coordonnees_en_paires.append([coordonnees_jetons_statiques[i],coordonnees_jetons_statiques[i+1]])
+	
+	matrice_coordonées = []
+	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
+		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -106,10 +125,21 @@ def game_clicks(event):
 	turn = not turn
 
 	visu = oval(pos, SLOT_SIZE)
-	if turn:
+	if turn == True: #au rouge de jouer
 		canvas.itemconfig(visu, fill = "firebrick")
-	else:
+		for i in range(len(matrice_coordonées)):
+			if (list(pos))in matrice_coordonées[i]:
+				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 1 #cherche l'indice des coordonées du jeton et affecte la matrice base dans ce même indice
+		linea4_rojo_horizontal()
+		linea4_rojo_vertical()	
+	else: #au jaune de jouer
 		canvas.itemconfig(visu, fill = "gold")
+		for i in range(len(matrice_coordonées)):
+			if (list(pos))in matrice_coordonées[i]:
+				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 2
+		linea4_amarillo_horizontal()
+		linea4_amarillo_vertical()
+	print(matrice_base)
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -214,5 +244,55 @@ def main_menu():
 	main_menu_visu()
 
 main_menu()
+
+
+
+def linea4_rojo_horizontal():
+	for y in range (len(matrice_base)):
+		counter = 0
+		for x in range (len(matrice_base[0])):
+			if matrice_base[y][x] == 1:
+				counter+=1
+				if x in range ((len(matrice_base[0])-1)):
+					if matrice_base[y][x+1]!=1:
+						break
+		if counter == 4: 
+			print("Linea 4 rojo horizontal")
+
+def linea4_rojo_vertical():
+	for x in range (len(matrice_base[0])):
+		counter = 0
+		for y in range (len(matrice_base)):
+			if matrice_base[y][x] == 1:
+				counter+=1
+				if y in range ((len(matrice_base)-1)):
+					if matrice_base[y+1][x]!=1:
+						break
+		if counter == 4: 
+			print("Linea 4 rojo vertical")
+
+def linea4_amarillo_horizontal():
+	for y in range (len(matrice_base)):
+		counter = 0
+		for x in range (len(matrice_base[0])):
+			if matrice_base[y][x] == 2:
+				counter+=1
+				if x in range ((len(matrice_base[0])-1)):
+					if matrice_base[y][x+1]!=2:
+						break
+		if counter == 4: 
+			print("Linea 4 amarillo horizontal")
+
+def linea4_amarillo_vertical():
+	for x in range (len(matrice_base[0])):
+		counter = 0
+		for y in range (len(matrice_base)):
+			if matrice_base[y][x] == 2:
+				counter+=1
+				if y in range ((len(matrice_base)-1)):
+					if matrice_base[y+1][x]!=2:
+						break
+		if counter == 4: 
+			print("Linea 4 amarillo vertical")
 
 root.mainloop()
