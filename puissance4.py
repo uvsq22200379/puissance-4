@@ -17,7 +17,7 @@ from PIL import Image, ImageTk
 #Options
 
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "royalblue" 
+BACKGROUND             = "steelblue2" 
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
 GRID_DIMS              = np.array([7, 6])
@@ -49,6 +49,16 @@ slot_image = Image.open("slot.png")
 slot_image = slot_image.resize(np.array(SLOT_SIZE + (1, 1), dtype = int))
 slot_imagetk = ImageTk.PhotoImage(slot_image)
 
+logo_image = Image.open("puiss4nce.jpg")
+logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
+logo_imagetk = ImageTk.PhotoImage(logo_image)
+
+fade_delay = 1500
+fade_duration = 500
+
+player1 = ""
+player2 = ""
+
 #Outils
 
 def rectangle(pos, size):
@@ -67,6 +77,7 @@ def set_pos(obj, pos, size):
 def delete_widgets():
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
+	widgets.clear()
 
 #Jeu
 
@@ -78,10 +89,13 @@ def game_keys(event):
 
 	if event.keysym == "Escape":
 		playing = False
+		turn = False
 		tokens_pos.clear()
 		tokens_speed.clear()
 		tokens_visu.clear()
 		is_static.clear()
+
+		delete_widgets()
 
 		root.after(1, main_menu)
 
@@ -108,6 +122,9 @@ def game_clicks(event):
 	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
 		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
 
+	global player1
+	global player2
+
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
 	
@@ -127,6 +144,7 @@ def game_clicks(event):
 	visu = oval(pos, SLOT_SIZE)
 	if turn == True: #au rouge de jouer
 		canvas.itemconfig(visu, fill = "firebrick")
+		widgets[0]["text"] = "Au tour de " + player2
 		for i in range(len(matrice_coordonées)):
 			if (list(pos))in matrice_coordonées[i]:
 				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 1 #cherche l'indice des coordonées du jeton et affecte la matrice base dans ce même indice
@@ -134,6 +152,7 @@ def game_clicks(event):
 		linea4_rojo_vertical()	
 	else: #au jaune de jouer
 		canvas.itemconfig(visu, fill = "gold")
+		widgets[0]["text"] = "Au tour de " + player1
 		for i in range(len(matrice_coordonées)):
 			if (list(pos))in matrice_coordonées[i]:
 				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 2
@@ -152,8 +171,6 @@ def game_physics():
 	global playing
 
 	for i in range(len(tokens_pos)):
-
-		#canvas.lower(tokens_visu[i])
 
 		if is_static[i]:
 			continue # Nous n'appliquons pas le comportement physique à un jeton statique
@@ -195,6 +212,12 @@ def game_visu():
 		for x in range(GRID_DIMS[0]):
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
 			create_slot((x, y) * SLOT_SIZE + GRID_POS)
+
+	turn_info = tk.Label(canvas, text = "Au tour de " + player1, font = ("Comic Sans MS", WINDOW_SIZE[1]//16), bg = BACKGROUND)
+	turn_info.place(x = 10, y = 10)
+
+	widgets.append(turn_info)
+
 def game():
 	global playing
 
@@ -209,7 +232,12 @@ def game():
 #Menu principal
 
 def main_menu_clicks(event):
-	
+	global player1
+	global player2
+
+	player1 = widgets[1].get()
+	player2 = widgets[2].get()
+
 	delete_widgets()
 
 	root.after(1, game)
@@ -218,32 +246,63 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
+	#bouton de lancement
+	monimage=Image.open("play.gif")
+	monimage=monimage.resize((100,100))
+	monimagetk=ImageTk.PhotoImage(monimage)
+	monimagetk=canvas.create_image(200,200,image=monimagetk)
+
+
 	#instruction pour les joueurs
 
-	font_size = int(WINDOW_SIZE[1]/16)
+	font_size = int(WINDOW_SIZE[1]/23)
 
-	instruction = tk.Label(canvas, text = "Nom des joueurs : ", fg="black", font = ("Comic Sans MS", font_size), bg = "firebrick")
-	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/100)
+	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs avant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
+	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 +200)
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie1 = tk.Entry(canvas)
-	saisie1.insert(0, "Turing")
-	saisie1.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6)
+	saisie1.insert(0, "Joueur 1")
+	saisie1.place(x=WINDOW_SIZE[0]/100+10, y=WINDOW_SIZE[1]/6 +300)
 
 	saisie2 = tk.Entry(canvas)
-	saisie2.insert(0, "Conway")
-	saisie2.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 + 20)
+	saisie2.insert(0, "Joueur 2")
+	saisie2.place(x=WINDOW_SIZE[0]/10 +400, y=WINDOW_SIZE[1]/6 +300)
 
 	widgets.append(instruction)
 	widgets.append(saisie1)
 	widgets.append(saisie2)
+
 
 def main_menu():
 
 	canvas.bind("<Button-1>", main_menu_clicks)
 	main_menu_visu()
 
-main_menu()
+#Ecran de lancement
+
+logo = canvas.create_image(WINDOW_SIZE[0] / 2, WINDOW_SIZE[1] / 2, image = logo_imagetk)
+fade = rectangle((0, 0), WINDOW_SIZE)
+canvas.itemconfig(fade, fill = "")
+
+def process_fade():
+	global fade
+	
+	root.after(0, lambda : canvas.itemconfig(fade, fill = "black", stipple = "gray12"))
+
+	root.after(1 * fade_duration // 5, lambda : canvas.itemconfig(fade, stipple = "gray25"))
+
+	root.after(2 * fade_duration // 5, lambda : canvas.itemconfig(fade, stipple = "gray50"))
+
+	root.after(3 * fade_duration //5, lambda : canvas.itemconfig(fade, stipple = "gray75"))
+
+	root.after(4 * fade_duration //5, lambda : canvas.itemconfig(fade, stipple = ""))
+
+	root.after(fade_duration, main_menu)
+
+root.after(fade_delay, process_fade)
+
+#main_menu()
 
 
 
