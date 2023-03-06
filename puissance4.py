@@ -53,6 +53,10 @@ logo_image = Image.open("puiss4nce.jpg")
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
+play_image=Image.open("slot.png")
+play_image=play_image.resize((100,100))
+play_imagetk=ImageTk.PhotoImage(play_image)
+
 fade_delay = 1500
 fade_duration = 500
 
@@ -246,11 +250,8 @@ def main_menu_visu():
 	canvas.delete("all")
 
 	#bouton de lancement
-	monimage=Image.open("play.gif")
-	monimage=monimage.resize((100,100))
-	monimagetk=ImageTk.PhotoImage(monimage)
-	monimagetk=canvas.create_image(200,200,image=monimagetk)
-
+	
+	canvas.create_image(200,200,image=play_imagetk)
 
 	#instruction pour les joueurs
 
