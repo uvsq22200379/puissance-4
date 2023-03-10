@@ -224,7 +224,7 @@ def main_menu_visu():
 
 	font_size = int(WINDOW_SIZE[1]/23)
 
-	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs avant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
+	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs\navant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
 	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 +200)
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
