@@ -16,8 +16,16 @@ from PIL import Image, ImageTk
 
 #Options
 
+COLOR_PALETTE          = {
+	"Red" : "#f63f34",
+	"Yellow" : "#efbd20",
+	"Cyan" : "#65abaf",
+	"Green" : "#00931f",
+	"Turquoise" : "#59e38c"	
+
+}
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "steelblue2" 
+BACKGROUND             = COLOR_PALETTE["Green"]
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
 GRID_DIMS              = np.array([7, 6])
@@ -25,6 +33,7 @@ SLOT_SIZE              = GRID_SIZE / GRID_DIMS
 TOKEN_BOX              = SLOT_SIZE * 4/5
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
 GRAVITY                = 2
+
 
 #Variables globales
 
