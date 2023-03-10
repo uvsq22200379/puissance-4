@@ -1,6 +1,6 @@
 Projet informatique L1
 
-Groupe : S1LDDBI
+Groupe : S2LDDBI - Groupe 3
 
 Auteurs :
 
