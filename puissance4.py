@@ -53,17 +53,11 @@ logo_image = Image.open("puiss4nce.jpg")
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
-play_image=Image.open("slot.png")
-play_image=play_image.resize((100,100))
-play_imagetk=ImageTk.PhotoImage(play_image)
-
 fade_delay = 1500
 fade_duration = 500
 
 player1 = ""
-player2 = ""
-
-matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
+player2 = "cc"
 
 
 #Outils
@@ -106,27 +100,11 @@ def game_keys(event):
 
 		root.after(1, main_menu)
 
-
 def game_clicks(event):
 	global turn
 	global click_time
-	global matrice_base
 	global player1
 	global player2
-
-	#cree une "matrice" (liste imbriquée) des coordonnées des jetons
-	coordonnees_jetons_statiques = np.array([])
-	for y in range (400,50,-50): #coordonnées en y des jetons lorsqu'ils sont statiques 
-		for x in range(175,525,50): #coordonnées en x des jetons lorsqu'ils sont statiques
-			coordonnees_jetons_statiques = np.append(coordonnees_jetons_statiques,([x,y]))
-
-	coordonnees_en_paires = []
-	for i in range (0, len(coordonnees_jetons_statiques)-1, 2): #couple les coordonnées x et y de chaque position
-		coordonnees_en_paires.append([coordonnees_jetons_statiques[i],coordonnees_jetons_statiques[i+1]])
-	
-	matrice_coordonées = []
-	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
-		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -145,23 +123,13 @@ def game_clicks(event):
 	turn = not turn
 
 	visu = oval(pos, SLOT_SIZE)
-	if turn == True: #au rouge de jouer
+
+	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
 		widgets[0]["text"] = "Au tour de " + player2
-		for i in range(len(matrice_coordonées)):
-			if (list(pos))in matrice_coordonées[i]:
-				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 1 #cherche l'indice des coordonées du jeton et affecte la matrice base dans ce même indice
-		linea4_rojo_horizontal()
-		linea4_rojo_vertical()	
-	else: #au jaune de jouer
+	else:
 		canvas.itemconfig(visu, fill = "gold")
 		widgets[0]["text"] = "Au tour de " + player1
-		for i in range(len(matrice_coordonées)):
-			if (list(pos))in matrice_coordonées[i]:
-				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 2
-		linea4_amarillo_horizontal()
-		linea4_amarillo_vertical()
-	print(matrice_base)
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -249,9 +217,8 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
-	#bouton de lancement
-	
-	canvas.create_image(200,200,image=play_imagetk)
+	#image play pour le lancement 
+
 
 	#instruction pour les joueurs
 
@@ -303,57 +270,5 @@ def process_fade():
 root.after(fade_delay, process_fade)
 
 #main_menu()
-
-
-
-#Fonctions pour vérifier le gagnant
-
-def linea4_rojo_horizontal(): #vérifie s'il y a 4 jetons rouges de suite horizontalement
-	for y in range (len(matrice_base)):
-		counter = 0
-		for x in range (len(matrice_base[0])):
-			if matrice_base[y][x] == 1:
-				counter+=1
-				if x in range ((len(matrice_base[0])-1)):
-					if matrice_base[y][x+1]!=1:
-						break
-		if counter == 4: 
-			print("Linea 4 rojo horizontal")
-
-def linea4_rojo_vertical(): #vérifie s'il y a 4 jetons rouges de suite verticalement
-	for x in range (len(matrice_base[0])):
-		counter = 0
-		for y in range (len(matrice_base)):
-			if matrice_base[y][x] == 1:
-				counter+=1
-				if y in range ((len(matrice_base)-1)):
-					if matrice_base[y+1][x]!=1:
-						break
-		if counter == 4: 
-			print("Linea 4 rojo vertical")
-
-def linea4_amarillo_horizontal(): #vérifie s'il y a 4 jetons jaunes de suite horizontalement
-	for y in range (len(matrice_base)):
-		counter = 0
-		for x in range (len(matrice_base[0])):
-			if matrice_base[y][x] == 2:
-				counter+=1
-				if x in range ((len(matrice_base[0])-1)):
-					if matrice_base[y][x+1]!=2:
-						break
-		if counter == 4: 
-			print("Linea 4 amarillo horizontal")
-
-def linea4_amarillo_vertical(): #vérifie s'il y a 4 jetons jaunes de suite horizontalement
-	for x in range (len(matrice_base[0])):
-		counter = 0
-		for y in range (len(matrice_base)):
-			if matrice_base[y][x] == 2:
-				counter+=1
-				if y in range ((len(matrice_base)-1)):
-					if matrice_base[y+1][x]!=2:
-						break
-		if counter == 4: 
-			print("Linea 4 amarillo vertical")
 
 root.mainloop()
