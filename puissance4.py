@@ -66,7 +66,7 @@ fade_delay = 1500
 fade_duration = 500
 
 player1 = ""
-player2 = "cc"
+player2 = ""
 
 
 #Outils
