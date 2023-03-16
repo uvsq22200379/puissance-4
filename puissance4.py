@@ -13,6 +13,7 @@ import numpy as np
 from math import *
 import time
 from PIL import Image, ImageTk
+import random
 
 #Options
 
@@ -193,16 +194,18 @@ def game_visu():
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
 			create_slot((x, y) * SLOT_SIZE + GRID_POS)
 
-	turn_info = tk.Label(canvas, text = "Au tour de " + player1, font = ("Comic Sans MS", WINDOW_SIZE[1]//16), bg = BACKGROUND)
+	turn_info = tk.Label(canvas, text = "Au tour de Joueur " + str(1 + int(turn)), font = ("Comic Sans MS", WINDOW_SIZE[1]//16), bg = BACKGROUND)
 	turn_info.place(x = 10, y = 10)
 
 	widgets.append(turn_info)
 
 def game():
 	global playing
+	global turn
 
 	playing = True
-
+	turn=random.randint(0,1)
+	print(turn)
 	canvas.bind("<Button-1>", game_clicks)
 	root.bind("<Key>", game_keys)
 
@@ -234,16 +237,16 @@ def main_menu_visu():
 	font_size = int(WINDOW_SIZE[1]/23)
 
 	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs\navant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
-	instruction.place(x = WINDOW_SIZE[0]/100, y = WINDOW_SIZE[1]/6 +200)
+	instruction.place(x = WINDOW_SIZE[0]/5.3, y = WINDOW_SIZE[1]/6 +200)
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie1 = tk.Entry(canvas)
 	saisie1.insert(0, "Joueur 1")
-	saisie1.place(x=WINDOW_SIZE[0]/100+10, y=WINDOW_SIZE[1]/6 +300)
+	saisie1.place(x=WINDOW_SIZE[0]/2-290, y=WINDOW_SIZE[1]/2+130)
 
 	saisie2 = tk.Entry(canvas)
 	saisie2.insert(0, "Joueur 2")
-	saisie2.place(x=WINDOW_SIZE[0]/10 +400, y=WINDOW_SIZE[1]/6 +300)
+	saisie2.place(x=WINDOW_SIZE[0]/2 +90, y=WINDOW_SIZE[1]/2+130)
 
 	widgets.append(instruction)
 	widgets.append(saisie1)
