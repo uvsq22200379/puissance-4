@@ -20,12 +20,12 @@ COLOR_PALETTE          = {
 	"Red" : "#f63f34",
 	"Yellow" : "#efbd20",
 	"Cyan" : "#65abaf",
-	"Green" : "#00931f",
+	"Grey" : "#9cafb7",
 	"Turquoise" : "#59e38c"	
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = COLOR_PALETTE["Green"]
+BACKGROUND             = COLOR_PALETTE["Grey"]
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
 GRID_DIMS              = np.array([7, 6])
@@ -248,6 +248,8 @@ def main_menu_visu():
 	widgets.append(instruction)
 	widgets.append(saisie1)
 	widgets.append(saisie2)
+
+	
 
 
 def main_menu():
