@@ -26,7 +26,7 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = COLOR_PALETTE["Grey"]
+BACKGROUND             = COLOR_PALETTE["Cyan"]
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
 GRID_DIMS              = np.array([7, 6])
@@ -62,6 +62,9 @@ slot_imagetk = ImageTk.PhotoImage(slot_image)
 logo_image = Image.open("puiss4nce.jpg")
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
+
+image_play=Image.open("fond d'écran.jpeg")
+image_play_tk = ImageTk.PhotoImage(image_play)
 
 fade_delay = 1500
 fade_duration = 500
@@ -229,15 +232,28 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
-	#image play pour le lancement 
+
+	canvas.create_image(0,200, image = image_play_tk)
 
 
 	#instruction pour les joueurs
 
 	font_size = int(WINDOW_SIZE[1]/23)
+	
 
-	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs\navant de commencer", fg="black", font = ("Comic Sans MS", font_size), bg = BACKGROUND)
-	instruction.place(x = WINDOW_SIZE[0]/5.3, y = WINDOW_SIZE[1]/6 +200)
+	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs\navant de commencer", fg="black", font = ("Comic Sans MS", font_size))
+	instruction.place(x=0, y=0)
+	instruction.update()
+	instruction.place(x = WINDOW_SIZE[0]/2 -instruction.winfo_width()/2, y = WINDOW_SIZE[1]/6 +200)
+
+	titre_puissance4=tk.Label(canvas,text="PUISSANCE 4", fg="black", font = ("Calibri", font_size))
+	titre_puissance4.place(x=280, y=100,anchor="nw")
+	
+	charger_jeu=tk.Label(canvas,text="Charger", fg="black", font = ("Calibri", font_size))
+	charger_jeu.place(x=300, y=150,anchor="nw")
+
+	quitter_jeu=tk.Label(canvas,text="QUITTER",fg="red",font = ("Calibri", font_size))
+	quitter_jeu.place(x=300, y=200,anchor="nw")
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie1 = tk.Entry(canvas)
