@@ -113,6 +113,8 @@ def game_keys(event):
 
 		root.after(1, main_menu)
 
+
+
 def game_clicks(event):
 	global turn
 	global click_time
@@ -148,6 +150,17 @@ def game_clicks(event):
 	tokens_speed.append(np.array((0, 0)))
 	tokens_visu.append(visu)
 	is_static.append(False)
+	
+	def annul_jeton(event):
+		global turn
+		canvas.delete(visu)
+		tokens_pos.pop()
+		tokens_speed.pop()
+		tokens_visu.pop()
+		is_static.pop()
+		turn = not turn
+	
+	canvas.bind("<Button-3>", annul_jeton)
 
 	click_time = time.time()
 
@@ -202,6 +215,9 @@ def game_visu():
 
 	widgets.append(turn_info)
 
+
+
+
 def game():
 	global playing
 	global turn
@@ -232,9 +248,7 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
-
 	canvas.create_image(0,200, image = image_play_tk)
-
 
 	#instruction pour les joueurs
 
@@ -252,8 +266,32 @@ def main_menu_visu():
 	charger_jeu=tk.Label(canvas,text="Charger", fg="black", font = ("Calibri", font_size))
 	charger_jeu.place(x=300, y=150,anchor="nw")
 
-	quitter_jeu=tk.Label(canvas,text="QUITTER",fg="red",font = ("Calibri", font_size))
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri", 12))
+	instructions_jeu.place(x=300, y=450, anchor="nw")
+	instructions_jeu.bind("<Button-1>", lambda event: instructions())
+	
+	def instructions():
+		charger_jeu.place_forget()
+		quitter_jeu.place_forget()
+		saisie1.place_forget()
+		saisie2.place_forget()
+		instruction.place_forget()
+		inst = tk.Label(canvas, text="Instructions: \n -Pour mettre un jeton cliquez sur la colonne souhaitée \n -Pour annuler un jeton cliquez sur le bouton droit de votre souris \n -Le but du jeu est de positionner 4 jetons de la même couleur consécutivement (horizonatalement, verticalement ou diagonalement)\n A vous de jouer!")
+		inst.place(x = 0, y = WINDOW_SIZE[1]/2)
+
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri", font_size))
 	quitter_jeu.place(x=300, y=200,anchor="nw")
+	quitter_jeu.bind("<Button-1>", lambda event: quitter())
+
+	retour = tk.Button(canvas, text="Retourner au menu principal")
+	retour.place(x=100, y=WINDOW_SIZE[1]-100)
+	retour.bind("<Button-1>", lambda event: retourner())
+
+	jouer = tk.Button(canvas, text = "Jouer")
+	jouer.place(x=250, y=250,anchor="nw")
+	jouer.bind("<Button-1>", lambda event: game())
+
+
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
 	saisie1 = tk.Entry(canvas)
@@ -270,9 +308,7 @@ def main_menu_visu():
 
 	
 
-
 def main_menu():
-
 	canvas.bind("<Button-1>", main_menu_clicks)
 	main_menu_visu()
 
@@ -300,5 +336,11 @@ def process_fade():
 root.after(fade_delay, process_fade)
 
 #main_menu()
+
+def quitter():
+	root.destroy()
+def retourner():
+	canvas.delete("all")
+	main_menu_visu()
 
 root.mainloop()
