@@ -44,6 +44,7 @@ root.title("Puissance 4")
 root.resizable(False, False)
 
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
+
 canvas.grid()
 
 widgets = [] #Toutes les widget crées doivent être dans cette liste afin de pouvoir les supprimer
@@ -216,8 +217,6 @@ def game_visu():
 	widgets.append(turn_info)
 
 
-
-
 def game():
 	global playing
 	global turn
@@ -227,7 +226,6 @@ def game():
 	print(turn)
 	canvas.bind("<Button-1>", game_clicks)
 	root.bind("<Key>", game_keys)
-
 	game_visu()
 	root.after(1, game_physics)
 
@@ -254,41 +252,48 @@ def main_menu_visu():
 
 	font_size = int(WINDOW_SIZE[1]/23)
 	
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+50, text= "Veuillez entrer le nom des joueurs\navant de commencer", fill="black", font=("Calibri", font_size))
+	canvas.pack()
 
-	instruction = tk.Label(canvas, text = "Veuillez entrer le nom des joueurs\navant de commencer", fg="black", font = ("Comic Sans MS", font_size))
-	instruction.place(x=0, y=0)
-	instruction.update()
-	instruction.place(x = WINDOW_SIZE[0]/2 -instruction.winfo_width()/2, y = WINDOW_SIZE[1]/6 +200)
 
-	titre_puissance4=tk.Label(canvas,text="PUISSANCE 4", fg="black", font = ("Calibri", font_size))
-	titre_puissance4.place(x=280, y=100,anchor="nw")
-	
-	charger_jeu=tk.Label(canvas,text="Charger", fg="black", font = ("Calibri", font_size))
-	charger_jeu.place(x=300, y=150,anchor="nw")
+	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="black", font=("Calibri bold", font_size))
+	canvas.pack()
 
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri", 12))
-	instructions_jeu.place(x=300, y=450, anchor="nw")
+	charger_jeu=tk.Button(canvas,text="Charger", fg="black", font = ("Calibri bold", 15))
+	charger_jeu.place(x=300, y=200,anchor="nw")
+
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15))
+	instructions_jeu.place(x=300, y=250, anchor="nw")
 	instructions_jeu.bind("<Button-1>", lambda event: instructions())
-	
+
+
 	def instructions():
+		canvas.delete("all")
 		charger_jeu.place_forget()
 		quitter_jeu.place_forget()
+		jouer.place_forget()
 		saisie1.place_forget()
 		saisie2.place_forget()
-		instruction.place_forget()
-		inst = tk.Label(canvas, text="Instructions: \n -Pour mettre un jeton cliquez sur la colonne souhaitée \n -Pour annuler un jeton cliquez sur le bouton droit de votre souris \n -Le but du jeu est de positionner 4 jetons de la même couleur consécutivement (horizonatalement, verticalement ou diagonalement)\n A vous de jouer!")
-		inst.place(x = 0, y = WINDOW_SIZE[1]/2)
+		instructions_jeu.place_forget()
+		canvas.create_text(WINDOW_SIZE[0]/2, 100, text= "Instructions:", fill="black", font=("Calibri", font_size))
+		canvas.create_text(WINDOW_SIZE[0]/2, 200, text= "-Pour mettre un jeton cliquez sur la colonne souhaitée", fill="black", font=("Calibri", 15))
+		canvas.create_text(WINDOW_SIZE[0]/2, 250, text= "-Pour annuler un jeton cliquez sur le bouton droit de votre souris", fill="black", font=("Calibri", 15))
+		canvas.create_text(WINDOW_SIZE[0]/2, 300, text= "-Le but du jeu est de positionner 4 jetons de la même couleur consécutivement", fill="black", font=("Calibri", 15))
+		canvas.create_text(WINDOW_SIZE[0]/2, 350, text= "(horizontalement, verticalement ou diagonalement)", fill="black", font=("Calibri", 15))
+		canvas.create_text(WINDOW_SIZE[0]/2, 400, text= "A vous de jouer!", fill="black", font=("Calibri", 15))
+		canvas.pack()
 
-	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri", font_size))
-	quitter_jeu.place(x=300, y=200,anchor="nw")
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15))
+	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-100)
+
 	quitter_jeu.bind("<Button-1>", lambda event: quitter())
 
-	retour = tk.Button(canvas, text="Retourner au menu principal")
-	retour.place(x=100, y=WINDOW_SIZE[1]-100)
+	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15))
+	retour.place(x=25, y=WINDOW_SIZE[1]-100)
 	retour.bind("<Button-1>", lambda event: retourner())
 
-	jouer = tk.Button(canvas, text = "Jouer")
-	jouer.place(x=250, y=250,anchor="nw")
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15))
+	jouer.place(x=300, y=150,anchor="nw") 
 	jouer.bind("<Button-1>", lambda event: game())
 
 
@@ -302,7 +307,6 @@ def main_menu_visu():
 	saisie2.insert(0, "Joueur 2")
 	saisie2.place(x=WINDOW_SIZE[0]/2 +90, y=WINDOW_SIZE[1]/2+130)
 
-	widgets.append(instruction)
 	widgets.append(saisie1)
 	widgets.append(saisie2)
 
