@@ -231,12 +231,12 @@ def game():
 
 #Menu principal
 
-def main_menu_clicks(event):
+def main_menu_clicks():
 	global player1
 	global player2
 
-	player1 = widgets[1].get()
-	player2 = widgets[2].get()
+	player1 = widgets[0].get()
+	player2 = widgets[1].get()
 
 	delete_widgets()
 
@@ -262,11 +262,6 @@ def main_menu_visu():
 	charger_jeu=tk.Button(canvas,text="Charger", fg="black", font = ("Calibri bold", 15))
 	charger_jeu.place(x=300, y=200,anchor="nw")
 
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15))
-	instructions_jeu.place(x=300, y=250, anchor="nw")
-	instructions_jeu.bind("<Button-1>", lambda event: instructions())
-
-
 	def instructions():
 		canvas.delete("all")
 		charger_jeu.place_forget()
@@ -283,19 +278,17 @@ def main_menu_visu():
 		canvas.create_text(WINDOW_SIZE[0]/2, 400, text= "A vous de jouer!", fill="black", font=("Calibri", 15))
 		canvas.pack()
 
-	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15))
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15), command = instructions)
+	instructions_jeu.place(x=300, y=250, anchor="nw")
+
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
 	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-100)
 
-	quitter_jeu.bind("<Button-1>", lambda event: quitter())
-
-	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15))
+	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-100)
-	retour.bind("<Button-1>", lambda event: retourner())
 
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15))
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = main_menu_clicks)
 	jouer.place(x=300, y=150,anchor="nw") 
-	jouer.bind("<Button-1>", lambda event: game())
-
 
 
 	#zone de saisie pour que les joueurs rentrent leurs noms 
@@ -309,11 +302,18 @@ def main_menu_visu():
 
 	widgets.append(saisie1)
 	widgets.append(saisie2)
+	widgets.append(jouer)
+	#widgets.append(retour)
+	#widgets.append(quitter_jeu)
+	widgets.append(instructions_jeu)
+	widgets.append(charger_jeu)
 
 	
 
 def main_menu():
-	canvas.bind("<Button-1>", main_menu_clicks)
+
+	#fonctions préliminaires au menu principal
+
 	main_menu_visu()
 
 #Ecran de lancement
@@ -345,6 +345,10 @@ def quitter():
 	root.destroy()
 def retourner():
 	canvas.delete("all")
+
+	for w in widgets:
+		w.place_forget()
+	widgets.clear()
 	main_menu_visu()
 
 root.mainloop()
