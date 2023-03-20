@@ -252,9 +252,11 @@ def main_menu_visu():
 
 	font_size = int(WINDOW_SIZE[1]/23)
 	
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+50, text= "Veuillez entrer le nom des joueurs\navant de commencer", fill="black", font=("Calibri", font_size))
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+50, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", font_size))
 	canvas.pack()
 
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+80, text= "avant de commencer", fill="black", font=("Calibri", font_size))
+	canvas.pack()
 
 	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="black", font=("Calibri bold", font_size))
 	canvas.pack()
