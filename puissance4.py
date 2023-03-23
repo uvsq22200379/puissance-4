@@ -383,5 +383,52 @@ def retourner():
 
 	main_menu_visu()
 
+def puissance4rougehorizontal():
+	for y in range (len(matrice_base)):
+		counter = 0
+		for x in range (len(matrice_base[0])):
+			if matrice_base[y][x] == 1:
+				counter+=1
+				if x in range ((len(matrice_base[0])-1)):
+					if matrice_base[y][x+1]!=1:
+						break
+		if counter == 4: 
+			print("Puissance 4 rouge horizontal")
 
+def puissance4rougevertical():
+	for x in range (len(matrice_base[0])):
+		counter = 0
+		for y in range (len(matrice_base)):
+			if matrice_base[y][x] == 1:
+				counter+=1
+				if y in range ((len(matrice_base)-1)):
+					if matrice_base[y+1][x]!=1:
+						break
+		if counter == 4: 
+			print("Puissance 4 rouge vertical")
+
+def puissance4jaunehorizontal():
+	for y in range (len(matrice_base)):
+		counter = 0
+		for x in range (len(matrice_base[0])):
+			if matrice_base[y][x] == 2:
+				counter+=1
+				if x in range ((len(matrice_base[0])-1)):
+					if matrice_base[y][x+1]!=2:
+						break
+		if counter == 4: 
+			print("Puissance 4 jaune horizontal")
+
+def puissance4jaunevertical():
+	for x in range (len(matrice_base[0])):
+		counter = 0
+		for y in range (len(matrice_base)):
+			if matrice_base[y][x] == 2:
+				counter+=1
+				if y in range ((len(matrice_base)-1)):
+					if matrice_base[y+1][x]!=2:
+						break
+		if counter == 4: 
+			print("Puissance 4 jaune vertical")
+			
 root.mainloop()
