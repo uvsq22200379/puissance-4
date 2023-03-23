@@ -114,13 +114,28 @@ def game_keys(event):
 
 		root.after(1, main_menu)
 
-
+matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
 def game_clicks(event):
 	global turn
 	global click_time
 	global player1
 	global player2
+	global matrice_base
+
+	#cree une "matrice" (liste imbriquée) des coordonnées des jetons
+	coordonnees_jetons_statiques = np.array([])
+	for y in range (400,50,-50): #coordonnées en y des jetons lorsqu'ils sont statiques 
+		for x in range(175,525,50): #coordonnées en x des jetons lorsqu'ils sont statiques
+			coordonnees_jetons_statiques = np.append(coordonnees_jetons_statiques,([x,y]))
+
+	coordonnees_en_paires = []
+	for i in range (0, len(coordonnees_jetons_statiques)-1, 2): #couple les coordonnées x et y de chaque position
+		coordonnees_en_paires.append([coordonnees_jetons_statiques[i],coordonnees_jetons_statiques[i+1]])
+
+	matrice_coordonées = []
+	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
+		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -143,9 +158,22 @@ def game_clicks(event):
 	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
 		widgets[0]["text"] = "Au tour de " + player2
+		for i in range(len(matrice_coordonées)):
+			if (list(pos))in matrice_coordonées[i]:
+				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 1 #cherche l'indice des coordonées du jeton et affecte la matrice base dans ce même indice
+		puissance4rougehorizontal()
+		puissance4rougevertical()	
+		print(matrice_base)
+
 	else:
 		canvas.itemconfig(visu, fill = "gold")
 		widgets[0]["text"] = "Au tour de " + player1
+		for i in range(len(matrice_coordonées)):
+			if (list(pos))in matrice_coordonées[i]:
+				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 2
+		puissance4jaunehorizontal()
+		puissance4jaunevertical()
+		print(matrice_base)
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -345,12 +373,15 @@ root.after(fade_delay, process_fade)
 
 def quitter():
 	root.destroy()
+
 def retourner():
 	canvas.delete("all")
 
 	for w in widgets:
 		w.place_forget()
 	widgets.clear()
+
 	main_menu_visu()
+
 
 root.mainloop()
