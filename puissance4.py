@@ -94,6 +94,39 @@ def delete_widgets():
 		widgets[i].place_forget()
 	widgets.clear()
 
+def raycast(o_start, stride):
+
+	start = o_start.copy()
+
+	count = 1
+	other_token = False
+	ray = start
+	verifying = ""
+
+	for i in range(4):
+
+		current_color = ""
+		found = False
+		for i_ in range(len(tokens_pos)):
+			pos = tokens_pos[i_]
+			if ray[0] >= pos[0] and ray[0] <= pos[0] + SLOT_SIZE[0] \
+		   and ray[1] >= pos[1] and ray[1] <= pos[1] + SLOT_SIZE[1]:
+				current_color = canvas.itemcget(tokens_visu[i_], "fill")
+				found = True
+				break
+		if not found:
+			break
+		if i==0:
+			verifying = current_color
+		elif current_color == verifying:
+			count += 1
+		else:
+			break
+
+		ray += stride
+
+	return count
+
 #Jeu
 
 playing = True
@@ -103,16 +136,7 @@ def game_keys(event):
 	global playing
 
 	if event.keysym == "Escape":
-		playing = False
-		turn = False
-		tokens_pos.clear()
-		tokens_speed.clear()
-		tokens_visu.clear()
-		is_static.clear()
-
-		delete_widgets()
-
-		root.after(1, main_menu)
+		retourner()
 
 matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
@@ -222,6 +246,10 @@ def game_physics():
 			if abs(tokens_speed[i][1]) < 1:
 				tokens_pos[i] = GRID_POS + SLOT_SIZE * np.array( (tokens_pos[i] - GRID_POS) / SLOT_SIZE, dtype = int)
 				is_static[i] = True
+
+				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0)) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
+
+				print(horiz)
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
@@ -375,13 +403,18 @@ def quitter():
 	root.destroy()
 
 def retourner():
-	canvas.delete("all")
-
-	for w in widgets:
-		w.place_forget()
-	widgets.clear()
-
-	main_menu_visu()
+	global playing
+	global turn
+	
+	#canvas.delete("all")
+	playing = False
+	turn = False
+	tokens_pos.clear()
+	tokens_speed.clear()
+	tokens_visu.clear()
+	is_static.clear()
+	delete_widgets()
+	root.after(1, main_menu)
 
 def puissance4rougehorizontal():
 	for y in range (len(matrice_base)):
