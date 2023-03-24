@@ -147,19 +147,6 @@ def game_clicks(event):
 	global player2
 	global matrice_base
 
-	#cree une "matrice" (liste imbriquée) des coordonnées des jetons
-	coordonnees_jetons_statiques = np.array([])
-	for y in range (400,50,-50): #coordonnées en y des jetons lorsqu'ils sont statiques 
-		for x in range(175,525,50): #coordonnées en x des jetons lorsqu'ils sont statiques
-			coordonnees_jetons_statiques = np.append(coordonnees_jetons_statiques,([x,y]))
-
-	coordonnees_en_paires = []
-	for i in range (0, len(coordonnees_jetons_statiques)-1, 2): #couple les coordonnées x et y de chaque position
-		coordonnees_en_paires.append([coordonnees_jetons_statiques[i],coordonnees_jetons_statiques[i+1]])
-
-	matrice_coordonées = []
-	for i in range (0, len(coordonnees_en_paires), GRID_DIMS[0]): #positionne les couples aux indices qui leur correspondent
-		matrice_coordonées.append(coordonnees_en_paires[i:i+GRID_DIMS[0]])
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -182,22 +169,9 @@ def game_clicks(event):
 	if turn:
 		canvas.itemconfig(visu, fill = "firebrick")
 		widgets[0]["text"] = "Au tour de " + player2
-		for i in range(len(matrice_coordonées)):
-			if (list(pos))in matrice_coordonées[i]:
-				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 1 #cherche l'indice des coordonées du jeton et affecte la matrice base dans ce même indice
-		puissance4rougehorizontal()
-		puissance4rougevertical()	
-		print(matrice_base)
-
 	else:
 		canvas.itemconfig(visu, fill = "gold")
 		widgets[0]["text"] = "Au tour de " + player1
-		for i in range(len(matrice_coordonées)):
-			if (list(pos))in matrice_coordonées[i]:
-				matrice_base[i-1,(matrice_coordonées[i].index(list(pos)))] = 2
-		puissance4jaunehorizontal()
-		puissance4jaunevertical()
-		print(matrice_base)
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -248,8 +222,12 @@ def game_physics():
 				is_static[i] = True
 
 				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0)) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
+				verti = raycast(tokens_pos[i] + TOKEN_BOX/2, (0, SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (0, -SLOT_SIZE[1])) - 1
+				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
+				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
-				print(horiz)
+				if horiz >= 4 or verti >= 4 or diag1 >= 4 or diag2 >= 4:
+					print("Victoire !!!")
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
@@ -279,7 +257,6 @@ def game():
 
 	playing = True
 	turn=random.randint(0,1)
-	print(turn)
 	canvas.bind("<Button-1>", game_clicks)
 	root.bind("<Key>", game_keys)
 	game_visu()
@@ -405,7 +382,7 @@ def quitter():
 def retourner():
 	global playing
 	global turn
-	
+
 	#canvas.delete("all")
 	playing = False
 	turn = False
@@ -416,52 +393,5 @@ def retourner():
 	delete_widgets()
 	root.after(1, main_menu)
 
-def puissance4rougehorizontal():
-	for y in range (len(matrice_base)):
-		counter = 0
-		for x in range (len(matrice_base[0])):
-			if matrice_base[y][x] == 1:
-				counter+=1
-				if x in range ((len(matrice_base[0])-1)):
-					if matrice_base[y][x+1]!=1:
-						break
-		if counter == 4: 
-			print("Puissance 4 rouge horizontal")
-
-def puissance4rougevertical():
-	for x in range (len(matrice_base[0])):
-		counter = 0
-		for y in range (len(matrice_base)):
-			if matrice_base[y][x] == 1:
-				counter+=1
-				if y in range ((len(matrice_base)-1)):
-					if matrice_base[y+1][x]!=1:
-						break
-		if counter == 4: 
-			print("Puissance 4 rouge vertical")
-
-def puissance4jaunehorizontal():
-	for y in range (len(matrice_base)):
-		counter = 0
-		for x in range (len(matrice_base[0])):
-			if matrice_base[y][x] == 2:
-				counter+=1
-				if x in range ((len(matrice_base[0])-1)):
-					if matrice_base[y][x+1]!=2:
-						break
-		if counter == 4: 
-			print("Puissance 4 jaune horizontal")
-
-def puissance4jaunevertical():
-	for x in range (len(matrice_base[0])):
-		counter = 0
-		for y in range (len(matrice_base)):
-			if matrice_base[y][x] == 2:
-				counter+=1
-				if y in range ((len(matrice_base)-1)):
-					if matrice_base[y+1][x]!=2:
-						break
-		if counter == 4: 
-			print("Puissance 4 jaune vertical")
 			
 root.mainloop()
