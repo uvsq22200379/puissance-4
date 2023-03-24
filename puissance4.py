@@ -25,32 +25,33 @@ COLOR_PALETTE          = {
 	"Turquoise" : "#59e38c"	
 
 }
-WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = COLOR_PALETTE["Cyan"]
-GRID_POS               = WINDOW_SIZE / 4
-GRID_SIZE              = WINDOW_SIZE / 2
-GRID_DIMS              = np.array([7, 6])
-SLOT_SIZE              = GRID_SIZE / GRID_DIMS
-TOKEN_BOX              = SLOT_SIZE * 4/5
+WINDOW_SIZE            = np.array([700, 600]) #Crée une matrice avec la taille de la fenêtre
+BACKGROUND             = COLOR_PALETTE["Cyan"] 
+GRID_POS               = WINDOW_SIZE / 4 
+GRID_SIZE              = WINDOW_SIZE / 2 #Taille d'un cercle individuel vide de la grille 
+GRID_DIMS              = np.array([7, 6]) #Dimensions de la grille des jetons
+SLOT_SIZE              = GRID_SIZE / GRID_DIMS #Taille d'un jeton 
+TOKEN_BOX              = SLOT_SIZE * 4/5 
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
-GRAVITY                = 2
+GRAVITY                = 2 #Valeur de la "gravité" appliquée aux jetons
 
 
 #Variables globales
 
+#Création de la fenêtre du jeu
 root = tk.Tk()
 root.geometry(str(WINDOW_SIZE[0])+'x'+str(WINDOW_SIZE[1]) + "+0+0")
 root.title("Puissance 4")
 root.resizable(False, False)
 
+#Création du canvas (lié à l'interface graphique)
 canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = BACKGROUND)
-
 canvas.grid()
 
 widgets = [] #Toutes les widget crées doivent être dans cette liste afin de pouvoir les supprimer
 
-tokens_pos = [] #position des jetons dans le monde physique
-tokens_speed = [] #vitesse des jetons
+tokens_pos = [] #Position des jetons dans le monde physique
+tokens_speed = [] #Vitesse des jetons
 tokens_visu = [] #Representation graphique des jetons
 is_static = [] #Définit si un jeton est un objet physique ou non
 
@@ -76,25 +77,29 @@ player2 = ""
 
 #Outils
 
-def rectangle(pos, size):
+def rectangle(pos, size): # Crée un rectangle sur le canvas
 	return canvas.create_rectangle(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
-def oval(pos, size):
+
+def oval(pos, size): # Crée un jeton
 	oval = canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], width = 0)
 	canvas.lower(oval) # On dessine les ovales derrière les images
 	return oval
-def create_slot(pos):
+
+def create_slot(pos): # Crée le cadre d'un jeton de la grille 
 	pos += SLOT_SIZE/2
 	slot = canvas.create_image(pos[0], pos[1], image = slot_imagetk)
 	canvas.tkraise(slot) # On dessine les images devant les ovales
 	return slot
-def set_pos(obj, pos, size):
+
+def set_pos(obj, pos, size): 
 	canvas.coords(obj, pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
-def delete_widgets():
+
+def delete_widgets(): # Efface tous les widgets ajouté à la liste "Widgets"
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
 	widgets.clear()
 
-def raycast(o_start, stride):
+def raycast(o_start, stride): # Fonction qui vérifie les victoires
 
 	start = o_start.copy()
 
@@ -127,26 +132,22 @@ def raycast(o_start, stride):
 
 	return count
 
-#Jeu
+# Jeu
 
 playing = True
-turn = False #False : Jeton jaune / True : Jeton rouge
+turn = False # False : Jeton jaune / True : Jeton rouge
 
-def game_keys(event):
+def game_keys(event): 
 	global playing
 
 	if event.keysym == "Escape":
 		retourner()
 
-matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
-
-def game_clicks(event):
+def game_clicks(event): # On définit tous ce qui se passe lorsqu'on clique pendant le jeu
 	global turn
 	global click_time
 	global player1
 	global player2
-	global matrice_base
-
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -162,24 +163,26 @@ def game_clicks(event):
 		else:
 			return # Un jeton obstrue le point d'apparition
 
-	turn = not turn
+	turn = not turn 
 
 	visu = oval(pos, SLOT_SIZE)
 
-	if turn:
+	if turn: # Si c'est le tour du premier joueur, on crée un jeton rouge
 		canvas.itemconfig(visu, fill = "firebrick")
 		widgets[0]["text"] = "Au tour de " + player2
-	else:
-		canvas.itemconfig(visu, fill = "gold")
+	else: # Si c'est le tour du deuxième joueur, on crée un jeton jaune
+		canvas.itemconfig(visu, fill = "gold") 
 		widgets[0]["text"] = "Au tour de " + player1
 
+	## On ajoute les données du jeton crée à chaque liste, on "stocke" son existence
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
 	tokens_visu.append(visu)
 	is_static.append(False)
 	
-	def annul_jeton(event):
+	def annul_jeton(event): # Fonction pour annuler un coup joué
 		global turn
+		# On supprime le dernier élément de chaque liste: tous les données liées à l'existence du jeton
 		canvas.delete(visu)
 		tokens_pos.pop()
 		tokens_speed.pop()
@@ -191,7 +194,7 @@ def game_clicks(event):
 
 	click_time = time.time()
 
-def game_physics():
+def game_physics(): # On ajoute du mouvement à la création des jetons (pas seulement apparaître, pour se rapprocher à la réalité du jeu dans le monde réel)
 	global playing
 
 	for i in range(len(tokens_pos)):
@@ -202,10 +205,8 @@ def game_physics():
 		collides_another = False
 
 		for j in range(len(tokens_pos)):
-			if i==j or tokens_pos[j][1] < tokens_pos[i][1]:
+			if i == j or tokens_pos[j][1] < tokens_pos[i][1]:
 				continue # On évite de tester si le jeton se collisione lui même ou avec un jeton plus haut
-
-
 			if tokens_pos[i][0] > tokens_pos[j][0] + SLOT_SIZE[0]-1 or tokens_pos[i][0] + SLOT_SIZE[0]-1 < tokens_pos[j][0]:
 				pass
 			elif tokens_pos[i][1] + SLOT_SIZE[1] + tokens_speed[i][1] > tokens_pos[j][1] + tokens_speed[j][1]:
