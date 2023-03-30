@@ -64,7 +64,7 @@ logo_image = Image.open("puiss4nce.jpg")
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
-image_play=Image.open("fond d'écran2.jpg")
+image_play=Image.open("background.jpg")
 image_play_tk = ImageTk.PhotoImage(image_play)
 
 fade_delay = 1500
@@ -228,8 +228,8 @@ def game_physics():
 
 				if horiz >= 4 or verti >= 4 or diag1 >= 4 or diag2 >= 4:
 					print("Victoire !!!")
-					vic=tk.Label("Victoire")
-					vic.place(x=10,y=10)
+					widgets.append(tk.Label(canvas, text = "Victoire"))
+					widgets[-1].place(x=10,y=10)
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
