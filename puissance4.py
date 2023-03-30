@@ -47,20 +47,19 @@ canvas = tk.Canvas(root, width = WINDOW_SIZE[0], height = WINDOW_SIZE[1], bg = B
 
 canvas.grid()
 
-widgets = [] #Toutes les widget crées doivent être dans cette liste afin de pouvoir les supprimer
-
+widgets = [] #Toutes les widget crées doivent être dans cette liste afin de pouvoir les supprime à chaque changement d'écran
 tokens_pos = [] #position des jetons dans le monde physique
 tokens_speed = [] #vitesse des jetons
 tokens_visu = [] #Representation graphique des jetons
 is_static = [] #Définit si un jeton est un objet physique ou non
 
-click_time = 0
+click_time = 0 # Permet d'empêcher le joueur de spammer les cliques
 
-slot_image = Image.open("slot.png")
+slot_image = Image.open("slot.png") # Image des cases
 slot_image = slot_image.resize(np.array(SLOT_SIZE + (1, 1), dtype = int))
 slot_imagetk = ImageTk.PhotoImage(slot_image)
 
-logo_image = Image.open("puiss4nce.jpg")
+logo_image = Image.open("puiss4nce.jpg") # Logo de l'écran de démarrage
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
