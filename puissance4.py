@@ -209,18 +209,23 @@ def game_clicks(event):
 	tokens_visu.append(visu)
 	is_static.append(False)
 	
-	def annul_jeton(event):
-		global turn
-		canvas.delete(visu)
-		tokens_pos.pop()
-		tokens_speed.pop()
-		tokens_visu.pop()
-		is_static.pop()
-		turn = not turn
-	
-	canvas.bind("<Button-3>", annul_jeton)
-
 	click_time = time.time()
+
+def annul_jeton():
+	'''
+		Annule le dernier jeton.
+	'''
+	global turn
+
+	if len(tokens_pos) == 0: # Si il n'y a plus de jeton, nous interrompons la fonction
+		return
+
+	canvas.delete(tokens_visu[-1])
+	tokens_pos.pop()
+	tokens_speed.pop()
+	tokens_visu.pop()
+	is_static.pop()
+	turn = not turn
 
 def game_physics():
 	'''
@@ -290,6 +295,8 @@ def game_visu():
 	turn_info.place(x = 10, y = 10)
 
 	widgets.append(turn_info)
+	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
+	widgets[-1].place(x = int(7 * WINDOW_SIZE[0]/10), y = 10)
 
 #
 
