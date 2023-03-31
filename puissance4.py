@@ -383,6 +383,8 @@ def game():
 	'''
 		Initialisation du jeu
 	'''
+	canvas.delete("all")
+	delete_widgets()
 
 	global playing
 	global turn
@@ -393,6 +395,7 @@ def game():
 	root.bind("<Key>", game_keys)
 	game_visu()
 	root.after(1, game_physics)
+
 
 #Menu principal
 
@@ -472,7 +475,7 @@ def main_menu_visu():
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-100)
 
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = main_menu_clicks)
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = game)
 	jouer.place(x=300, y=150,anchor="nw") 
 
 
