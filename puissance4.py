@@ -107,6 +107,9 @@ def delete_widgets():
 	'''
 		Supprime tous les widgets
 	'''
+	
+	canvas.delete("all")
+
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
 	widgets.clear()
@@ -205,6 +208,18 @@ def load(path):
 		print()
 
 	inn.close()
+
+def launch_load(path):
+	global player1
+	global player2
+
+	player1 = widgets[0].get()
+	player2 = widgets[1].get()
+
+	delete_widgets()
+
+	root.after(10, load(path))
+	root.after(1, game)
 
 #Jeu
 
@@ -348,8 +363,6 @@ def game_visu():
 		Crée les widgets et la grille du jeu
 	'''
 
-	canvas.delete("all")
-
 	for y in range(GRID_DIMS[1]):
 		for x in range(GRID_DIMS[0]):
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
@@ -417,7 +430,7 @@ def main_menu_visu():
 	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="red", font=("Calibri bold", 50))
 	canvas.pack()
 
-	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Calibri bold", 15))
+	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Calibri bold", 15), command = lambda: launch_load("saved_games/test.game"))
 	charger_jeu.place(x=300, y=200,anchor="nw")
 
 	#fonction qui explique les instructions dans une nouvelle fenêtre
