@@ -157,11 +157,54 @@ def save(path):
 
 	for i in range(len(tokens_pos)):
 
-		out.write(canvas.itemcget(tokens_visu[i], "fill") + ";" + str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
-			    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + "\n")
+		out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
+			    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + ";" + canvas.itemcget(tokens_visu[i], "fill")  + ";" + "\n")
 
 	out.close()
 
+def load(path):
+
+	inn = open(path, "r")
+
+	reading = True
+	while reading:
+		
+		line = inn.readline()
+
+		if line:
+			
+			buffer = ""
+			phase = 0
+
+			for c in line:
+
+				if c == ";":
+					if phase == 0:
+						tokens_pos.append(np.array([float(buffer), 0]))
+					elif phase == 1:
+						tokens_pos[-1][1] = float(buffer)
+					elif phase == 2:
+						tokens_speed.append(np.array([float(buffer), 0]))
+					elif phase == 3:
+						tokens_speed[-1][1] = float(buffer)
+					elif phase == 4:
+						is_static.append(bool(buffer))
+					elif phase == 5:
+						visu = oval(tokens_pos[-1], SLOT_SIZE)
+						canvas.itemconfig(visu, fill = buffer)
+						tokens_visu.append(visu)
+
+					phase += 1
+					buffer = ""
+					continue
+
+				buffer += c
+		else:
+			reading = False
+
+		print()
+
+	inn.close()
 
 #Jeu
 
@@ -181,6 +224,8 @@ def game_keys(event):
 		annul_jeton()
 	if event.keysym == "s":
 		save("saved_games/test.game")
+	if event.keysym == "l":
+		load("saved_games/test.game")
 
 matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
