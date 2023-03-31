@@ -28,14 +28,15 @@ COLOR_PALETTE          = {
 }
 WINDOW_SIZE            = np.array([700, 600])
 BACKGROUND             = COLOR_PALETTE["Cyan"]
+GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
-GRID_DIMS              = np.array([7, 6])
+longueur               = 0
+largeur                = 0
 SLOT_SIZE              = GRID_SIZE / GRID_DIMS
 TOKEN_BOX              = SLOT_SIZE * 4/5
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
 GRAVITY                = 2
-
 
 #Variables globales
 
@@ -244,7 +245,6 @@ def game_keys(event):
 	if event.keysym == "l":
 		load("saved_games/test.game")
 
-matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
 def game_clicks(event):
 	'''
@@ -537,16 +537,16 @@ def retourner():
 
 
 def menu_perso_jeu():
+
+	global GRID_POS
+	global GRID_SIZE
+
 	canvas.delete("all")
 	delete_widgets()
 
 	font_size = int(WINDOW_SIZE[1]/23)
 
-	play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 15), command = game)
-	play.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
-	widgets.append(play)
-
-	#zone de saisie pour que les joueurs rentrent leurs noms 
+	#Zone de saisie pour que les joueurs rentrent leurs noms 
 	
 	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 15))
 	canvas.pack()
@@ -651,6 +651,66 @@ def menu_perso_jeu():
 	bleu2 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu2)
 	bleu2.place(x=((WINDOW_SIZE[0]/5)*3)+65, y=330,anchor="nw") 
 	widgets.append(bleu2)
+
+	def etape_suivante_perso():
+
+		global longueur
+		global largeur
+
+		canvas.delete("all")
+		delete_widgets()
+
+		play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 15), command = executer_jeu_perso)
+		play.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
+		widgets.append(play)
+		
+		canvas.create_text((WINDOW_SIZE[0]/2), 150, text= "Veuillez entrer les dimensions souhaitées de votre grille", fill="black", font=("Calibri", 15))
+		canvas.pack()
+
+		global GRID_DIMS
+		longueur = tk.Entry(canvas)
+		longueur.insert(0, "")
+		longueur.place(x=WINDOW_SIZE[0]/5, y=200)
+		canvas.create_text((WINDOW_SIZE[0]/5+50), 180, text= "LONGUEUR", fill="black", font=("Calibri", 12))
+		canvas.pack()
+
+		largeur = tk.Entry(canvas)
+		largeur.insert(0, "")
+		largeur.place(x=(WINDOW_SIZE[0]/5)*3, y=200)
+		canvas.create_text((WINDOW_SIZE[0]/5)*3+50, 180, text= "LARGEUR", fill="black", font=("Calibri", 12))
+		canvas.pack()
+
+		canvas.create_text((WINDOW_SIZE[0]/2), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 12))
+		canvas.pack()
+		qtite_jetons = tk.Entry(canvas)
+		qtite_jetons.insert(0, "")
+		qtite_jetons.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]/2+20)
+		
+
+	etape_suivante = tk.Button(canvas, text = "Etape suivante", bg = "white", font=("Calibri", 15), command = etape_suivante_perso)
+	etape_suivante.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
+	widgets.append(etape_suivante)
+
+	def dim_grille():
+		longueur.place_forget()
+		largeur.place_forget()
+		global longueur_grille
+		global largeur_grille
+		global GRID_DIMS
+		global GRID_POS
+		global GRID_SIZE
+		longueur_grille = int(longueur.get())
+		largeur_grille = int(largeur.get())
+		GRID_DIMS = ([longueur_grille, largeur_grille])
+
+	def executer_jeu_perso():
+		dim_grille()
+		game()
+
+
+
+
+
 
 
 
