@@ -15,6 +15,7 @@ import time
 from PIL import Image, ImageTk
 import random
 
+
 #Options
 
 COLOR_PALETTE          = {
@@ -148,6 +149,20 @@ def raycast(o_start, stride):
 
 	return count
 
+# Chargement / Sauvegarde
+
+def save(path):
+
+	out = open(path, "w")
+
+	for i in range(len(tokens_pos)):
+
+		out.write(canvas.itemcget(tokens_visu[i], "fill") + ";" + str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
+			    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + "\n")
+
+	out.close()
+
+
 #Jeu
 
 playing = True
@@ -162,6 +177,10 @@ def game_keys(event):
 
 	if event.keysym == "Escape":
 		retourner()
+	if event.keysym == "BackSpace":
+		annul_jeton()
+	if event.keysym == "s":
+		save("saved_games/test.game")
 
 matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
