@@ -117,7 +117,7 @@ def raycast(o_start, stride):
 		d'une même couleur touchés. 
 	'''
 
-	start = o_start.copy()
+	start = o_start.copy() # On copie o_start pour éviter de le modifier globalement
 
 	count = 1
 	other_token = False
@@ -131,14 +131,14 @@ def raycast(o_start, stride):
 		for i_ in range(len(tokens_pos)):
 			pos = tokens_pos[i_]
 			if ray[0] >= pos[0] and ray[0] <= pos[0] + SLOT_SIZE[0] \
-		   and ray[1] >= pos[1] and ray[1] <= pos[1] + SLOT_SIZE[1]:
+		   and ray[1] >= pos[1] and ray[1] <= pos[1] + SLOT_SIZE[1]: # <=> Si le rayon touche un jeton
 				current_color = canvas.itemcget(tokens_visu[i_], "fill")
 				found = True
 				break
 		if not found:
 			break
 		if i==0:
-			verifying = current_color
+			verifying = current_color # La couleur que l'on vérifie est la couleur du premier jeton touché par le rayon
 		elif current_color == verifying:
 			count += 1
 		else:
@@ -192,6 +192,8 @@ def game_clicks(event):
 			return # Un jeton obstrue le point d'apparition
 
 	turn = not turn
+
+	# Création d'un nouveau jeton
 
 	visu = oval(pos, SLOT_SIZE)
 
