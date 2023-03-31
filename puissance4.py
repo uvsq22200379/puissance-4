@@ -279,11 +279,11 @@ def game_clicks(event):
 	visu = oval(pos, SLOT_SIZE)
 
 	if turn:
-		canvas.itemconfig(visu, fill = "firebrick")
-		widgets[0]["text"] = "Au tour de " + player2
-	else:
-		canvas.itemconfig(visu, fill = "gold")
+		canvas.itemconfig(visu, fill = color_player1)
 		widgets[0]["text"] = "Au tour de " + player1
+	else:
+		canvas.itemconfig(visu, fill = color_player2)
+		widgets[0]["text"] = "Au tour de " + player2
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -426,12 +426,6 @@ def main_menu_visu():
 
 	font_size = int(WINDOW_SIZE[1]/23)
 	
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+50, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 15))
-	canvas.pack()
-
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2+80, text= "avant de commencer", fill="black", font=("Calibri", 15))
-	canvas.pack()
-
 	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="red", font=("Calibri bold", 50))
 	canvas.pack()
 
@@ -448,8 +442,6 @@ def main_menu_visu():
 		charger_jeu.place_forget()
 		quitter_jeu.place_forget()
 		jouer.place_forget()
-		saisie1.place_forget()
-		saisie2.place_forget()
 		instructions_jeu.place_forget()
 		canvas.create_text(WINDOW_SIZE[0]/2, 100, text= "Instructions:", fill="black", font=("Calibri", font_size))
 		canvas.create_text(WINDOW_SIZE[0]/2, 200, text= "-Pour mettre un jeton cliquez sur la colonne souhaitée", fill="black", font=("Calibri", 15))
@@ -464,10 +456,6 @@ def main_menu_visu():
 	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15), command = instructions)
 	instructions_jeu.place(x=300, y=250, anchor="nw")
 
-	couleurs = tk.Button(canvas, text = "Modif couleurs jetons", command = changer_couleurs)
-	couleurs.place(x=300, y=300,anchor="nw") 
-	widgets.append(couleurs)
-
 
 	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
 	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-100)
@@ -475,21 +463,10 @@ def main_menu_visu():
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-100)
 
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = game)
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = menu_perso_jeu)
 	jouer.place(x=300, y=150,anchor="nw") 
 
 
-	#zone de saisie pour que les joueurs rentrent leurs noms 
-	saisie1 = tk.Entry(canvas)
-	saisie1.insert(0, "Joueur 1")
-	saisie1.place(x=WINDOW_SIZE[0]/2-290, y=WINDOW_SIZE[1]/2+130)
-
-	saisie2 = tk.Entry(canvas)
-	saisie2.insert(0, "Joueur 2")
-	saisie2.place(x=WINDOW_SIZE[0]/2 +90, y=WINDOW_SIZE[1]/2+130)
-
-	widgets.append(saisie1)
-	widgets.append(saisie2)
 	widgets.append(jouer)
 	#widgets.append(retour)
 	#widgets.append(quitter_jeu)
@@ -557,31 +534,123 @@ def retourner():
 	delete_widgets()
 	root.after(1, main_menu)
 
-def changer_couleurs(): 
 
-	delete_widgets()
+
+def menu_perso_jeu():
 	canvas.delete("all")
+	delete_widgets()
 
-	vert = tk.Button(canvas, bg = "green", height= 2, width=4)
-	vert.place(x=300, y=150,anchor="nw") 
-	widgets.append(vert)
+	font_size = int(WINDOW_SIZE[1]/23)
 
-	rouge = tk.Button(canvas, bg = "red", height= 2, width=4)
-	rouge.place(x=350, y=150,anchor="nw") 
-	widgets.append(rouge)
+	play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 15), command = game)
+	play.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
+	widgets.append(play)
 
-	jaune = tk.Button(canvas, bg = "yellow", height= 2, width=4)
-	jaune.place(x=400, y=150,anchor="nw") 
-	widgets.append(jaune)
+	#zone de saisie pour que les joueurs rentrent leurs noms 
+	
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 15))
+	canvas.pack()
 
-	rose = tk.Button(canvas, bg = "pink", height= 2, width=4)
-	rose.place(x=450, y=150,anchor="nw") 
-	widgets.append(rose)
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5+20, text= "avant de commencer", fill="black", font=("Calibri", 15))
+	canvas.pack()
 
-	bleu = tk.Button(canvas, bg = "blue", height= 2, width=4)
-	bleu.place(x=500, y=150,anchor="nw") 
-	widgets.append(bleu)
+	saisie1 = tk.Entry(canvas)
+	saisie1.insert(0, "Joueur 1")
+	saisie1.place(x=WINDOW_SIZE[0]/5, y=WINDOW_SIZE[1]/4+25)
 
+	saisie2 = tk.Entry(canvas)
+	saisie2.insert(0, "Joueur 2")
+	saisie2.place(x=(WINDOW_SIZE[0]/5)*3, y=WINDOW_SIZE[1]/4+25)
+
+	widgets.append(saisie1)
+	widgets.append(saisie2)
+
+	canvas.create_text(WINDOW_SIZE[0]/2, (WINDOW_SIZE[1]/4)+100, text= "Veuillez choisir les couleurs de vos jetons", fill="black", font=("Calibri", 15))
+	canvas.pack()
+	
+	#Couleurs pour le joueur 1
+
+	def jeton_vert1():
+		global color_player1
+		color_player1 = "green"
+
+	vert1 = tk.Button(canvas, bg = "green", height= 2, width=4, command = jeton_vert1)
+	vert1.place(x=(WINDOW_SIZE[0]/5)-15, y=280,anchor="nw") 
+	widgets.append(vert1)
+
+	def jeton_rouge1():
+		global color_player1
+		color_player1 = "firebrick"
+
+	rouge1 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge1)
+	rouge1.place(x=(WINDOW_SIZE[0]/5)+ 40, y=280,anchor="nw") 
+	widgets.append(rouge1)
+	
+	def jeton_jaune1():
+		global color_player1
+		color_player1 = "gold"
+
+	jaune1 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune1)
+	jaune1.place(x=(WINDOW_SIZE[0]/5)+ 95, y=280,anchor="nw") 
+	widgets.append(jaune1)
+
+	def jeton_rose1():
+		global color_player1
+		color_player1 = "pink"
+
+	rose1 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose1)
+	rose1.place(x=(WINDOW_SIZE[0]/5)+15, y=330,anchor="nw") 
+	widgets.append(rose1)
+
+	def jeton_bleu1():
+		global color_player1
+		color_player1 = "blue"
+
+	bleu1 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu1)
+	bleu1.place(x=(WINDOW_SIZE[0]/5)+65, y=330,anchor="nw") 
+	widgets.append(bleu1)
+
+	#Couleurs pour le joueur 2
+
+	def jeton_vert2():
+		global color_player2
+		color_player2 = "green"
+	
+	vert2 = tk.Button(canvas, bg = "green", height= 2, width=4, command = jeton_vert2)
+	vert2.place(x=((WINDOW_SIZE[0]/5)*3)-15, y=280,anchor="nw") 
+	widgets.append(vert2)
+
+	def jeton_rouge2():
+		global color_player2
+		color_player2 = "firebrick"
+	
+	rouge2 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge2)
+	rouge2.place(x=((WINDOW_SIZE[0]/5)*3)+ 40, y=280,anchor="nw") 
+	widgets.append(rouge2)
+
+	def jeton_jaune2():
+		global color_player2
+		color_player2 = "gold"
+
+	jaune2 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune2)
+	jaune2.place(x=((WINDOW_SIZE[0]/5)*3)+ 95, y=280,anchor="nw") 
+	widgets.append(jaune2)
+
+	def jeton_rose2():
+		global color_player2
+		color_player2 = "pink"
+
+	rose2 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose2)
+	rose2.place(x=((WINDOW_SIZE[0]/5)*3)+15, y=330,anchor="nw") 
+	widgets.append(rose2)
+
+	def jeton_bleu2():
+		global color_player2
+		color_player2 = "blue"
+
+	bleu2 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu2)
+	bleu2.place(x=((WINDOW_SIZE[0]/5)*3)+65, y=330,anchor="nw") 
+	widgets.append(bleu2)
 
 
 
