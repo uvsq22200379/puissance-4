@@ -63,7 +63,7 @@ logo_image = Image.open("puiss4nce.jpg") # Logo de l'écran de démarrage
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
-image_play=Image.open("background.jpg")
+image_play=Image.open("background.jpg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
 fade_delay = 1500
@@ -75,25 +75,47 @@ player2 = ""
 
 #Outils
 
+# Fonctions permettant d'utiliser des tableaux numpy 1x2 (Vecteurs) pour créer des formes
 def rectangle(pos, size):
+	'''
+		Retourne l'id tkinter d'un rectangle dont le côté supérieur gauche est à "pos" et qui mesure "size".
+	'''
 	return canvas.create_rectangle(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
 def oval(pos, size):
+	'''
+		Retourne l'id tkinter de l'oval inscrit dans le rectangle dont le point supérieur gauche est à "pos" et qui mesure "size"
+	'''
 	oval = canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], width = 0)
 	canvas.lower(oval) # On dessine les ovales derrière les images
 	return oval
 def create_slot(pos):
+	'''
+		Crée une case de puissance quatre à pos
+	'''
 	pos += SLOT_SIZE/2
 	slot = canvas.create_image(pos[0], pos[1], image = slot_imagetk)
 	canvas.tkraise(slot) # On dessine les images devant les ovales
 	return slot
 def set_pos(obj, pos, size):
+	'''
+		Change la position et la taille d'un item du canvas
+	'''
 	canvas.coords(obj, pos[0], pos[1], pos[0] + size[0], pos[1] + size[1])
+
 def delete_widgets():
+	'''
+		Supprime tous les widgets
+	'''
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
 	widgets.clear()
 
 def raycast(o_start, stride):
+	'''
+		Lance un "rayon" de "o_start" jusqu'à 4*"stride" avec un pas de "stride" s'intérompant
+		lorsqu'il tombe sur un jeton d'une couleur différente et renvoie le nombre de jetons 
+		d'une même couleur touchés. 
+	'''
 
 	start = o_start.copy()
 
@@ -132,6 +154,10 @@ playing = True
 turn = False #False : Jeton jaune / True : Jeton rouge
 
 def game_keys(event):
+	'''
+		Gère les entrées clavier lorsque le jeu tourne
+	'''
+
 	global playing
 
 	if event.keysym == "Escape":
@@ -140,6 +166,10 @@ def game_keys(event):
 matrice_base = np.zeros([GRID_DIMS[1],GRID_DIMS[0]]) #crée une matrice représentant la grille
 
 def game_clicks(event):
+	'''
+		Gère les cliques lorsque le jeu tourne
+	'''
+
 	global turn
 	global click_time
 	global player1
@@ -191,6 +221,10 @@ def game_clicks(event):
 	click_time = time.time()
 
 def game_physics():
+	'''
+		Comportement physique des jetons (gravité, rebonds et collisions)
+	'''
+
 	global playing
 
 	for i in range(len(tokens_pos)):
@@ -237,9 +271,11 @@ def game_physics():
 		root.after(int(1000/60), game_physics)
 
 
-# définir le joueur qui commence, de manière aléatoire 
 
 def game_visu():
+	'''
+		Crée les widgets et la grille du jeu
+	'''
 
 	canvas.delete("all")
 
@@ -256,6 +292,10 @@ def game_visu():
 #
 
 def game():
+	'''
+		Initialisation du jeu
+	'''
+
 	global playing
 	global turn
 
@@ -269,6 +309,9 @@ def game():
 #Menu principal
 
 def main_menu_clicks():
+	'''
+		Gère les cliques du menu principal
+	'''
 	global player1
 	global player2
 
@@ -280,6 +323,9 @@ def main_menu_clicks():
 	root.after(1, game)
 
 def main_menu_visu():
+	'''
+		Crée les widgets du menu principal
+	'''
 
 	canvas.delete("all")
 
@@ -304,6 +350,9 @@ def main_menu_visu():
 	#fonction qui explique les instructions dans une nouvelle fenêtre
 
 	def instructions():
+		'''
+			Montre les instructions de jeu
+		'''
 		canvas.delete("all")
 		charger_jeu.place_forget()
 		quitter_jeu.place_forget()
@@ -354,8 +403,9 @@ def main_menu_visu():
 	
 
 def main_menu():
-
-	#fonctions préliminaires au menu principal
+	'''
+		fonctions préliminaires au menu principal
+	'''
 
 	main_menu_visu()
 
@@ -366,6 +416,10 @@ fade = rectangle((0, 0), WINDOW_SIZE)
 canvas.itemconfig(fade, fill = "")
 
 def process_fade():
+	'''
+		Gère le dégradé du menu de lancement.
+	'''
+
 	global fade
 	
 	root.after(0, lambda : canvas.itemconfig(fade, fill = "black", stipple = "gray12"))
@@ -385,9 +439,15 @@ root.after(fade_delay, process_fade)
 #main_menu()
 
 def quitter():
+	'''
+		Inutile...
+	'''
 	root.destroy()
 
 def retourner():
+	'''
+		Retourne au menu principal
+	'''
 	global playing
 	global turn
 
