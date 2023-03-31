@@ -74,6 +74,8 @@ fade_duration = 500
 player1 = ""
 player2 = ""
 
+color_player1 = ""
+color_player2 = ""
 
 #Outils
 
@@ -228,7 +230,7 @@ def game_physics(): # On ajoute du mouvement à la création des jetons (pas seu
 				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
 				if horiz >= 4 or verti >= 4 or diag1 >= 4 or diag2 >= 4:
-					print("Victoire !!!")
+					canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2, text= "VICTOIRE!", fill="white", font=("Calibri bold", 23))
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
@@ -298,6 +300,7 @@ def main_menu_visu():
 	charger_jeu=tk.Button(canvas,text="Charger", fg="black", font = ("Calibri bold", 15))
 	charger_jeu.place(x=300, y=200,anchor="nw")
 
+
 	def instructions():
 		canvas.delete("all")
 		charger_jeu.place_forget()
@@ -316,6 +319,11 @@ def main_menu_visu():
 
 	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15), command = instructions)
 	instructions_jeu.place(x=300, y=250, anchor="nw")
+
+	couleurs = tk.Button(canvas, text = "Modif couleurs jetons", command = changer_couleurs)
+	couleurs.place(x=300, y=300,anchor="nw") 
+	widgets.append(couleurs)
+
 
 	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
 	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-100)
@@ -394,5 +402,35 @@ def retourner():
 	delete_widgets()
 	root.after(1, main_menu)
 
-			
+def changer_couleurs(): 
+
+	delete_widgets()
+	canvas.delete("all")
+
+	vert = tk.Button(canvas, bg = "green", height= 2, width=4)
+	vert.place(x=300, y=150,anchor="nw") 
+	widgets.append(vert)
+
+	rouge = tk.Button(canvas, bg = "red", height= 2, width=4)
+	rouge.place(x=350, y=150,anchor="nw") 
+	widgets.append(rouge)
+
+	jaune = tk.Button(canvas, bg = "yellow", height= 2, width=4)
+	jaune.place(x=400, y=150,anchor="nw") 
+	widgets.append(jaune)
+
+	rose = tk.Button(canvas, bg = "pink", height= 2, width=4)
+	rose.place(x=450, y=150,anchor="nw") 
+	widgets.append(rose)
+
+	bleu = tk.Button(canvas, bg = "blue", height= 2, width=4)
+	bleu.place(x=500, y=150,anchor="nw") 
+	widgets.append(bleu)
+
+
+
+
+
+
+
 root.mainloop()
