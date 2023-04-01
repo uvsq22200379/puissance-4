@@ -65,8 +65,9 @@ logo_image = Image.open("puiss4nce.jpg") # Logo de l'écran de démarrage
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
-image_play=Image.open("background.jpg") # Fond d'écran du menu principal
+image_play=Image.open("nv fond d'écran.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
+
 
 fade_delay = 1500
 fade_duration = 500
@@ -349,8 +350,8 @@ def game_physics():
 
 				if horiz >= 4 or verti >= 4 or diag1 >= 4 or diag2 >= 4:
 					print("Victoire !!!")
-					widgets.append(tk.Label(canvas, text = "Victoire"))
-					widgets[-1].place(x=10,y=10)
+					widgets.append(tk.Label(canvas, text = "Victoire", fg="red", font=("Calibri", 30), bg="white"))
+					widgets[-1].place(x=10,y=270)
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
@@ -374,7 +375,7 @@ def game_visu():
 	turn_info.place(x = 10, y = 10)
 
 	widgets.append(turn_info)
-	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
+	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 15), command = annul_jeton))
 	widgets[-1].place(x = int(7 * WINDOW_SIZE[0]/10), y = 10)
 
 #
@@ -420,7 +421,7 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
-	canvas.create_image(0,200, image = image_play_tk)
+	canvas.create_image(0,0, image = image_play_tk)
 
 	#instruction pour les joueurs, boutons du menu principal 
 
