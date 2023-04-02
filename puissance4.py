@@ -38,6 +38,7 @@ SLOT_SIZE              = GRID_SIZE / GRID_DIMS
 TOKEN_BOX              = SLOT_SIZE * 4/5
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
 GRAVITY                = 2
+nombre_jetons_gagnant  = 4
 
 #Variables globales
 
@@ -126,6 +127,8 @@ def raycast(o_start, stride):
 		d'une même couleur touchés. 
 	'''
 
+	global nombre_jetons_gagnant
+
 	start = o_start.copy() # On copie o_start pour éviter de le modifier globalement
 
 	count = 1
@@ -133,7 +136,7 @@ def raycast(o_start, stride):
 	ray = start
 	verifying = ""
 
-	for i in range(4):
+	for i in range(nombre_jetons_gagnant):
 
 		current_color = ""
 		found = False
@@ -316,6 +319,7 @@ def game_physics():
 	'''
 
 	global playing
+	global nombre_jetons_gagnant
 
 	for i in range(len(tokens_pos)):
 
@@ -349,7 +353,7 @@ def game_physics():
 				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
 				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
-				if horiz >= 4 or verti >= 4 or diag1 >= 4 or diag2 >= 4:
+				if horiz >= nombre_jetons_gagnant or verti >= nombre_jetons_gagnant or diag1 >= nombre_jetons_gagnant or diag2 >= nombre_jetons_gagnant:
 					print("Victoire !!!")
 					widgets.append(tk.Label(canvas, text = "Victoire", fg="red", font=("Calibri", 30), bg="white"))
 					widgets[-1].place(x=10,y=270)
@@ -660,6 +664,7 @@ def menu_perso_jeu():
 
 		global longueur
 		global largeur
+		global nombre_jetons_gagnant
 
 		canvas.delete("all")
 		delete_widgets()
@@ -687,10 +692,18 @@ def menu_perso_jeu():
 		canvas.create_text((WINDOW_SIZE[0]/2), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 12))
 		canvas.pack()
 		qtite_jetons = tk.Entry(canvas)
-		qtite_jetons.insert(0, "")
+		qtite_jetons.insert(0, "4")
 		qtite_jetons.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]/2+20)
-		
 
+		def jetons_gagnant():
+			global nombre_jetons_gagnant
+			nombre_jetons_gagnant = int(qtite_jetons.get())
+
+		sauvegarder_preferences = tk.Button(canvas, text = "Sauvegarder vos choix", bg = "white", font=("Calibri", 15), command = jetons_gagnant)
+		sauvegarder_preferences.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-350,anchor="nw") 
+		widgets.append(sauvegarder_preferences)
+
+				
 	etape_suivante = tk.Button(canvas, text = "Etape suivante", bg = "white", font=("Calibri", 15), command = etape_suivante_perso)
 	etape_suivante.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
 	widgets.append(etape_suivante)
@@ -711,7 +724,6 @@ def menu_perso_jeu():
 		GRID_POS[0] = WINDOW_SIZE[0]/2 - GRID_SIZE[0]/2
 		GRID_POS[1] = WINDOW_SIZE[1]/2 - GRID_SIZE[1]/2
 
-	
 	def executer_jeu_perso():
 		dim_grille()
 		game()
