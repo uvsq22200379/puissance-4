@@ -30,6 +30,7 @@ WINDOW_SIZE            = np.array([700, 600])
 BACKGROUND             = COLOR_PALETTE["Cyan"]
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
+
 GRID_SIZE              = WINDOW_SIZE / 2
 longueur               = 0
 largeur                = 0
@@ -256,14 +257,14 @@ def game_clicks(event):
 	global click_time
 	global player1
 	global player2
-	global matrice_base
+	global GRID_SIZE
 
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
 	
 	pos = np.array((GRID_POS[0] + SLOT_SIZE[0] * int((event.x - GRID_POS[0])/SLOT_SIZE[0]), GRID_POS[1] - SLOT_SIZE[1])) # On met le jeton dans la bonne colonne
-	
+
 	for t in tokens_pos:
 		if pos[0] + SLOT_SIZE[0] <= t[0]\
 		or pos[0] >= t[0] + SLOT_SIZE[0]\
@@ -536,8 +537,10 @@ def retourner():
 	root.after(1, main_menu)
 
 
-
 def menu_perso_jeu():
+	'''
+		Menu avec pour modifier/personnaliser le jeu avant de commencer
+	'''
 
 	global GRID_POS
 	global GRID_SIZE
@@ -703,16 +706,15 @@ def menu_perso_jeu():
 		longueur_grille = int(longueur.get())
 		largeur_grille = int(largeur.get())
 		GRID_DIMS = ([longueur_grille, largeur_grille])
+		GRID_SIZE[0]= longueur_grille*50
+		GRID_SIZE[1]=largeur_grille*50
+		GRID_POS[0] = WINDOW_SIZE[0]/2 - GRID_SIZE[0]/2
+		GRID_POS[1] = WINDOW_SIZE[1]/2 - GRID_SIZE[1]/2
 
+	
 	def executer_jeu_perso():
 		dim_grille()
 		game()
-
-
-
-
-
-
 
 
 
