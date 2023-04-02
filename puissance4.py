@@ -285,10 +285,10 @@ def game_clicks(event):
 
 	if turn:
 		canvas.itemconfig(visu, fill = color_player1)
-		widgets[0]["text"] = "Au tour de " + player1
+		widgets[0]["text"] = "Au tour de " + player2
 	else:
 		canvas.itemconfig(visu, fill = color_player2)
-		widgets[0]["text"] = "Au tour de " + player2
+		widgets[0]["text"] = "Au tour de " + player1
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -376,12 +376,12 @@ def game_visu():
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
 			create_slot((x, y) * SLOT_SIZE + GRID_POS)
 
-	turn_info = tk.Label(canvas, text = "Au tour de Joueur " + str(1 + int(turn)), font = ("Comic Sans MS", WINDOW_SIZE[1]//16), bg = BACKGROUND)
+	turn_info = tk.Label(canvas, text = "Au tour de Joueur " + str(1 + int(turn)), font = ("Comic Sans MS", WINDOW_SIZE[1]//20), bg = BACKGROUND)
 	turn_info.place(x = 10, y = 10)
 
 	widgets.append(turn_info)
-	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 15), command = annul_jeton))
-	widgets[-1].place(x = int(7 * WINDOW_SIZE[0]/10), y = 10)
+	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
+	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
 
 #
 
@@ -463,11 +463,11 @@ def main_menu_visu():
 	instructions_jeu.place(x=300, y=250, anchor="nw")
 
 
-	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
-	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-100)
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 12), command = quitter)
+	quitter_jeu.place(x=WINDOW_SIZE[0]-80, y=WINDOW_SIZE[1]-50)
 
-	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 15), command = retourner)
-	retour.place(x=25, y=WINDOW_SIZE[1]-100)
+	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 12), command = retourner)
+	retour.place(x=25, y=WINDOW_SIZE[1]-50)
 
 	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = menu_perso_jeu)
 	jouer.place(x=300, y=150,anchor="nw") 
@@ -570,6 +570,14 @@ def menu_perso_jeu():
 	saisie2.insert(0, "Joueur 2")
 	saisie2.place(x=(WINDOW_SIZE[0]/5)*3, y=WINDOW_SIZE[1]/4+25)
 
+	def noms_joueurs():
+		global player1
+		global player2
+		player1 = saisie1.get()
+		player2 = saisie2.get()
+
+	player2 = saisie2.get()
+
 	widgets.append(saisie1)
 	widgets.append(saisie2)
 
@@ -668,9 +676,10 @@ def menu_perso_jeu():
 
 		canvas.delete("all")
 		delete_widgets()
+		noms_joueurs()
 
-		play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 15), command = executer_jeu_perso)
-		play.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
+		play = tk.Button(canvas, text = "PL4Y", bg = "white", font=("Calibri", 15), command = executer_jeu_perso)
+		play.place(x=WINDOW_SIZE[0]/2-25, y=WINDOW_SIZE[1]-150,anchor="nw") 
 		widgets.append(play)
 		
 		canvas.create_text((WINDOW_SIZE[0]/2), 150, text= "Veuillez entrer les dimensions souhaitées de votre grille", fill="black", font=("Calibri", 15))
@@ -694,18 +703,20 @@ def menu_perso_jeu():
 		qtite_jetons = tk.Entry(canvas)
 		qtite_jetons.insert(0, "4")
 		qtite_jetons.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]/2+20)
+		widgets.append(qtite_jetons)
+
 
 		def jetons_gagnant():
 			global nombre_jetons_gagnant
 			nombre_jetons_gagnant = int(qtite_jetons.get())
 
-		sauvegarder_preferences = tk.Button(canvas, text = "Sauvegarder vos choix", bg = "white", font=("Calibri", 15), command = jetons_gagnant)
-		sauvegarder_preferences.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-350,anchor="nw") 
+		sauvegarder_preferences = tk.Button(canvas, text = "Sauvegardez vos choix !", bg = "white", font=("Calibri", 12), command = jetons_gagnant)
+		sauvegarder_preferences.place(x=WINDOW_SIZE[0]/2-65, y=WINDOW_SIZE[1]/2+75,anchor="nw") 
 		widgets.append(sauvegarder_preferences)
 
 				
-	etape_suivante = tk.Button(canvas, text = "Etape suivante", bg = "white", font=("Calibri", 15), command = etape_suivante_perso)
-	etape_suivante.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]-150,anchor="nw") 
+	etape_suivante = tk.Button(canvas, text = "Etape suivante", bg = "white", font=("Calibri", 12), command = etape_suivante_perso)
+	etape_suivante.place(x=WINDOW_SIZE[0]/2-55, y=WINDOW_SIZE[1]-200,anchor="nw") 
 	widgets.append(etape_suivante)
 
 	def dim_grille():
@@ -727,9 +738,6 @@ def menu_perso_jeu():
 	def executer_jeu_perso():
 		dim_grille()
 		game()
-
-
-
 
 
 root.mainloop()
