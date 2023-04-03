@@ -70,7 +70,6 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 image_play=Image.open("nv fond d'écran.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
-
 fade_delay = 1500
 fade_duration = 500
 
@@ -426,7 +425,8 @@ def main_menu_visu():
 
 	canvas.delete("all")
 
-	canvas.create_image(0,0, image = image_play_tk)
+	canvas.create_image(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2, image=image_play_tk)
+	#canvas.create_image(0,0, image = image_play_tk)
 
 	#instruction pour les joueurs, boutons du menu principal 
 
