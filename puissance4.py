@@ -432,11 +432,11 @@ def main_menu_visu():
 
 	font_size = int(WINDOW_SIZE[1]/23)
 	
-	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="red", font=("Calibri bold", 50))
+	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="red", font=("Copperplate", 50))
 	canvas.pack()
 
-	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Calibri bold", 15), command = lambda: launch_load("saved_games/test.game"))
-	charger_jeu.place(x=300, y=200,anchor="nw")
+	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Calibri bold", 25), command = lambda: launch_load("saved_games/test.game"))
+	charger_jeu.place(x=WINDOW_SIZE[0]/2 -60, y=300,anchor="nw")
 
 	#fonction qui explique les instructions dans une nouvelle fenêtre
 
@@ -459,18 +459,18 @@ def main_menu_visu():
 
 	#nouveaux boutons au menu principal 
 
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 15), command = instructions)
-	instructions_jeu.place(x=300, y=250, anchor="nw")
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Calibri bold", 25), command = instructions)
+	instructions_jeu.place(x=WINDOW_SIZE[0]/2-78, y=350, anchor="nw")
 
 
 	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 12), command = quitter)
-	quitter_jeu.place(x=WINDOW_SIZE[0]-80, y=WINDOW_SIZE[1]-50)
+	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-50)
 
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 12), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
 
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 15), command = menu_perso_jeu)
-	jouer.place(x=300, y=150,anchor="nw") 
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 25), command = menu_perso_jeu)
+	jouer.place(x=300, y=250,anchor="nw") 
 
 
 	widgets.append(jouer)
