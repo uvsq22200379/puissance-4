@@ -556,10 +556,10 @@ def menu_perso_jeu():
 
 	#Zone de saisie pour que les joueurs rentrent leurs noms 
 	
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 15))
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 20))
 	canvas.pack()
 
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5+20, text= "avant de commencer", fill="black", font=("Calibri", 15))
+	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5+20, text= "avant de commencer", fill="black", font=("Calibri", 20))
 	canvas.pack()
 
 	saisie1 = tk.Entry(canvas)
@@ -581,7 +581,7 @@ def menu_perso_jeu():
 	widgets.append(saisie1)
 	widgets.append(saisie2)
 
-	canvas.create_text(WINDOW_SIZE[0]/2, (WINDOW_SIZE[1]/4)+100, text= "Veuillez choisir les couleurs de vos jetons", fill="black", font=("Calibri", 15))
+	canvas.create_text(WINDOW_SIZE[0]/2, (WINDOW_SIZE[1]/4)+100, text= "Veuillez choisir les couleurs de vos jetons", fill="black", font=("Calibri", 17))
 	canvas.pack()
 	
 	#Couleurs pour le joueur 1
@@ -678,31 +678,31 @@ def menu_perso_jeu():
 		delete_widgets()
 		noms_joueurs()
 
-		play = tk.Button(canvas, text = "PL4Y", bg = "white", font=("Calibri", 15), command = executer_jeu_perso)
+		play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 23), command = executer_jeu_perso)
 		play.place(x=WINDOW_SIZE[0]/2-25, y=WINDOW_SIZE[1]-150,anchor="nw") 
 		widgets.append(play)
 		
-		canvas.create_text((WINDOW_SIZE[0]/2), 150, text= "Veuillez entrer les dimensions souhaitées de votre grille", fill="black", font=("Calibri", 15))
+		canvas.create_text((WINDOW_SIZE[0]/2), 130, text= "Veuillez entrer les dimensions souhaitées de votre grille", fill="black", font=("Calibri", 17))
 		canvas.pack()
 
 		global GRID_DIMS
 		longueur = tk.Entry(canvas)
 		longueur.insert(0, "")
 		longueur.place(x=WINDOW_SIZE[0]/5, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5+50), 180, text= "LONGUEUR", fill="black", font=("Calibri", 12))
+		canvas.create_text((WINDOW_SIZE[0]/5+50), 180, text= "LONGUEUR", fill="#efbd20", font=("Calibri", 14))
 		canvas.pack()
 
 		largeur = tk.Entry(canvas)
 		largeur.insert(0, "")
 		largeur.place(x=(WINDOW_SIZE[0]/5)*3, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5)*3+50, 180, text= "LARGEUR", fill="black", font=("Calibri", 12))
+		canvas.create_text((WINDOW_SIZE[0]/5)*3+50, 180, text= "LARGEUR", fill="#efbd20", font=("Calibri", 14))
 		canvas.pack()
 
-		canvas.create_text((WINDOW_SIZE[0]/2), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 12))
+		canvas.create_text((WINDOW_SIZE[0]/2), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 15))
 		canvas.pack()
 		qtite_jetons = tk.Entry(canvas)
 		qtite_jetons.insert(0, "4")
-		qtite_jetons.place(x=WINDOW_SIZE[0]/2-50, y=WINDOW_SIZE[1]/2+20)
+		qtite_jetons.place(x=WINDOW_SIZE[0]/2-75, y=WINDOW_SIZE[1]/2+20)
 		widgets.append(qtite_jetons)
 
 
