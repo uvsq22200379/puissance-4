@@ -591,7 +591,7 @@ def menu_perso_jeu():
 		color_player1 = "green"
 
 	vert1 = tk.Button(canvas, bg = "green", height= 2, width=4, command = jeton_vert1)
-	vert1.place(x=(WINDOW_SIZE[0]/5)-15, y=280,anchor="nw") 
+	vert1.place(x=(WINDOW_SIZE[0]/5)-60, y=280,anchor="nw") 
 	widgets.append(vert1)
 
 	def jeton_rouge1():
@@ -599,7 +599,7 @@ def menu_perso_jeu():
 		color_player1 = "firebrick"
 
 	rouge1 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge1)
-	rouge1.place(x=(WINDOW_SIZE[0]/5)+ 40, y=280,anchor="nw") 
+	rouge1.place(x=(WINDOW_SIZE[0]/5)+18, y=280,anchor="nw") 
 	widgets.append(rouge1)
 	
 	def jeton_jaune1():
@@ -607,7 +607,7 @@ def menu_perso_jeu():
 		color_player1 = "gold"
 
 	jaune1 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune1)
-	jaune1.place(x=(WINDOW_SIZE[0]/5)+ 95, y=280,anchor="nw") 
+	jaune1.place(x=(WINDOW_SIZE[0]/5)+ 97, y=280,anchor="nw") 
 	widgets.append(jaune1)
 
 	def jeton_rose1():
@@ -615,7 +615,7 @@ def menu_perso_jeu():
 		color_player1 = "pink"
 
 	rose1 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose1)
-	rose1.place(x=(WINDOW_SIZE[0]/5)+15, y=330,anchor="nw") 
+	rose1.place(x=(WINDOW_SIZE[0]/5)-22, y=330,anchor="nw") 
 	widgets.append(rose1)
 
 	def jeton_bleu1():
@@ -623,7 +623,7 @@ def menu_perso_jeu():
 		color_player1 = "blue"
 
 	bleu1 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu1)
-	bleu1.place(x=(WINDOW_SIZE[0]/5)+65, y=330,anchor="nw") 
+	bleu1.place(x=(WINDOW_SIZE[0]/5)+58, y=330,anchor="nw") 
 	widgets.append(bleu1)
 
 	#Couleurs pour le joueur 2
@@ -641,7 +641,7 @@ def menu_perso_jeu():
 		color_player2 = "firebrick"
 	
 	rouge2 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge2)
-	rouge2.place(x=((WINDOW_SIZE[0]/5)*3)+ 40, y=280,anchor="nw") 
+	rouge2.place(x=((WINDOW_SIZE[0]/5)*3)+ 63, y=280,anchor="nw") 
 	widgets.append(rouge2)
 
 	def jeton_jaune2():
@@ -649,7 +649,7 @@ def menu_perso_jeu():
 		color_player2 = "gold"
 
 	jaune2 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune2)
-	jaune2.place(x=((WINDOW_SIZE[0]/5)*3)+ 95, y=280,anchor="nw") 
+	jaune2.place(x=((WINDOW_SIZE[0]/5)*3)+ 142, y=280,anchor="nw") 
 	widgets.append(jaune2)
 
 	def jeton_rose2():
@@ -657,7 +657,7 @@ def menu_perso_jeu():
 		color_player2 = "pink"
 
 	rose2 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose2)
-	rose2.place(x=((WINDOW_SIZE[0]/5)*3)+15, y=330,anchor="nw") 
+	rose2.place(x=((WINDOW_SIZE[0]/5)*3)+20, y=330,anchor="nw") 
 	widgets.append(rose2)
 
 	def jeton_bleu2():
@@ -665,7 +665,7 @@ def menu_perso_jeu():
 		color_player2 = "blue"
 
 	bleu2 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu2)
-	bleu2.place(x=((WINDOW_SIZE[0]/5)*3)+65, y=330,anchor="nw") 
+	bleu2.place(x=((WINDOW_SIZE[0]/5)*3)+100, y=330,anchor="nw") 
 	widgets.append(bleu2)
 
 	def etape_suivante_perso():
@@ -688,17 +688,17 @@ def menu_perso_jeu():
 		global GRID_DIMS
 		longueur = tk.Entry(canvas)
 		longueur.insert(0, "")
-		longueur.place(x=WINDOW_SIZE[0]/5, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5+50), 180, text= "LONGUEUR", fill="#efbd20", font=("Calibri", 14))
+		longueur.place(x=WINDOW_SIZE[0]/7, y=200)
+		canvas.create_text((WINDOW_SIZE[0]/5+55), 180, text= "LONGUEUR", fill="blue2", font=("Calibri", 14))
 		canvas.pack()
 
 		largeur = tk.Entry(canvas)
 		largeur.insert(0, "")
 		largeur.place(x=(WINDOW_SIZE[0]/5)*3, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5)*3+50, 180, text= "LARGEUR", fill="#efbd20", font=("Calibri", 14))
+		canvas.create_text((WINDOW_SIZE[0]/5+15)*3+50, 180, text= "LARGEUR", fill="blue2", font=("Calibri", 14))
 		canvas.pack()
 
-		canvas.create_text((WINDOW_SIZE[0]/2), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 15))
+		canvas.create_text((WINDOW_SIZE[0]/2+24), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 15))
 		canvas.pack()
 		qtite_jetons = tk.Entry(canvas)
 		qtite_jetons.insert(0, "4")
