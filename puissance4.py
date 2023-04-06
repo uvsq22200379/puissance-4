@@ -29,7 +29,7 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "#3030CF"
+BACKGROUND             = "#3030cf"
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
@@ -87,7 +87,7 @@ def oval(pos, size):
 	'''
 		Retourne l'id tkinter de l'oval inscrit dans le rectangle dont le point supérieur gauche est à "pos" et qui mesure "size"
 	'''
-	oval = canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], width = 0)
+	oval = canvas.create_oval(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], width = 0, fill = "red")
 	canvas.lower(oval) # On dessine les ovales derrière les images
 	return oval
 def create_slot(pos):
@@ -109,7 +109,7 @@ def delete_widgets():
 		Supprime tous les widgets
 	'''
 	
-	canvas.delete("all")
+	#canvas.delete("all")
 
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
@@ -161,6 +161,8 @@ def save(path):
 
 	out = open(path, "w")
 
+	out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
+
 	for i in range(len(tokens_pos)):
 
 		out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
@@ -170,14 +172,43 @@ def save(path):
 
 def load(path):
 
+	global COLOR_PLAYER_1
+	global COLOR_PLAYER_2
+	global SLOT_SIZE
+	global GRID_DIMS
+	global slot_image
+	global slot_imagetk
+
 	inn = open(path, "r")
 
+	def_color = 0
+
+	header = True
 	reading = True
 	while reading:
 		
 		line = inn.readline()
 
-		if line:
+		if line and header:
+			buffer = ""
+			step = 0
+
+			for c in line:
+				if c == ";":
+					GRID_DIMS[step] = int(buffer)
+					buffer = ""
+					step += 1
+				else:
+					buffer += c
+
+			header = False
+
+			SLOT_SIZE = GRID_SIZE / GRID_DIMS
+
+			slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
+			slot_imagetk = ImageTk.PhotoImage(slot_image)
+
+		elif line:
 			
 			buffer = ""
 			phase = 0
@@ -196,9 +227,16 @@ def load(path):
 					elif phase == 4:
 						is_static.append(bool(buffer))
 					elif phase == 5:
+						oval((0, 0), (100, 100))
 						visu = oval(tokens_pos[-1], SLOT_SIZE)
 						canvas.itemconfig(visu, fill = buffer)
 						tokens_visu.append(visu)
+
+						if def_color == 0:
+							COLOR_PLAYER_1 = buffer
+							def_color += 1
+						elif def_color == 1 and buffer != COLOR_PLAYER_1:
+							COLOR_PLAYER_2 = buffer
 
 					phase += 1
 					buffer = ""
@@ -208,14 +246,12 @@ def load(path):
 		else:
 			reading = False
 
-		print()
-
 	inn.close()
 
 def launch_load(path):
 	delete_widgets()
 
-	root.after(10, load(path))
+	load(path)
 	root.after(1, game)
 
 #Jeu
@@ -376,6 +412,8 @@ def game_visu():
 	widgets.append(turn_info)
 	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
+	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save("saved_games/test.game")))
+	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 #
 
@@ -383,8 +421,18 @@ def game():
 	'''
 		Initialisation du jeu
 	'''
+	global tokens_visu
+
+	colors_copy = []
+	for e in tokens_visu:
+		colors_copy.append(canvas.itemcget(e, "fill"))
+
 	canvas.delete("all")
 	delete_widgets()
+	tokens_visu.clear()
+	for i in range(len(colors_copy)):
+		tokens_visu.append(oval(tokens_pos[i], SLOT_SIZE))
+		canvas.itemconfig(tokens_visu[-1], fill = colors_copy[i])
 
 	global playing
 	global turn
@@ -432,6 +480,7 @@ def main_menu_visu():
 		'''
 			Montre les instructions de jeu
 		'''
+		delete_widgets()
 		canvas.delete("all")
 		charger_jeu.place_forget()
 		quitter_jeu.place_forget()
