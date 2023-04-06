@@ -16,8 +16,10 @@ from PIL import Image, ImageTk
 import random
 
 
-#Options
+#Variables globales
 
+
+#Options
 COLOR_PALETTE          = {
 	"Red" : "#f63f34",
 	"Yellow" : "#efbd20",
@@ -27,21 +29,21 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = COLOR_PALETTE["Cyan"]
+BACKGROUND             = "#3030CF"
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
-
 GRID_SIZE              = WINDOW_SIZE / 2
-longueur               = 0
-largeur                = 0
 SLOT_SIZE              = GRID_SIZE / GRID_DIMS
 TOKEN_BOX              = SLOT_SIZE * 4/5
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
 GRAVITY                = 2
-nombre_jetons_gagnant  = 4
+WINNING_STREAK         = 4
+NAME_PLAYER_1          = "Turing"
+NAME_PLAYER_2          = "Conway"
+COLOR_PLAYER_1         = COLOR_PALETTE["Red"]
+COLOR_PLAYER_2         = COLOR_PALETTE["Yellow"]
 
-#Variables globales
-
+#Visual
 root = tk.Tk()
 root.geometry(str(WINDOW_SIZE[0])+'x'+str(WINDOW_SIZE[1]) + "+0+0")
 root.title("Puissance 4")
@@ -67,17 +69,11 @@ logo_image = Image.open("puiss4nce.jpg") # Logo de l'écran de démarrage
 logo_image = logo_image.resize(np.array(WINDOW_SIZE, dtype=int))
 logo_imagetk = ImageTk.PhotoImage(logo_image)
 
-image_play=Image.open("nv fond d'écran.jpeg") # Fond d'écran du menu principal
+image_play=Image.open("background.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
 fade_delay = 1500
 fade_duration = 500
-
-player1 = ""
-player2 = ""
-
-color_player1 = ""
-color_player2 = ""
 
 #Outils
 
@@ -126,7 +122,7 @@ def raycast(o_start, stride):
 		d'une même couleur touchés. 
 	'''
 
-	global nombre_jetons_gagnant
+	global WINNING_STREAK
 
 	start = o_start.copy() # On copie o_start pour éviter de le modifier globalement
 
@@ -135,7 +131,7 @@ def raycast(o_start, stride):
 	ray = start
 	verifying = ""
 
-	for i in range(nombre_jetons_gagnant):
+	for i in range(WINNING_STREAK):
 
 		current_color = ""
 		found = False
@@ -217,12 +213,6 @@ def load(path):
 	inn.close()
 
 def launch_load(path):
-	global player1
-	global player2
-
-	player1 = widgets[0].get()
-	player2 = widgets[1].get()
-
 	delete_widgets()
 
 	root.after(10, load(path))
@@ -257,8 +247,8 @@ def game_clicks(event):
 
 	global turn
 	global click_time
-	global player1
-	global player2
+	global NAME_PLAYER_1
+	global NAME_PLAYER_2
 	global GRID_SIZE
 
 
@@ -283,11 +273,11 @@ def game_clicks(event):
 	visu = oval(pos, SLOT_SIZE)
 
 	if turn:
-		canvas.itemconfig(visu, fill = color_player1)
-		widgets[0]["text"] = "Au tour de " + player2
+		canvas.itemconfig(visu, fill = COLOR_PLAYER_1)
+		widgets[0]["text"] = "Au tour de " + NAME_PLAYER_2
 	else:
-		canvas.itemconfig(visu, fill = color_player2)
-		widgets[0]["text"] = "Au tour de " + player1
+		canvas.itemconfig(visu, fill = COLOR_PLAYER_2)
+		widgets[0]["text"] = "Au tour de " + NAME_PLAYER_1
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -318,7 +308,7 @@ def game_physics():
 	'''
 
 	global playing
-	global nombre_jetons_gagnant
+	global WINNING_STREAK
 
 	for i in range(len(tokens_pos)):
 
@@ -352,7 +342,7 @@ def game_physics():
 				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
 				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
-				if horiz >= nombre_jetons_gagnant or verti >= nombre_jetons_gagnant or diag1 >= nombre_jetons_gagnant or diag2 >= nombre_jetons_gagnant:
+				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
 					print("Victoire !!!")
 					widgets.append(tk.Label(canvas, text = "Victoire", fg="red", font=("Calibri", 30), bg="white"))
 					widgets[-1].place(x=10,y=270)
@@ -375,7 +365,12 @@ def game_visu():
 			#oval((x, y) * SLOT_SIZE + GRID_POS, SLOT_SIZE)
 			create_slot((x, y) * SLOT_SIZE + GRID_POS)
 
-	turn_info = tk.Label(canvas, text = "Au tour de Joueur " + str(1 + int(turn)), font = ("Comic Sans MS", WINDOW_SIZE[1]//20), bg = BACKGROUND)
+	turn_info = tk.Label(canvas, font = ("Comic Sans MS", WINDOW_SIZE[1]//20), bg = BACKGROUND)
+	if turn == 0:
+		turn_info["text"] = NAME_PLAYER_1 + " commence !"
+	else:
+		turn_info["text"] = NAME_PLAYER_2 + " commence !"
+
 	turn_info.place(x = 10, y = 10)
 
 	widgets.append(turn_info)
@@ -406,17 +401,10 @@ def game():
 
 def main_menu_clicks():
 	'''
+		/!\\ Obsolète /!\\
 		Gère les cliques du menu principal
 	'''
-	global player1
-	global player2
-
-	player1 = widgets[0].get()
-	player2 = widgets[1].get()
-
-	delete_widgets()
-
-	root.after(1, game)
+	pass
 
 def main_menu_visu():
 	'''
@@ -469,15 +457,19 @@ def main_menu_visu():
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 12), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
 
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 25), command = menu_perso_jeu)
+	jouer = tk.Button(canvas, text = "Jouer", font = ("Calibri bold", 25), command = game)
 	jouer.place(x=300, y=250,anchor="nw") 
 
+
+	options = tk.Button(canvas, text = "Options", font = ("Calibri bold", 25), command = menu_perso_jeu)
+	options.place(x = 300, y = 450)
 
 	widgets.append(jouer)
 	#widgets.append(retour)
 	#widgets.append(quitter_jeu)
 	widgets.append(instructions_jeu)
 	widgets.append(charger_jeu)
+	widgets.append(options)
 
 	
 
@@ -541,203 +533,189 @@ def retourner():
 	root.after(1, main_menu)
 
 
+def player_name_menu():
+
+	global widgets
+
+	canvas.delete("all")
+	delete_widgets()
+
+	def validate_names():
+		global NAME_PLAYER_1
+		global NAME_PLAYER_2
+		global widgets
+
+		NAME_PLAYER_1 = widgets[0].get()
+		NAME_PLAYER_2 = widgets[1].get()
+
+		root.after(1, retourner)
+
+	widgets = [
+		tk.Entry(canvas, font = ("Copperplate", 28)),
+		tk.Entry(canvas, font = ("Copperplate", 28)),
+		tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_names)
+	]
+
+	widgets[0].insert(0, NAME_PLAYER_1)
+	widgets[1].insert(0, NAME_PLAYER_2)
+
+	for i in range(len(widgets)):
+		widgets[i].place(x = 10, y = 200 + i * 66)
+
+def grid_dimensions_menu():
+	
+	global GRID_DIMS
+	global SLOT_SIZE
+	global widgets
+	global slot_image
+	global slot_imagetk
+
+	canvas.delete("all")
+	delete_widgets()
+
+	def validate_dims():
+		global GRID_DIMS
+		global SLOT_SIZE
+		global widgets
+		global slot_image
+		global slot_imagetk
+
+		try:
+			GRID_DIMS[0] = int(widgets[0]["text"])
+			GRID_DIMS[1] = int(widgets[1]["text"])
+		except:
+			GRID_DIMS[0] = 7
+			GRID_DIMS[1] = 6
+
+		SLOT_SIZE = GRID_SIZE / GRID_DIMS
+
+		slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
+		slot_imagetk = ImageTk.PhotoImage(slot_image)
+
+		root.after(1, retourner)
+
+
+	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[0])))
+	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1])))
+	widgets[0].place(x = 10, y = 10)
+	widgets[1].place(x = 10, y = 60)
+
+	def add_figure(index, fig):
+		widgets[index]["text"] += fig
+	def remove_figure(index):
+		if len(widgets[index]["text"]) > 0:
+			widgets[index]["text"] = widgets[index]["text"][:len(widgets[index]["text"]) - 1]
+
+	for i in range(2):
+		for j in range(10):
+			widgets.append(tk.Button(canvas, text = str(j), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
+			widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 120 + i * 50)
+
+	widgets.append(tk.Button(canvas, text = "Remove figure", command = lambda: remove_figure(0)))
+	widgets[-1].place(x = 510, y = 120)
+	widgets.append(tk.Button(canvas, text = "Remove figure", command = lambda: remove_figure(1)))
+	widgets[-1].place(x = 510, y = 170)
+
+	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_dims))
+	widgets[-1].place(x = 10, y = 300)
+
+def tokens_color_menu():
+	global COLOR_PLAYER_1
+	global COLOR_PLAYER_2
+
+	canvas.delete("all")
+	delete_widgets()
+
+	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
+	widgets[-1].place(x = 10, y = 10)
+	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_2, relief = "flat", bd = 10))
+	widgets[-1].place(x = 90, y = 10)
+
+	def validate_colors():
+		global COLOR_PLAYER_1
+		global COLOR_PLAYER_2
+
+		COLOR_PLAYER_1 = widgets[0]["bg"]
+		COLOR_PLAYER_2 = widgets[1]["bg"]
+
+		root.after(1, retourner)
+
+	def change_color(index, color_index):
+		widgets[index]["bg"] = COLOR_PALETTE[list(COLOR_PALETTE.keys())[color_index]]
+
+	for i in range(2):
+		for j in range(len(list(COLOR_PALETTE.keys()))):
+			widgets.append(tk.Button(canvas, relief = "sunken", bd = 8, bg = COLOR_PALETTE[list(COLOR_PALETTE.keys())[j]], command = lambda arg0 = i, arg1 = j: change_color(arg0, arg1)))
+			widgets[-1].place(x = 10 + j * 48, y = 100 + i * 70)
+
+	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_colors))
+	widgets[-1].place(x = 10, y = 300)
+
+def winning_streak_menu():
+	
+	global WINNING_STREAK
+
+	canvas.delete("all")
+	delete_widgets()
+
+	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK)))
+	widgets[0].place(x = 10, y = 10)
+
+	def validate_winning_streak():
+		global WINNING_STREAK
+
+		try:
+			WINNING_STREAK = int(widgets[0]["text"])
+		except:
+			WINNING_STREAK = 4
+
+		root.after(1, retourner)
+
+	def add_figure(fig):
+		widgets[0]["text"] += fig
+	def remove_figure():
+		if len(widgets[0]["text"]) > 0:
+			widgets[0]["text"] = widgets[0]["text"][:len(widgets[0]["text"]) - 1]
+
+	for j in range(10):
+		widgets.append(tk.Button(canvas, text = str(j), command = lambda arg = j: add_figure(str(arg))))
+		
+		if j != 9:
+			widgets[j + 1].place(x = 10 + (j%3) * 50, y = 120 + int(j/3) * 50)
+		else:
+			widgets[j + 1].place(x = 10 + 50, y = 120 + int(j/3) * 50)
+
+	widgets.append(tk.Button(canvas, text = "Remove figure", command = lambda: remove_figure()))
+	widgets[-1].place(x = 510, y = 120)
+
+
+	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_winning_streak))
+	widgets[-1].place(x = 10, y = 350)
+
 def menu_perso_jeu():
 	'''
 		Menu avec pour modifier/personnaliser le jeu avant de commencer
 	'''
 
-	global GRID_POS
-	global GRID_SIZE
+	global widgets
 
 	canvas.delete("all")
 	delete_widgets()
 
 	font_size = int(WINDOW_SIZE[1]/23)
 
-	#Zone de saisie pour que les joueurs rentrent leurs noms 
+	widgets = [
+		  tk.Label (canvas, text = "Options", font = ("Copperplate", font_size * 3), bg = BACKGROUND)	
+	,	  tk.Button(canvas, text = "Player names", font = ("Copperplate", font_size), command = player_name_menu)
+	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Copperplate", font_size), command = grid_dimensions_menu)
+	, 	  tk.Button(canvas, text = "Tokens color", font = ("Copperplate", font_size), command = tokens_color_menu)
+	, 	  tk.Button(canvas, text = "Winning streak", font = ("Copperplate", font_size), command = winning_streak_menu)
+	]
 	
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5, text= "Veuillez entrer le nom des joueurs", fill="black", font=("Calibri", 20))
-	canvas.pack()
+	widgets[0].place(x = 10, y = 0)
+	for i in range(1, len(widgets)):
+		widgets[i].place(x = 10, y = font_size * 3 + 10 + (font_size * 2 + 10) * i)
 
-	canvas.create_text(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5+20, text= "avant de commencer", fill="black", font=("Calibri", 20))
-	canvas.pack()
-
-	saisie1 = tk.Entry(canvas)
-	saisie1.insert(0, "Joueur 1")
-	saisie1.place(x=WINDOW_SIZE[0]/5, y=WINDOW_SIZE[1]/4+25)
-
-	saisie2 = tk.Entry(canvas)
-	saisie2.insert(0, "Joueur 2")
-	saisie2.place(x=(WINDOW_SIZE[0]/5)*3, y=WINDOW_SIZE[1]/4+25)
-
-	def noms_joueurs():
-		global player1
-		global player2
-		player1 = saisie1.get()
-		player2 = saisie2.get()
-
-	player2 = saisie2.get()
-
-	widgets.append(saisie1)
-	widgets.append(saisie2)
-
-	canvas.create_text(WINDOW_SIZE[0]/2, (WINDOW_SIZE[1]/4)+100, text= "Veuillez choisir les couleurs de vos jetons", fill="black", font=("Calibri", 17))
-	canvas.pack()
-	
-	#Couleurs pour le joueur 1
-
-	def jeton_vert1():
-		global color_player1
-		color_player1 = "green"
-
-	vert1 = tk.Button(canvas, bg = "green", height= 2, width=4, command = jeton_vert1)
-	vert1.place(x=(WINDOW_SIZE[0]/5)-60, y=280,anchor="nw") 
-	widgets.append(vert1)
-
-	def jeton_rouge1():
-		global color_player1
-		color_player1 = "firebrick"
-
-	rouge1 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge1)
-	rouge1.place(x=(WINDOW_SIZE[0]/5)+18, y=280,anchor="nw") 
-	widgets.append(rouge1)
-	
-	def jeton_jaune1():
-		global color_player1
-		color_player1 = "gold"
-
-	jaune1 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune1)
-	jaune1.place(x=(WINDOW_SIZE[0]/5)+ 97, y=280,anchor="nw") 
-	widgets.append(jaune1)
-
-	def jeton_rose1():
-		global color_player1
-		color_player1 = "pink"
-
-	rose1 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose1)
-	rose1.place(x=(WINDOW_SIZE[0]/5)-22, y=330,anchor="nw") 
-	widgets.append(rose1)
-
-	def jeton_bleu1():
-		global color_player1
-		color_player1 = "blue"
-
-	bleu1 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu1)
-	bleu1.place(x=(WINDOW_SIZE[0]/5)+58, y=330,anchor="nw") 
-	widgets.append(bleu1)
-
-	#Couleurs pour le joueur 2
-
-	def jeton_vert2():
-		global color_player2
-		color_player2 = "green"
-	
-	vert2 = tk.Button(canvas, bg = "green", height= 2, width=4, command = jeton_vert2)
-	vert2.place(x=((WINDOW_SIZE[0]/5)*3)-15, y=280,anchor="nw") 
-	widgets.append(vert2)
-
-	def jeton_rouge2():
-		global color_player2
-		color_player2 = "firebrick"
-	
-	rouge2 = tk.Button(canvas, bg = "red", height= 2, width=4, command = jeton_rouge2)
-	rouge2.place(x=((WINDOW_SIZE[0]/5)*3)+ 63, y=280,anchor="nw") 
-	widgets.append(rouge2)
-
-	def jeton_jaune2():
-		global color_player2
-		color_player2 = "gold"
-
-	jaune2 = tk.Button(canvas, bg = "gold", height= 2, width=4, command = jeton_jaune2)
-	jaune2.place(x=((WINDOW_SIZE[0]/5)*3)+ 142, y=280,anchor="nw") 
-	widgets.append(jaune2)
-
-	def jeton_rose2():
-		global color_player2
-		color_player2 = "pink"
-
-	rose2 = tk.Button(canvas, bg = "pink", height= 2, width=4, command = jeton_rose2)
-	rose2.place(x=((WINDOW_SIZE[0]/5)*3)+20, y=330,anchor="nw") 
-	widgets.append(rose2)
-
-	def jeton_bleu2():
-		global color_player2
-		color_player2 = "blue"
-
-	bleu2 = tk.Button(canvas, bg = "blue", height= 2, width=4, command = jeton_bleu2)
-	bleu2.place(x=((WINDOW_SIZE[0]/5)*3)+100, y=330,anchor="nw") 
-	widgets.append(bleu2)
-
-	def etape_suivante_perso():
-
-		global longueur
-		global largeur
-		global nombre_jetons_gagnant
-
-		canvas.delete("all")
-		delete_widgets()
-		noms_joueurs()
-
-		play = tk.Button(canvas, text = "PLAY", bg = "white", font=("Calibri", 23), command = executer_jeu_perso)
-		play.place(x=WINDOW_SIZE[0]/2-25, y=WINDOW_SIZE[1]-150,anchor="nw") 
-		widgets.append(play)
-		
-		canvas.create_text((WINDOW_SIZE[0]/2), 130, text= "Veuillez entrer les dimensions souhaitées de votre grille", fill="black", font=("Calibri", 17))
-		canvas.pack()
-
-		global GRID_DIMS
-		longueur = tk.Entry(canvas)
-		longueur.insert(0, "")
-		longueur.place(x=WINDOW_SIZE[0]/7, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5+55), 180, text= "LONGUEUR", fill="blue2", font=("Calibri", 14))
-		canvas.pack()
-
-		largeur = tk.Entry(canvas)
-		largeur.insert(0, "")
-		largeur.place(x=(WINDOW_SIZE[0]/5)*3, y=200)
-		canvas.create_text((WINDOW_SIZE[0]/5+15)*3+50, 180, text= "LARGEUR", fill="blue2", font=("Calibri", 14))
-		canvas.pack()
-
-		canvas.create_text((WINDOW_SIZE[0]/2+24), WINDOW_SIZE[1]/2, text= "Combien de jetons pour gagner?", fill="black", font=("Calibri", 15))
-		canvas.pack()
-		qtite_jetons = tk.Entry(canvas)
-		qtite_jetons.insert(0, "4")
-		qtite_jetons.place(x=WINDOW_SIZE[0]/2-75, y=WINDOW_SIZE[1]/2+20)
-		widgets.append(qtite_jetons)
-
-
-		def jetons_gagnant():
-			global nombre_jetons_gagnant
-			nombre_jetons_gagnant = int(qtite_jetons.get())
-
-		sauvegarder_preferences = tk.Button(canvas, text = "Sauvegardez vos choix !", bg = "white", font=("Calibri", 12), command = jetons_gagnant)
-		sauvegarder_preferences.place(x=WINDOW_SIZE[0]/2-65, y=WINDOW_SIZE[1]/2+75,anchor="nw") 
-		widgets.append(sauvegarder_preferences)
-
-				
-	etape_suivante = tk.Button(canvas, text = "Etape suivante", bg = "white", font=("Calibri", 12), command = etape_suivante_perso)
-	etape_suivante.place(x=WINDOW_SIZE[0]/2-55, y=WINDOW_SIZE[1]-200,anchor="nw") 
-	widgets.append(etape_suivante)
-
-	def dim_grille():
-		longueur.place_forget()
-		largeur.place_forget()
-		global longueur_grille
-		global largeur_grille
-		global GRID_DIMS
-		global GRID_POS
-		global GRID_SIZE
-		longueur_grille = int(longueur.get())
-		largeur_grille = int(largeur.get())
-		GRID_DIMS = ([longueur_grille, largeur_grille])
-		GRID_SIZE[0]= longueur_grille*50
-		GRID_SIZE[1]=largeur_grille*50
-		GRID_POS[0] = WINDOW_SIZE[0]/2 - GRID_SIZE[0]/2
-		GRID_POS[1] = WINDOW_SIZE[1]/2 - GRID_SIZE[1]/2
-
-	def executer_jeu_perso():
-		dim_grille()
-		game()
 
 
 root.mainloop()
