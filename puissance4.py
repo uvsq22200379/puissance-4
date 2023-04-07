@@ -578,6 +578,7 @@ def retourner():
 	tokens_speed.clear()
 	tokens_visu.clear()
 	is_static.clear()
+	canvas.unbind("<Button-1>")
 	delete_widgets()
 	root.after(1, main_menu)
 
