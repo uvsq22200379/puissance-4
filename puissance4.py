@@ -30,7 +30,7 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "#3030cf"
+BACKGROUND             = "snow3"
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
@@ -428,7 +428,7 @@ def game_visu():
 	widgets.append(turn_info)
 	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
-	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save(filedialog.asksaveasfilename())))
+	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save("saved_games/test.game")))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 #
@@ -516,8 +516,8 @@ def main_menu_visu():
 	instructions_jeu.place(x=WINDOW_SIZE[0]/2-78, y=350, anchor="nw")
 
 
-	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 12), command = quitter)
-	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-50)
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
+	quitter_jeu.place(x=WINDOW_SIZE[0]-110, y=WINDOW_SIZE[1]-50)
 
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 12), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
@@ -526,7 +526,7 @@ def main_menu_visu():
 	jouer.place(x=300, y=250,anchor="nw") 
 
 
-	options = tk.Button(canvas, text = "Options", font = ("Calibri bold", 25), command = menu_perso_jeu)
+	options = tk.Button(canvas, text = "Options", font = ("Calibri bold", 24), command = menu_perso_jeu)
 	options.place(x = 300, y = 450)
 
 	widgets.append(jouer)
@@ -616,16 +616,19 @@ def player_name_menu():
 		root.after(1, retourner)
 
 	widgets = [
-		tk.Entry(canvas, font = ("Copperplate", 28)),
-		tk.Entry(canvas, font = ("Copperplate", 28)),
-		tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_names)
+		tk.Label (canvas, text = "veuilllez saisir vos noms ", font = ("Copperplate", 30), bg="#9cafb7")
+	,	tk.Entry(canvas, font = ("Copperplate", 25)),
+		tk.Entry(canvas, font = ("Copperplate", 25)),
+		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names)
 	]
+	widgets[0].place(x = 145, y = 90)
+	widgets[1].insert(0, NAME_PLAYER_1)
+	widgets[2].insert(0, NAME_PLAYER_2)
+	
 
-	widgets[0].insert(0, NAME_PLAYER_1)
-	widgets[1].insert(0, NAME_PLAYER_2)
-
-	for i in range(len(widgets)):
-		widgets[i].place(x = 10, y = 200 + i * 66)
+	for i in range(1, len(widgets)):
+		widgets[i].place(x = 10, y = 170 + i * 66)
+	
 
 def grid_dimensions_menu():
 	
@@ -692,9 +695,9 @@ def tokens_color_menu():
 	delete_widgets()
 
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
-	widgets[-1].place(x = 10, y = 10)
+	widgets[-1].place(x = 10, y = 145)
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_2, relief = "flat", bd = 10))
-	widgets[-1].place(x = 90, y = 10)
+	widgets[-1].place(x = 90, y = 145)
 
 	def validate_colors():
 		global COLOR_PLAYER_1
@@ -711,10 +714,16 @@ def tokens_color_menu():
 	for i in range(2):
 		for j in range(len(list(COLOR_PALETTE.keys()))):
 			widgets.append(tk.Button(canvas, relief = "sunken", bd = 8, bg = COLOR_PALETTE[list(COLOR_PALETTE.keys())[j]], command = lambda arg0 = i, arg1 = j: change_color(arg0, arg1)))
-			widgets[-1].place(x = 10 + j * 48, y = 100 + i * 70)
+			widgets[-1].place(x = 350 + j * 48, y = 250 + i * 70)
 
-	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_colors))
-	widgets[-1].place(x = 10, y = 300)
+	joueur1_chx=tk.Label(canvas, text = "Couleurs pour player 1 :", font = ("Copperplate", 24))
+	joueur1_chx.place(x = 10, y = 250)
+
+	joueur2_choix=tk.Label(canvas, text = "Couleurs pour player 2 :", font = ("Copperplate", 24))
+	joueur2_choix.place(x = 10, y = 320)
+
+	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 25), command = validate_colors))
+	widgets[-1].place(x = 10, y = 400)
 
 def winning_streak_menu():
 	
@@ -768,16 +777,17 @@ def menu_perso_jeu():
 	delete_widgets()
 
 	font_size = int(WINDOW_SIZE[1]/23)
+	
 
 	widgets = [
-		  tk.Label (canvas, text = "Options", font = ("Copperplate", font_size * 3), bg = BACKGROUND)	
+		tk.Label (canvas, text = "Options", font = ("Copperplate", font_size * 2), bg="#9cafb7")
 	,	  tk.Button(canvas, text = "Player names", font = ("Copperplate", font_size), command = player_name_menu)
 	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Copperplate", font_size), command = grid_dimensions_menu)
 	, 	  tk.Button(canvas, text = "Tokens color", font = ("Copperplate", font_size), command = tokens_color_menu)
 	, 	  tk.Button(canvas, text = "Winning streak", font = ("Copperplate", font_size), command = winning_streak_menu)
 	]
 	
-	widgets[0].place(x = 10, y = 0)
+	widgets[0].place(x = 240, y = 10)
 	for i in range(1, len(widgets)):
 		widgets[i].place(x = 10, y = font_size * 3 + 10 + (font_size * 2 + 10) * i)
 
