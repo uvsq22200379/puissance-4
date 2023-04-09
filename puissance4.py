@@ -9,6 +9,7 @@
 '''
 
 import tkinter as tk
+from tkinter import filedialog
 import numpy as np
 from math import *
 import time
@@ -159,16 +160,21 @@ def raycast(o_start, stride):
 
 def save(path):
 
-	out = open(path, "w")
+	try:
+		out = open(path, "w")
 
-	out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
+		out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
 
-	for i in range(len(tokens_pos)):
+		for i in range(len(tokens_pos)):
 
-		out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
-			    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + ";" + canvas.itemcget(tokens_visu[i], "fill")  + ";" + "\n")
+			out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
+				    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + ";" + canvas.itemcget(tokens_visu[i], "fill")  + ";" + "\n")
 
-	out.close()
+		out.close()
+
+		return True
+	except:
+		return False
 
 def load(path):
 
@@ -179,80 +185,93 @@ def load(path):
 	global slot_image
 	global slot_imagetk
 
-	inn = open(path, "r")
+	try:
+		inn = open(path, "r")
 
-	def_color = 0
+		def_color = 0
 
-	header = True
-	reading = True
-	while reading:
-		
-		line = inn.readline()
-
-		if line and header:
-			buffer = ""
-			step = 0
-
-			for c in line:
-				if c == ";":
-					GRID_DIMS[step] = int(buffer)
-					buffer = ""
-					step += 1
-				else:
-					buffer += c
-
-			header = False
-
-			SLOT_SIZE = GRID_SIZE / GRID_DIMS
-
-			slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
-			slot_imagetk = ImageTk.PhotoImage(slot_image)
-
-		elif line:
+		header = True
+		reading = True
+		while reading:
 			
-			buffer = ""
-			phase = 0
+			line = inn.readline()
 
-			for c in line:
+			if line and header:
+				buffer = ""
+				step = 0
 
-				if c == ";":
-					if phase == 0:
-						tokens_pos.append(np.array([float(buffer), 0]))
-					elif phase == 1:
-						tokens_pos[-1][1] = float(buffer)
-					elif phase == 2:
-						tokens_speed.append(np.array([float(buffer), 0]))
-					elif phase == 3:
-						tokens_speed[-1][1] = float(buffer)
-					elif phase == 4:
-						is_static.append(bool(buffer))
-					elif phase == 5:
-						oval((0, 0), (100, 100))
-						visu = oval(tokens_pos[-1], SLOT_SIZE)
-						canvas.itemconfig(visu, fill = buffer)
-						tokens_visu.append(visu)
+				for c in line:
+					if c == ";":
+						GRID_DIMS[step] = int(buffer)
+						buffer = ""
+						step += 1
+					else:
+						buffer += c
 
-						if def_color == 0:
-							COLOR_PLAYER_1 = buffer
-							def_color += 1
-						elif def_color == 1 and buffer != COLOR_PLAYER_1:
-							COLOR_PLAYER_2 = buffer
+				header = False
 
-					phase += 1
-					buffer = ""
-					continue
+				SLOT_SIZE = GRID_SIZE / GRID_DIMS
 
-				buffer += c
-		else:
-			reading = False
+				slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
+				slot_imagetk = ImageTk.PhotoImage(slot_image)
 
-	inn.close()
+			elif line:
+				
+				buffer = ""
+				phase = 0
+
+				for c in line:
+
+					if c == ";":
+						if phase == 0:
+							tokens_pos.append(np.array([float(buffer), 0]))
+						elif phase == 1:
+							tokens_pos[-1][1] = float(buffer)
+						elif phase == 2:
+							tokens_speed.append(np.array([float(buffer), 0]))
+						elif phase == 3:
+							tokens_speed[-1][1] = float(buffer)
+						elif phase == 4:
+							is_static.append(bool(buffer))
+						elif phase == 5:
+							oval((0, 0), (100, 100))
+							visu = oval(tokens_pos[-1], SLOT_SIZE)
+							canvas.itemconfig(visu, fill = buffer)
+							tokens_visu.append(visu)
+
+							if def_color == 0:
+								COLOR_PLAYER_1 = buffer
+								def_color += 1
+							elif def_color == 1 and buffer != COLOR_PLAYER_1:
+								COLOR_PLAYER_2 = buffer
+
+						phase += 1
+						buffer = ""
+						continue
+
+					buffer += c
+			else:
+				reading = False
+
+		inn.close()
+
+		return True # La lecture du fichier s'est bien passée
+	except:
+		return False # Le fichier n'a pas pu être lu.
 
 def launch_load(path):
+
 	delete_widgets()
 
-	load(path)
-	root.after(1, game)
+	path = filedialog.askopenfilename()
+	if load(path):
+		root.after(1, game)
+	else:
+		widgets.append(tk.Label(canvas, text = "Erreur : Le fichier \"" + str(path) + "\" n'a pas pu être chargé !", fg = "red"))
+		widgets.append(tk.Button(canvas, text = "OK", command = retourner))
+		widgets[-2].place(x = 10, y = 10)
+		widgets[-1].place(x = 10, y = 50)
+
 
 #Jeu
 
@@ -270,10 +289,6 @@ def game_keys(event):
 		retourner()
 	if event.keysym == "BackSpace":
 		annul_jeton()
-	if event.keysym == "s":
-		save("saved_games/test.game")
-	if event.keysym == "l":
-		load("saved_games/test.game")
 
 
 def game_clicks(event):
@@ -383,6 +398,7 @@ def game_physics():
 					widgets.append(tk.Label(canvas, text = "Victoire", fg="red", font=("Calibri", 30), bg="white"))
 					widgets[-1].place(x=10,y=270)
 
+
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
 
@@ -412,7 +428,7 @@ def game_visu():
 	widgets.append(turn_info)
 	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
-	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save("saved_games/test.game")))
+	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save(filedialog.asksaveasfilename())))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 #
@@ -526,7 +542,6 @@ def main_menu():
 	'''
 		fonctions préliminaires au menu principal
 	'''
-
 	main_menu_visu()
 
 #Ecran de lancement
