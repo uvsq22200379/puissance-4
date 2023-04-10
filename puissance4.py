@@ -610,24 +610,24 @@ def player_name_menu():
 		global NAME_PLAYER_2
 		global widgets
 
-		NAME_PLAYER_1 = widgets[0].get()
-		NAME_PLAYER_2 = widgets[1].get()
+		NAME_PLAYER_1 = widgets[1].get()
+		NAME_PLAYER_2 = widgets[2].get()
 
 		root.after(1, retourner)
 
 	widgets = [
+		tk.Label (canvas, text = "Veuillez saisir vos noms", font = ("Copperplate", 30, "bold"), bg=BACKGROUND),
 		tk.Entry(canvas, font = ("Copperplate", 25)),
 		tk.Entry(canvas, font = ("Copperplate", 25)),
-		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names),
-		tk.Label (canvas, text = "Veuillez saisir vos noms", font = ("Copperplate", 30), bg="#9cafb7")
+		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names)
 	]
-	widgets[3].place(x = 145, y = 90)
+	widgets[0].place(x = WINDOW_SIZE[0]/2, y = 10, anchor = "n")
 	widgets[1].insert(0, NAME_PLAYER_1)
 	widgets[2].insert(0, NAME_PLAYER_2)
 	
 
 	for i in range(1, len(widgets)):
-		widgets[i].place(x = 10, y = 170 + i * 66)
+		widgets[i].place(x = 10, y = 50 + i * 66)
 	
 
 def grid_dimensions_menu():
