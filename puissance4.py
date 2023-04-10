@@ -616,12 +616,12 @@ def player_name_menu():
 		root.after(1, retourner)
 
 	widgets = [
-		tk.Label (canvas, text = "veuilllez saisir vos noms ", font = ("Copperplate", 30), bg="#9cafb7")
-	,	tk.Entry(canvas, font = ("Copperplate", 25)),
 		tk.Entry(canvas, font = ("Copperplate", 25)),
-		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names)
+		tk.Entry(canvas, font = ("Copperplate", 25)),
+		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names),
+		tk.Label (canvas, text = "Veuillez saisir vos noms", font = ("Copperplate", 30), bg="#9cafb7")
 	]
-	widgets[0].place(x = 145, y = 90)
+	widgets[3].place(x = 145, y = 90)
 	widgets[1].insert(0, NAME_PLAYER_1)
 	widgets[2].insert(0, NAME_PLAYER_2)
 	
@@ -695,9 +695,9 @@ def tokens_color_menu():
 	delete_widgets()
 
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
-	widgets[-1].place(x = 10, y = 145)
+	widgets[-1].place(x = 10, y = 200)
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_2, relief = "flat", bd = 10))
-	widgets[-1].place(x = 90, y = 145)
+	widgets[-1].place(x = 10, y = 350)
 
 	def validate_colors():
 		global COLOR_PLAYER_1
@@ -714,16 +714,19 @@ def tokens_color_menu():
 	for i in range(2):
 		for j in range(len(list(COLOR_PALETTE.keys()))):
 			widgets.append(tk.Button(canvas, relief = "sunken", bd = 8, bg = COLOR_PALETTE[list(COLOR_PALETTE.keys())[j]], command = lambda arg0 = i, arg1 = j: change_color(arg0, arg1)))
-			widgets[-1].place(x = 350 + j * 48, y = 250 + i * 70)
+			widgets[-1].place(x = 350 + j * 48, y = 200 + i * 150)
 
-	joueur1_chx=tk.Label(canvas, text = "Couleurs pour player 1 :", font = ("Copperplate", 24))
-	joueur1_chx.place(x = 10, y = 250)
+	widgets.append(tk.Label(canvas, text = "Couleurs", font = ("Copperplate", 50, "bold"), bg = BACKGROUND))
+	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 0, anchor = "n")
 
-	joueur2_choix=tk.Label(canvas, text = "Couleurs pour player 2 :", font = ("Copperplate", 24))
-	joueur2_choix.place(x = 10, y = 320)
+	widgets.append(tk.Label(canvas, text = "Couleur pour player 1 :", font = ("Copperplate", 24)))
+	widgets[-1].place(x = 10, y = 150)
+
+	widgets.append(tk.Label(canvas, text = "Couleurs pour player 2 :", font = ("Copperplate", 24)))
+	widgets[-1].place(x = 10, y = 300)
 
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 25), command = validate_colors))
-	widgets[-1].place(x = 10, y = 400)
+	widgets[-1].place(x = 10, y = 450)
 
 def winning_streak_menu():
 	
