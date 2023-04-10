@@ -428,7 +428,7 @@ def game_visu():
 	widgets.append(turn_info)
 	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
-	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save("saved_games/test.game")))
+	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save(filedialog.asksaveasfilename())))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 #
