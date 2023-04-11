@@ -43,6 +43,9 @@ NAME_PLAYER_1          = "Turing"
 NAME_PLAYER_2          = "Conway"
 COLOR_PLAYER_1         = COLOR_PALETTE["Red"]
 COLOR_PLAYER_2         = COLOR_PALETTE["Yellow"]
+SCORE_PLAYER_1         = 0 
+SCORE_PLAYER_2         = 0
+N_SET                  = 0
 
 #Visual
 root = tk.Tk()
@@ -353,10 +356,6 @@ def annul_jeton():
 	is_static.pop()
 	turn = not turn
 
-scoreP1 = 0 #score du joueur 1 (nombre de manches gagnées)
-scoreP2 = 0 #score du joueur 2
-n_set = 3 # nombre de manches à joueur (saisi par l'utilisateur)
-
 def nouvelle_manche():
 	for i in range (len(tokens_visu)):
 		canvas.delete(tokens_visu[i])
@@ -364,7 +363,16 @@ def nouvelle_manche():
 	tokens_speed.clear()
 	tokens_visu.clear()
 	is_static.clear()
-	widgets.pop()
+
+
+def jeu_set_match(N_SET):
+	if SCORE_PLAYER_1 > (N_SET/2):
+		widgets.append(tk.Label(canvas, text = str(NAME_PLAYER_1) + " emporte le set!", font = ("Comic Sans MS", 15), bg = "white"))
+		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
+	elif SCORE_PLAYER_2 > (N_SET/2):
+		widgets.append(tk.Label(canvas, text = str(NAME_PLAYER_2) + " emporte le set!", font = ("Comic Sans MS", 15), bg = "white"))
+		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
+
 
 def game_physics():
 	'''
@@ -373,15 +381,9 @@ def game_physics():
 
 	global playing
 	global WINNING_STREAK
-	global scoreP1
-	global scoreP2
-	global n_set
-
-	def jeu_set_match(n_set):
-		if scoreP1 > (n_set/2):
-			print(NAME_PLAYER_1 + "emporte le set!")
-		elif scoreP2 > (n_set/2):
-			print(NAME_PLAYER_2 + "emporte le set!")
+	global SCORE_PLAYER_1
+	global SCORE_PLAYER_2
+	global N_SET
 
 	for i in range(len(tokens_pos)):
 
@@ -419,17 +421,19 @@ def game_physics():
 					if turn == True:
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
-						scoreP1+=1
+						SCORE_PLAYER_1+=1
 					else: 
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
-						scoreP2+=1
-					print(scoreP1, scoreP2)
-					jeu_set_match(3)
-				if n_set != 0: #valeur par défaut, sans personnalisation
-					while i <= n_set: 
+						SCORE_PLAYER_2+=1
+					print(SCORE_PLAYER_1, SCORE_PLAYER_2)
+					widgets.append(tk.Label(canvas, text = "SCORE: " + str(SCORE_PLAYER_1) + " - " + str(SCORE_PLAYER_2), font = ("Comic Sans MS", 15), bg = "white"))
+					widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
+					jeu_set_match(N_SET)
+					if SCORE_PLAYER_1 or SCORE_PLAYER_2 >= (N_SET/2):
+						break
+					else: 
 						root.after(2000, nouvelle_manche)
-
 
 		
 		tokens_speed[i][1] += GRAVITY
@@ -446,6 +450,8 @@ def game_visu():
 	'''
 		Crée les widgets et la grille du jeu
 	'''
+	global SCORE_PLAYER_1
+	global SCORE_PLAYER_2
 
 	for y in range(GRID_DIMS[1]):
 		for x in range(GRID_DIMS[0]):
@@ -465,6 +471,14 @@ def game_visu():
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
 	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save(filedialog.asksaveasfilename())))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
+
+	if N_SET != 0:
+		widgets.append(tk.Label(canvas, text = "Set à " + str(N_SET) + " manches", font = ("Comic Sans MS", 15), bg = "white"))
+		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 100), y = 80)
+
+
+
+
 
 #
 
@@ -804,6 +818,39 @@ def winning_streak_menu():
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_winning_streak))
 	widgets[-1].place(x = 10, y = 350)
 
+def jeu_set_match_menu():
+
+	global N_SET
+	canvas.delete("all")
+	delete_widgets()
+
+	#(fonctions à améliorer après)
+	def set_3():
+		global N_SET
+		N_SET = 3
+		retourner()
+	set3 = tk.Button(canvas, text = "3", font = ("Copperplate", 25), command = set_3)
+	widgets.append(set3)
+	set3.place(x = 390, y = 120)
+
+	def set_5():
+		global N_SET
+		N_SET = 5
+		retourner()
+	set5 = tk.Button(canvas, text = "5", font = ("Copperplate", 25), command = set_5)
+	widgets.append(set5)
+	set5.place(x = 450, y = 120)
+	
+	def set_7():
+		global N_SET
+		N_SET = 7
+		retourner()
+
+	set7 = tk.Button(canvas, text = "7", font = ("Copperplate", 25), command = set_7)
+	widgets.append(set7)
+	set7.place(x = 510, y = 120)
+	
+
 def menu_perso_jeu():
 	'''
 		Menu avec pour modifier/personnaliser le jeu avant de commencer
@@ -823,6 +870,7 @@ def menu_perso_jeu():
 	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Copperplate", font_size), command = grid_dimensions_menu)
 	, 	  tk.Button(canvas, text = "Tokens color", font = ("Copperplate", font_size), command = tokens_color_menu)
 	, 	  tk.Button(canvas, text = "Winning streak", font = ("Copperplate", font_size), command = winning_streak_menu)
+	,     tk.Button(canvas, text = "Set / Match", font = ("Copperplate", font_size), command = jeu_set_match_menu)
 	]
 	
 	widgets[0].place(x = 240, y = 10)
