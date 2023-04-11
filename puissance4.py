@@ -353,6 +353,19 @@ def annul_jeton():
 	is_static.pop()
 	turn = not turn
 
+scoreP1 = 0 #score du joueur 1 (nombre de manches gagnées)
+scoreP2 = 0 #score du joueur 2
+n_set = 3 # nombre de manches à joueur (saisi par l'utilisateur)
+
+def nouvelle_manche():
+	for i in range (len(tokens_visu)):
+		canvas.delete(tokens_visu[i])
+	tokens_pos.clear()
+	tokens_speed.clear()
+	tokens_visu.clear()
+	is_static.clear()
+	widgets.pop()
+
 def game_physics():
 	'''
 		Comportement physique des jetons (gravité, rebonds et collisions)
@@ -360,6 +373,15 @@ def game_physics():
 
 	global playing
 	global WINNING_STREAK
+	global scoreP1
+	global scoreP2
+	global n_set
+
+	def jeu_set_match(n_set):
+		if scoreP1 > (n_set/2):
+			print(NAME_PLAYER_1 + "emporte le set!")
+		elif scoreP2 > (n_set/2):
+			print(NAME_PLAYER_2 + "emporte le set!")
 
 	for i in range(len(tokens_pos)):
 
@@ -397,13 +419,23 @@ def game_physics():
 					if turn == True:
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
+						scoreP1+=1
 					else: 
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
+						scoreP2+=1
+					print(scoreP1, scoreP2)
+					jeu_set_match(3)
+				if n_set != 0: #valeur par défaut, sans personnalisation
+					while i <= n_set: 
+						root.after(2000, nouvelle_manche)
 
 
+		
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
+	
+
 
 	if playing:
 		root.after(int(1000/60), game_physics)
