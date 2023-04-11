@@ -9,6 +9,7 @@
 '''
 
 import tkinter as tk
+from tkinter import filedialog
 import numpy as np
 from math import *
 import time
@@ -29,7 +30,7 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "#3030cf"
+BACKGROUND             = "snow3"
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
@@ -159,16 +160,21 @@ def raycast(o_start, stride):
 
 def save(path):
 
-	out = open(path, "w")
+	try:
+		out = open(path, "w")
 
-	out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
+		out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
 
-	for i in range(len(tokens_pos)):
+		for i in range(len(tokens_pos)):
 
-		out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
-			    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + ";" + canvas.itemcget(tokens_visu[i], "fill")  + ";" + "\n")
+			out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
+				    + str(tokens_speed[i][0]) + ";" + str(tokens_speed[i][1]) + ";" + str(int(is_static[i])) + ";" + canvas.itemcget(tokens_visu[i], "fill")  + ";" + "\n")
 
-	out.close()
+		out.close()
+
+		return True
+	except:
+		return False
 
 def load(path):
 
@@ -179,80 +185,93 @@ def load(path):
 	global slot_image
 	global slot_imagetk
 
-	inn = open(path, "r")
+	try:
+		inn = open(path, "r")
 
-	def_color = 0
+		def_color = 0
 
-	header = True
-	reading = True
-	while reading:
-		
-		line = inn.readline()
-
-		if line and header:
-			buffer = ""
-			step = 0
-
-			for c in line:
-				if c == ";":
-					GRID_DIMS[step] = int(buffer)
-					buffer = ""
-					step += 1
-				else:
-					buffer += c
-
-			header = False
-
-			SLOT_SIZE = GRID_SIZE / GRID_DIMS
-
-			slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
-			slot_imagetk = ImageTk.PhotoImage(slot_image)
-
-		elif line:
+		header = True
+		reading = True
+		while reading:
 			
-			buffer = ""
-			phase = 0
+			line = inn.readline()
 
-			for c in line:
+			if line and header:
+				buffer = ""
+				step = 0
 
-				if c == ";":
-					if phase == 0:
-						tokens_pos.append(np.array([float(buffer), 0]))
-					elif phase == 1:
-						tokens_pos[-1][1] = float(buffer)
-					elif phase == 2:
-						tokens_speed.append(np.array([float(buffer), 0]))
-					elif phase == 3:
-						tokens_speed[-1][1] = float(buffer)
-					elif phase == 4:
-						is_static.append(bool(buffer))
-					elif phase == 5:
-						oval((0, 0), (100, 100))
-						visu = oval(tokens_pos[-1], SLOT_SIZE)
-						canvas.itemconfig(visu, fill = buffer)
-						tokens_visu.append(visu)
+				for c in line:
+					if c == ";":
+						GRID_DIMS[step] = int(buffer)
+						buffer = ""
+						step += 1
+					else:
+						buffer += c
 
-						if def_color == 0:
-							COLOR_PLAYER_1 = buffer
-							def_color += 1
-						elif def_color == 1 and buffer != COLOR_PLAYER_1:
-							COLOR_PLAYER_2 = buffer
+				header = False
 
-					phase += 1
-					buffer = ""
-					continue
+				SLOT_SIZE = GRID_SIZE / GRID_DIMS
 
-				buffer += c
-		else:
-			reading = False
+				slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
+				slot_imagetk = ImageTk.PhotoImage(slot_image)
 
-	inn.close()
+			elif line:
+				
+				buffer = ""
+				phase = 0
+
+				for c in line:
+
+					if c == ";":
+						if phase == 0:
+							tokens_pos.append(np.array([float(buffer), 0]))
+						elif phase == 1:
+							tokens_pos[-1][1] = float(buffer)
+						elif phase == 2:
+							tokens_speed.append(np.array([float(buffer), 0]))
+						elif phase == 3:
+							tokens_speed[-1][1] = float(buffer)
+						elif phase == 4:
+							is_static.append(bool(buffer))
+						elif phase == 5:
+							oval((0, 0), (100, 100))
+							visu = oval(tokens_pos[-1], SLOT_SIZE)
+							canvas.itemconfig(visu, fill = buffer)
+							tokens_visu.append(visu)
+
+							if def_color == 0:
+								COLOR_PLAYER_1 = buffer
+								def_color += 1
+							elif def_color == 1 and buffer != COLOR_PLAYER_1:
+								COLOR_PLAYER_2 = buffer
+
+						phase += 1
+						buffer = ""
+						continue
+
+					buffer += c
+			else:
+				reading = False
+
+		inn.close()
+
+		return True # La lecture du fichier s'est bien passée
+	except:
+		return False # Le fichier n'a pas pu être lu.
 
 def launch_load(path):
+
 	delete_widgets()
 
-	load(path)
-	root.after(1, game)
+	path = filedialog.askopenfilename()
+	if load(path):
+		root.after(1, game)
+	else:
+		widgets.append(tk.Label(canvas, text = "Erreur : Le fichier \"" + str(path) + "\" n'a pas pu être chargé !", fg = "red"))
+		widgets.append(tk.Button(canvas, text = "OK", command = retourner))
+		widgets[-2].place(x = 10, y = 10)
+		widgets[-1].place(x = 10, y = 50)
+
 
 #Jeu
 
@@ -270,10 +289,6 @@ def game_keys(event):
 		retourner()
 	if event.keysym == "BackSpace":
 		annul_jeton()
-	if event.keysym == "s":
-		save("saved_games/test.game")
-	if event.keysym == "l":
-		load("saved_games/test.game")
 
 
 def game_clicks(event):
@@ -386,6 +401,7 @@ def game_physics():
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
 
+
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
 
@@ -415,7 +431,7 @@ def game_visu():
 	widgets.append(turn_info)
 	widgets.append(tk.Button(text = "Annuler le dernier jeton", font = ("Comic Sans MS", 12), command = annul_jeton))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] - 200), y = 10)
-	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save("saved_games/test.game")))
+	widgets.append(tk.Button(text = "Sauvegarder", command = lambda: save(filedialog.asksaveasfilename())))
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 #
@@ -503,8 +519,8 @@ def main_menu_visu():
 	instructions_jeu.place(x=WINDOW_SIZE[0]/2-78, y=350, anchor="nw")
 
 
-	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 12), command = quitter)
-	quitter_jeu.place(x=WINDOW_SIZE[0]-100, y=WINDOW_SIZE[1]-50)
+	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Calibri bold", 15), command = quitter)
+	quitter_jeu.place(x=WINDOW_SIZE[0]-110, y=WINDOW_SIZE[1]-50)
 
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Calibri bold", 12), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
@@ -513,7 +529,7 @@ def main_menu_visu():
 	jouer.place(x=300, y=250,anchor="nw") 
 
 
-	options = tk.Button(canvas, text = "Options", font = ("Calibri bold", 25), command = menu_perso_jeu)
+	options = tk.Button(canvas, text = "Options", font = ("Calibri bold", 24), command = menu_perso_jeu)
 	options.place(x = 300, y = 450)
 
 	widgets.append(jouer)
@@ -529,7 +545,6 @@ def main_menu():
 	'''
 		fonctions préliminaires au menu principal
 	'''
-
 	main_menu_visu()
 
 #Ecran de lancement
@@ -581,6 +596,7 @@ def retourner():
 	tokens_speed.clear()
 	tokens_visu.clear()
 	is_static.clear()
+	canvas.unbind("<Button-1>")
 	delete_widgets()
 	root.after(1, main_menu)
 
@@ -597,22 +613,25 @@ def player_name_menu():
 		global NAME_PLAYER_2
 		global widgets
 
-		NAME_PLAYER_1 = widgets[0].get()
-		NAME_PLAYER_2 = widgets[1].get()
+		NAME_PLAYER_1 = widgets[1].get()
+		NAME_PLAYER_2 = widgets[2].get()
 
 		root.after(1, retourner)
 
 	widgets = [
-		tk.Entry(canvas, font = ("Copperplate", 28)),
-		tk.Entry(canvas, font = ("Copperplate", 28)),
-		tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_names)
+		tk.Label (canvas, text = "Veuillez saisir vos noms", font = ("Copperplate", 30, "bold"), bg=BACKGROUND),
+		tk.Entry(canvas, font = ("Copperplate", 25)),
+		tk.Entry(canvas, font = ("Copperplate", 25)),
+		tk.Button(canvas, text = "Valider", font = ("Copperplate", 23), command = validate_names)
 	]
+	widgets[0].place(x = WINDOW_SIZE[0]/2, y = 10, anchor = "n")
+	widgets[1].insert(0, NAME_PLAYER_1)
+	widgets[2].insert(0, NAME_PLAYER_2)
+	
 
-	widgets[0].insert(0, NAME_PLAYER_1)
-	widgets[1].insert(0, NAME_PLAYER_2)
-
-	for i in range(len(widgets)):
-		widgets[i].place(x = 10, y = 200 + i * 66)
+	for i in range(1, len(widgets)):
+		widgets[i].place(x = 10, y = 50 + i * 66)
+	
 
 def grid_dimensions_menu():
 	
@@ -679,9 +698,9 @@ def tokens_color_menu():
 	delete_widgets()
 
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
-	widgets[-1].place(x = 10, y = 10)
+	widgets[-1].place(x = 10, y = 200)
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_2, relief = "flat", bd = 10))
-	widgets[-1].place(x = 90, y = 10)
+	widgets[-1].place(x = 10, y = 350)
 
 	def validate_colors():
 		global COLOR_PLAYER_1
@@ -698,10 +717,19 @@ def tokens_color_menu():
 	for i in range(2):
 		for j in range(len(list(COLOR_PALETTE.keys()))):
 			widgets.append(tk.Button(canvas, relief = "sunken", bd = 8, bg = COLOR_PALETTE[list(COLOR_PALETTE.keys())[j]], command = lambda arg0 = i, arg1 = j: change_color(arg0, arg1)))
-			widgets[-1].place(x = 10 + j * 48, y = 100 + i * 70)
+			widgets[-1].place(x = 350 + j * 48, y = 200 + i * 150)
 
-	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 28), command = validate_colors))
+	widgets.append(tk.Label(canvas, text = "Couleurs", font = ("Copperplate", 50, "bold"), bg = BACKGROUND))
+	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 0, anchor = "n")
+
+	widgets.append(tk.Label(canvas, text = "Couleur pour player 1 :", font = ("Copperplate", 24)))
+	widgets[-1].place(x = 10, y = 150)
+
+	widgets.append(tk.Label(canvas, text = "Couleurs pour player 2 :", font = ("Copperplate", 24)))
 	widgets[-1].place(x = 10, y = 300)
+
+	widgets.append(tk.Button(canvas, text = "Valider", font = ("Copperplate", 25), command = validate_colors))
+	widgets[-1].place(x = 10, y = 450)
 
 def winning_streak_menu():
 	
@@ -755,16 +783,17 @@ def menu_perso_jeu():
 	delete_widgets()
 
 	font_size = int(WINDOW_SIZE[1]/23)
+	
 
 	widgets = [
-		  tk.Label (canvas, text = "Options", font = ("Copperplate", font_size * 3), bg = BACKGROUND)	
+		tk.Label (canvas, text = "Options", font = ("Copperplate", font_size * 2), bg="#9cafb7")
 	,	  tk.Button(canvas, text = "Player names", font = ("Copperplate", font_size), command = player_name_menu)
 	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Copperplate", font_size), command = grid_dimensions_menu)
 	, 	  tk.Button(canvas, text = "Tokens color", font = ("Copperplate", font_size), command = tokens_color_menu)
 	, 	  tk.Button(canvas, text = "Winning streak", font = ("Copperplate", font_size), command = winning_streak_menu)
 	]
 	
-	widgets[0].place(x = 10, y = 0)
+	widgets[0].place(x = 240, y = 10)
 	for i in range(1, len(widgets)):
 		widgets[i].place(x = 10, y = font_size * 3 + 10 + (font_size * 2 + 10) * i)
 
