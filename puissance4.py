@@ -379,9 +379,12 @@ def game_physics():
 				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
 				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
-					print("Victoire !!!")
-					widgets.append(tk.Label(canvas, text = "Victoire", fg="red", font=("Calibri", 30), bg="white"))
-					widgets[-1].place(x=10,y=270)
+					if turn == True:
+						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
+						widgets[-1].place(x=10,y=270)
+					else: 
+						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Calibri", 30), bg="white"))
+						widgets[-1].place(x=10,y=270)
 
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
