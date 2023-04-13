@@ -536,9 +536,6 @@ def main_menu_visu():
 	canvas.create_text(WINDOW_SIZE[0]/2, 100, text="PUISSANCE 4", fill="red", font=("Small Fonts", 50))
 	canvas.pack()
 
-	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Small Fonts", 25), command = lambda: launch_load("saved_games/test.game"))
-	charger_jeu.place(x=WINDOW_SIZE[0]/2 -60, y=300,anchor="nw")
-
 	#fonction qui explique les instructions dans une nouvelle fenêtre
 
 	def instructions():
@@ -561,9 +558,9 @@ def main_menu_visu():
 
 	#nouveaux boutons au menu principal 
 
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Small Fonts", 25), command = instructions)
-	instructions_jeu.place(x=WINDOW_SIZE[0]/2-78, y=350, anchor="nw")
+	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Small Fonts", 25), command = lambda: launch_load("saved_games/test.game"))
 
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Small Fonts", 25), command = instructions)
 
 	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Small Fonts", 15), command = quitter)
 	quitter_jeu.place(x=WINDOW_SIZE[0]-110, y=WINDOW_SIZE[1]-50)
@@ -572,11 +569,15 @@ def main_menu_visu():
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
 
 	jouer = tk.Button(canvas, text = "Jouer", font = ("Small Fonts", 25), command = game)
-	jouer.place(x=300, y=250,anchor="nw") 
-
 
 	options = tk.Button(canvas, text = "Options", font = ("Small Fonts", 24), command = menu_perso_jeu)
-	options.place(x = 300, y = 450)
+
+	boutons_main_menu_centre = [jouer, charger_jeu, options, instructions_jeu]
+
+	k = 20
+	for i in range(0, len(boutons_main_menu_centre)):
+		boutons_main_menu_centre[i].place(relx=0.5, y= font_size * 3 + (font_size * 2 + 10) * i + 100 + k, anchor="center")
+		k+=10
 
 	widgets.append(jouer)
 	#widgets.append(retour)
@@ -585,7 +586,7 @@ def main_menu_visu():
 	widgets.append(charger_jeu)
 	widgets.append(options)
 
-	
+
 
 def main_menu():
 	'''
@@ -866,7 +867,7 @@ def menu_perso_jeu():
 
 	widgets = [
 		tk.Label (canvas, text = "Options", font = ("Small Fonts", font_size * 2), bg="#9cafb7")
-	,	  tk.Button(canvas, text = "Player names", font = ("Small Fonts", font_size), command = player_name_menu)
+	,	  tk.Button(canvas, text = "  Player names  ", font = ("Small Fonts", font_size), command = player_name_menu)
 	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Small Fonts", font_size), command = grid_dimensions_menu)
 	, 	  tk.Button(canvas, text = "Tokens color", font = ("Small Fonts", font_size), command = tokens_color_menu)
 	, 	  tk.Button(canvas, text = "Winning streak", font = ("Small Fonts", font_size), command = winning_streak_menu)
@@ -874,9 +875,9 @@ def menu_perso_jeu():
 	]
 	
 	widgets[0].place(x = 240, y = 10)
+	k = 0
 	for i in range(1, len(widgets)):
-		widgets[i].place(x = 10, y = font_size * 3 + 10 + (font_size * 2 + 10) * i)
-
-
+		widgets[i].place(relx=0.5, y= font_size * 3 + 10 + (font_size * 2 + 10) * i + 10 + k, anchor="center")
+		k+=10
 
 root.mainloop()
