@@ -366,10 +366,10 @@ def nouvelle_manche():
 def jeu_set_match(N_SET):
 	if SCORE_PLAYER_1 > (N_SET/2):
 		widgets.append(tk.Label(canvas, text = str(NAME_PLAYER_1) + " emporte le set!", font = ("Small Fonts", 15), bg = "white"))
-		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
+		widgets[-1].place(relx = 0.5, y = 90, anchor='center')
 	elif SCORE_PLAYER_2 > (N_SET/2):
 		widgets.append(tk.Label(canvas, text = str(NAME_PLAYER_2) + " emporte le set!", font = ("Small Fonts", 15), bg = "white"))
-		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
+		widgets[-1].place(relx = 0.5, y = 90, anchor='center')
 
 
 def game_physics():
@@ -425,11 +425,11 @@ def game_physics():
 					else: 
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Small Fonts", 30), bg="white"))
 						widgets[-1].place(x=10,y=270)
-						SCORE_PLAYER_2+=1
-					print(SCORE_PLAYER_1, SCORE_PLAYER_2)
-					widgets.append(tk.Label(canvas, text = "SCORE: " + str(SCORE_PLAYER_1) + " - " + str(SCORE_PLAYER_2), font = ("Small Fonts", 15), bg = "white"))
-					widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 50), y = 90)
-					jeu_set_match(N_SET)
+						SCORE_PLAYER_2+=1					
+					if N_SET!=0:
+						widgets.append(tk.Label(canvas, text = " SCORE: " + str(SCORE_PLAYER_1) + " - " + str(SCORE_PLAYER_2) + " ", font = ("Small Fonts", 18), highlightthickness=3, highlightbackground = "white", bg = BACKGROUND))
+						widgets[-1].place(relx = 0.5, y = 120, anchor='center')
+						jeu_set_match(N_SET)
 					if SCORE_PLAYER_1 or SCORE_PLAYER_2 >= (N_SET/2):
 						break
 					else: 
@@ -473,14 +473,10 @@ def game_visu():
 	widgets[-1].place(x = int(WINDOW_SIZE[0] / 2), y = int(WINDOW_SIZE[1] - 40))
 
 	if N_SET != 0:
-		widgets.append(tk.Label(canvas, text = "Set à " + str(N_SET) + " manches", font = ("Small Fonts", 15), bg = "white"))
-		widgets[-1].place(x = int(WINDOW_SIZE[0]/2 - 100), y = 80)
+		widgets.append(tk.Label(canvas, text = "Set à " + str(N_SET) + " manches", font = ("Small Fonts", 14), bg = "white"))
+		widgets[-1].place(relx = 0.5, y = 80, anchor='center')
 
 
-
-
-
-#
 
 def game():
 	'''
