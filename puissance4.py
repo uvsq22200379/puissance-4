@@ -119,14 +119,12 @@ def delete_widgets():
 		widgets[i].place_forget()
 	widgets.clear()
 
-def raycast(o_start, stride):
+def raycast(o_start, stride, nbr = WINNING_STREAK):
 	'''
 		Lance un "rayon" de "o_start" jusqu'à 4*"stride" avec un pas de "stride" s'intérompant
 		lorsqu'il tombe sur un jeton d'une couleur différente et renvoie le nombre de jetons 
 		d'une même couleur touchés. 
 	'''
-
-	global WINNING_STREAK
 
 	start = o_start.copy() # On copie o_start pour éviter de le modifier globalement
 
@@ -135,7 +133,7 @@ def raycast(o_start, stride):
 	ray = start
 	verifying = ""
 
-	for i in range(WINNING_STREAK):
+	for i in range(nbr):
 
 		current_color = ""
 		found = False
@@ -409,7 +407,9 @@ def game_physics():
 		else:
 			tokens_speed[i][1] = -1/2 * tokens_speed[i][1]
 			if abs(tokens_speed[i][1]) < 1:
-				tokens_pos[i] = GRID_POS + SLOT_SIZE * np.array( (tokens_pos[i] - GRID_POS) / SLOT_SIZE, dtype = int)
+				tokens_pos[i][1] = GRID_POS[1] + SLOT_SIZE[1] * int( (tokens_pos[i][1] - GRID_POS[1]) /SLOT_SIZE[1])
+
+
 				is_static[i] = True
 
 				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0)) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
