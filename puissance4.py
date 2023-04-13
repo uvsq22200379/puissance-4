@@ -666,14 +666,14 @@ def player_name_menu():
 
 	widgets = [
 		tk.Label (canvas, text = "Veuillez saisir vos noms", font = ("Small Fonts", 30, "bold"), bg=BACKGROUND),
-		tk.Entry(canvas, font = ("Small Fonts", 25)),
-		tk.Entry(canvas, font = ("Small Fonts", 25)),
+		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, highlightbackground = "white", bg = BACKGROUND),
+		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, highlightbackground = "white", bg = BACKGROUND),
 		tk.Button(canvas, text = "Valider", font = ("Small Fonts", 23), command = validate_names)
 	]
 	widgets[0].place(x = WINDOW_SIZE[0]/2, y = 10, anchor = "n")
 	widgets[1].insert(0, NAME_PLAYER_1)
 	widgets[2].insert(0, NAME_PLAYER_2)
-	
+
 
 	for i in range(1, len(widgets)):
 		widgets[i].place(x = 10, y = 50 + i * 66)
