@@ -506,6 +506,26 @@ def game():
 	root.after(1, game_physics)
 
 
+def credits():
+	global widgets
+
+	delete_widgets()
+
+	credits_font = ("Small Fonts", 20)
+
+	widgets = [
+		tk.Label(root, text = "Puissance 4 S2", font = credits_font),
+		tk.Label(root, text = "Auteurs : ", font = credits_font),
+		tk.Label(root, text = "JOURDAIN Anaïs\n\
+CAICEDO LEMOS Vanessa\n\
+GHARIB ALI BARURA Sama", font = credits_font),
+		tk.Label(root, text = "LDDBI", font = credits_font),
+		tk.Label(root, text = "Projet réalisé dans le cadre du module IN200", font = credits_font)
+	]
+
+	for i in range(len(widgets)):
+		widgets[i].place(x = WINDOW_SIZE[0]/2, y = 100 + i * 100, anchor = "center")
+
 #Menu principal
 
 def main_menu_clicks():
@@ -568,7 +588,9 @@ def main_menu_visu():
 
 	options = tk.Button(canvas, text = "Options", font = ("Small Fonts", 24), command = menu_perso_jeu)
 
-	boutons_main_menu_centre = [jouer, charger_jeu, options, instructions_jeu]
+	show_credits = tk.Button(canvas, text = "Credits", font = ("Small Fonts", 25), command = credits)
+
+	boutons_main_menu_centre = [jouer, charger_jeu, options, instructions_jeu, show_credits]
 
 	k = 20
 	for i in range(0, len(boutons_main_menu_centre)):
@@ -581,6 +603,7 @@ def main_menu_visu():
 	widgets.append(instructions_jeu)
 	widgets.append(charger_jeu)
 	widgets.append(options)
+	widgets.append(show_credits)
 
 
 
