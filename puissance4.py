@@ -510,20 +510,24 @@ def credits():
 	global widgets
 
 	delete_widgets()
+	canvas.delete("all")
 
 	credits_font = ("Small Fonts", 20)
+	credits_font_title = ("Small Fonts", 38, "bold")
+	credits_font_subtitle = ("Small Fonts", 24, "bold")
 
 	widgets = [
-		tk.Label(root, text = "Puissance 4 S2", font = credits_font),
-		tk.Label(root, text = "Auteurs : ", font = credits_font),
+		tk.Label(root, text = "Puissance 4 S2", font = credits_font_title),
+		tk.Label(root, text = "Auteurs : ", font = credits_font_subtitle),
 		tk.Label(root, text = "JOURDAIN Anaïs\n\
 CAICEDO LEMOS Vanessa\n\
 GHARIB ALI BARURA Sama", font = credits_font),
-		tk.Label(root, text = "LDDBI", font = credits_font),
+		tk.Label(root, text = "LDDBI", font = credits_font_subtitle),
 		tk.Label(root, text = "Projet réalisé dans le cadre du module IN200", font = credits_font)
 	]
 
 	for i in range(len(widgets)):
+		widgets[i]["bg"] = BACKGROUND
 		widgets[i].place(x = WINDOW_SIZE[0]/2, y = 100 + i * 100, anchor = "center")
 
 #Menu principal
