@@ -17,10 +17,10 @@ from PIL import Image, ImageTk
 import random
 
 
-#Variables globales
+# Variables globales
 
 
-#Options
+# Options
 COLOR_PALETTE          = {
 	"Red" : "#f63f34",
 	"Yellow" : "#efbd20",
@@ -76,6 +76,7 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 image_play=Image.open("background.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
+# Propriétés du fondu sur l'écran de lancement
 fade_delay = 1500
 fade_duration = 500
 
@@ -160,12 +161,17 @@ def raycast(o_start, stride, nbr = WINNING_STREAK):
 # Chargement / Sauvegarde
 
 def save(path):
+	'''
+		Sauvegarde une partie de puissance 4 dans le fichier situé à "path" sur le
+		disque dur de l'utilisateur.
+	'''
 
 	try:
 		out = open(path, "w")
 
-		out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n")
+		out.write(str(GRID_DIMS[0]) + ";" + str(GRID_DIMS[1]) + ";\n") # On commence par écrire le nombre de colonnes et le nombre de lignes
 
+		# On sauvegarde les propriétés de chaque jeton
 		for i in range(len(tokens_pos)):
 
 			out.write(str(tokens_pos[i][0]) + ";" + str(tokens_pos[i][1]) + ";" 
@@ -174,10 +180,13 @@ def save(path):
 		out.close()
 
 		return True
-	except:
+	except: # Si le "path" n'est pas valide.
 		return False
 
 def load(path):
+	'''
+		Charge une partie à partir du fichier situé à "path" sur le disque dur de l'utilisateur
+	'''
 
 	global COLOR_PLAYER_1
 	global COLOR_PLAYER_2
@@ -191,13 +200,13 @@ def load(path):
 
 		def_color = 0
 
-		header = True
+		header = True # Header devient false lorsque les paramètres de la partie ont étés chargés
 		reading = True
 		while reading:
 			
 			line = inn.readline()
 
-			if line and header:
+			if line and header: # On charge les paramètres de la partie (Pour l'instant il ne s'agit que des dimensions de la grille)
 				buffer = ""
 				step = 0
 
@@ -216,7 +225,7 @@ def load(path):
 				slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
 				slot_imagetk = ImageTk.PhotoImage(slot_image)
 
-			elif line:
+			elif line: # On charge un jeton
 				
 				buffer = ""
 				phase = 0
@@ -225,16 +234,16 @@ def load(path):
 
 					if c == ";":
 						if phase == 0:
-							tokens_pos.append(np.array([float(buffer), 0]))
+							tokens_pos.append(np.array([float(buffer), 0])) # La première donnée rencontrée est la position x
 						elif phase == 1:
-							tokens_pos[-1][1] = float(buffer)
+							tokens_pos[-1][1] = float(buffer) # Puis il s'agit de la position y
 						elif phase == 2:
-							tokens_speed.append(np.array([float(buffer), 0]))
+							tokens_speed.append(np.array([float(buffer), 0])) # Ensuite la vitesse x
 						elif phase == 3:
-							tokens_speed[-1][1] = float(buffer)
+							tokens_speed[-1][1] = float(buffer) # Suite à quoi on trouve la vitesse y
 						elif phase == 4:
-							is_static.append(bool(buffer))
-						elif phase == 5:
+							is_static.append(bool(buffer)) # Suivie par le bit décidant si le jeton est fixé ou non
+						elif phase == 5: # Pour enfin charger la couleur du jeton
 							oval((0, 0), (100, 100))
 							visu = oval(tokens_pos[-1], SLOT_SIZE)
 							canvas.itemconfig(visu, fill = buffer)
@@ -355,6 +364,9 @@ def annul_jeton():
 	turn = not turn
 
 def nouvelle_manche():
+	'''
+		Lance une nouvelle manche.
+	'''
 	for i in range (len(tokens_visu)):
 		canvas.delete(tokens_visu[i])
 	tokens_pos.clear()
@@ -364,6 +376,9 @@ def nouvelle_manche():
 
 
 def jeu_set_match(N_SET):
+	'''
+		Montre quel joueur remporte le set.
+	'''
 	if SCORE_PLAYER_1 > (N_SET/2):
 		widgets.append(tk.Label(canvas, text = str(NAME_PLAYER_1) + " emporte le set!", font = ("Small Fonts", 15), bg = "white"))
 		widgets[-1].place(relx = 0.5, y = 90, anchor='center')
@@ -402,21 +417,24 @@ def game_physics():
 				break
 			
 
+		# Si le jeton ne collisionne ni un autre jeton, ni le bas de la grille
 		if not collides_another and tokens_pos[i][1] + tokens_speed[i][1] + SLOT_SIZE[1] <= GRID_POS[1] + GRID_SIZE[1]:
 			tokens_pos[i] += tokens_speed[i]
-		else:
+		else: # Sinon
 			tokens_speed[i][1] = -1/2 * tokens_speed[i][1]
-			if abs(tokens_speed[i][1]) < 1:
+			if abs(tokens_speed[i][1]) < 1: # Si la vitesse absolue du jeton est trop faible, on met sa position à la case la plus proche (évite qu'un jeton ne soit entre deux cases)
 				tokens_pos[i][1] = GRID_POS[1] + SLOT_SIZE[1] * int( (tokens_pos[i][1] - GRID_POS[1]) /SLOT_SIZE[1])
 
 
-				is_static[i] = True
+				is_static[i] = True # On fixe le jeton
 
+				# On lance les différents rayons pour compter le nombre de jetons autour
 				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0)) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
 				verti = raycast(tokens_pos[i] + TOKEN_BOX/2, (0, SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (0, -SLOT_SIZE[1])) - 1
 				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
 				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) + raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
+				# Dans le cas où il y a assez de jetons alignés pour un puissance 4 :
 				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
 					if turn == True:
 						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + "!!!", fg="red", font=("Small Fonts", 30), bg="white"))
@@ -507,6 +525,9 @@ def game():
 
 
 def credits():
+	'''
+		Montre le menu "credits"
+	'''
 	global widgets
 
 	delete_widgets()
@@ -672,7 +693,10 @@ def retourner():
 
 
 def player_name_menu():
-
+	'''
+		Montre le menu pour changer les noms des joueurs
+	'''
+	
 	global widgets
 
 	canvas.delete("all")
@@ -704,7 +728,11 @@ def player_name_menu():
 	
 
 def grid_dimensions_menu():
-	
+	'''
+		Menu pour changer les dimensions de la grille
+	'''
+
+
 	global GRID_DIMS
 	global SLOT_SIZE
 	global widgets
@@ -747,6 +775,7 @@ def grid_dimensions_menu():
 		if len(widgets[index]["text"]) > 0:
 			widgets[index]["text"] = widgets[index]["text"][:len(widgets[index]["text"]) - 1]
 
+	# Clavier de saisie
 	for i in range(2):
 		for j in range(10):
 			widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
@@ -761,6 +790,10 @@ def grid_dimensions_menu():
 	widgets[-1].place(x = 10, y = 300)
 
 def tokens_color_menu():
+	'''
+		Menu pour changer les couleurs des joueurs
+	'''
+
 	global COLOR_PLAYER_1
 	global COLOR_PLAYER_2
 
@@ -802,7 +835,10 @@ def tokens_color_menu():
 	widgets[-1].place(x = 10, y = 450)
 
 def winning_streak_menu():
-	
+	'''
+		Menu pour changer le nombre de jetons nécessaire pour faire un puissance 4.
+	'''
+
 	global WINNING_STREAK
 
 	canvas.delete("all")
@@ -827,6 +863,7 @@ def winning_streak_menu():
 		if len(widgets[0]["text"]) > 0:
 			widgets[0]["text"] = widgets[0]["text"][:len(widgets[0]["text"]) - 1]
 
+	# Clavier de saisie
 	for j in range(10):
 		widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg = j: add_figure(str(arg))))
 		
@@ -843,6 +880,9 @@ def winning_streak_menu():
 	widgets[-1].place(x = 10, y = 350)
 
 def jeu_set_match_menu():
+	'''
+		Menu pour choisir le nombre de set à gagner pour gagner un match
+	'''
 
 	global N_SET
 	canvas.delete("all")
