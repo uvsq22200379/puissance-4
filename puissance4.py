@@ -506,7 +506,7 @@ def game_visu():
 
 	if N_SET != 0:
 		widgets.append(tk.Label(canvas, text = "Set à " + str(N_SET) + " manches", font = ("Small Fonts", 14), bg = "white"))
-		widgets[-1].place(relx = 0.5, y = 80, anchor='center')
+		widgets[-1].place(relx = 0.5, y = 60, anchor='center')
 
 
 
@@ -780,10 +780,21 @@ def grid_dimensions_menu():
 		root.after(1, retourner)
 
 
-	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[0]), font = ("Small Fonts", 12)))
-	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), font = ("Small Fonts", 12)))
-	widgets[0].place(x = 10, y = 10)
-	widgets[1].place(x = 10, y = 60)
+	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[0]), font = ("Small Fonts", 15)))
+	widgets[-1].place(x = 270, y = 175)
+
+	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), font = ("Small Fonts", 15)))
+	widgets[-1].place(x = 270, y = 225)
+
+
+	choix_longueur=tk.Label(canvas, text="Choix de la longueur de la grille : ", font=("Small Fonts", 15))
+	choix_longueur.place(x = 10, y = 175)
+
+	choix_hauteur=tk.Label(canvas, text="Choix de la hauteur de la grille : ", font=("Small Fonts", 15))
+	choix_hauteur.place(x = 10, y = 225)
+
+	
+
 
 	def add_figure(index, fig):
 		widgets[index]["text"] += fig
@@ -795,15 +806,15 @@ def grid_dimensions_menu():
 	for i in range(2):
 		for j in range(10):
 			widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
-			widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 120 + i * 50)
+			widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 270 + i * 50)
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", font = ("Small Fonts", 12), command = lambda: remove_figure(0)))
-	widgets[-1].place(x = 510, y = 120)
+	widgets[-1].place(x = 510, y = 270)
 	widgets.append(tk.Button(canvas, text = "Remove figure", font = ("Small Fonts", 12), command = lambda: remove_figure(1)))
-	widgets[-1].place(x = 510, y = 170)
+	widgets[-1].place(x = 510, y = 320)
 
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Small Fonts", 28), command = validate_dims))
-	widgets[-1].place(x = 10, y = 300)
+	widgets[-1].place(x = 10, y = 390)
 
 def tokens_color_menu():
 	'''
@@ -815,6 +826,7 @@ def tokens_color_menu():
 
 	canvas.delete("all")
 	delete_widgets()
+	
 
 	widgets.append(tk.Canvas(canvas, width = 50, height = 50, bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
 	widgets[-1].place(x = 10, y = 200)
@@ -839,7 +851,7 @@ def tokens_color_menu():
 			widgets[-1].place(x = 350 + j * 48, y = 200 + i * 150)
 
 	widgets.append(tk.Label(canvas, text = "Couleurs", font = ("Small Fonts", 50, "bold"), bg = BACKGROUND))
-	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 0, anchor = "n")
+	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 10, anchor = "n")
 
 	widgets.append(tk.Label(canvas, text = "Couleur pour player 1 :", font = ("Small Fonts", 24)))
 	widgets[-1].place(x = 10, y = 150)
@@ -862,6 +874,10 @@ def winning_streak_menu():
 
 	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK), font = ("Small Fonts", 12)))
 	widgets[0].place(x = 10, y = 10)
+
+	
+
+
 
 	def validate_winning_streak():
 		global WINNING_STREAK
@@ -903,6 +919,9 @@ def jeu_set_match_menu():
 	global N_SET
 	canvas.delete("all")
 	delete_widgets()
+
+	widgets.append(tk.Label(canvas,text="Choisissez le nombre de set ", font=("Small Fonts", 25)))
+	widgets[-1].place(x=200, y=10)
 
 	#(fonctions à améliorer après)
 	def set_3():
