@@ -26,7 +26,8 @@ COLOR_PALETTE          = {
 	"Yellow" : "#efbd20",
 	"Cyan" : "#65abaf",
 	"Grey" : "#9cafb7",
-	"Turquoise" : "#59e38c"	
+	"Turquoise" : "#59e38c",
+	"Violet" : "#89375F"
 
 }
 WINDOW_SIZE            = np.array([700, 600])
@@ -446,12 +447,12 @@ def game_physics():
 				# Dans le cas où il y a assez de jetons alignés pour un puissance 4 :
 				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
 					if turn == True:
-						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + "!!!", fg="red", font=("Small Fonts", 30), bg="white"))
-						widgets[-1].place(x=10,y=270)
+						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + " !!!", fg="red", font=("Small Fonts", 35), bg=BACKGROUND))
+						widgets[-1].place(x=10,y=80)
 						SCORE_PLAYER_1+=1
 					else: 
-						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + "!!!", fg="red", font=("Small Fonts", 30), bg="white"))
-						widgets[-1].place(x=10,y=270)
+						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + " !!!", fg="red", font=("Small Fonts", 35), bg=BACKGROUND))
+						widgets[-1].place(x=10,y=80)
 						SCORE_PLAYER_2+=1					
 					if N_SET!=0:
 						widgets.append(tk.Label(canvas, text = " SCORE: " + str(SCORE_PLAYER_1) + " - " + str(SCORE_PLAYER_2) + " ", font = ("Small Fonts", 18), highlightthickness=3, highlightbackground = "white", bg = BACKGROUND))
@@ -604,7 +605,7 @@ def main_menu_visu():
 		quitter_jeu.place_forget()
 		jouer.place_forget()
 		instructions_jeu.place_forget()
-		canvas.create_text(WINDOW_SIZE[0]/2, 100, text= "Instructions:", fill="black", font=("Small Fonts", font_size))
+		canvas.create_text(WINDOW_SIZE[0]/2, 100, text= "Instructions:", fill="#89375F", font=("Small Fonts", 35))
 		canvas.create_text(WINDOW_SIZE[0]/2, 200, text= "-Pour mettre un jeton cliquez sur la colonne souhaitée", fill="black", font=("Small Fonts", 15))
 		canvas.create_text(WINDOW_SIZE[0]/2, 250, text= "-Pour annuler un jeton cliquez sur le bouton droit de votre souris", fill="black", font=("Small Fonts", 15))
 		canvas.create_text(WINDOW_SIZE[0]/2, 300, text= "-Le but du jeu est de positionner 4 jetons de la même couleur consécutivement", fill="black", font=("Small Fonts", 15))
@@ -940,11 +941,11 @@ def menu_perso_jeu():
 	canvas.delete("all")
 	delete_widgets()
 
-	font_size = int(WINDOW_SIZE[1]/23)
+	font_size = int(WINDOW_SIZE[1]/25)
 	
 
 	widgets = [
-		tk.Label (canvas, text = "Options", font = ("Small Fonts", font_size * 2), bg="#9cafb7")
+		tk.Label (canvas, text = "Options", font = ("Small Fonts", font_size * 2),fg="#89375F", bg=BACKGROUND)
 	,	  tk.Button(canvas, text = "  Player names  ", font = ("Small Fonts", font_size), command = player_name_menu)
 	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Small Fonts", font_size), command = grid_dimensions_menu)
 	, 	  tk.Button(canvas, text = "Tokens color", font = ("Small Fonts", font_size), command = tokens_color_menu)
@@ -952,8 +953,8 @@ def menu_perso_jeu():
 	,     tk.Button(canvas, text = "Set / Match", font = ("Small Fonts", font_size), command = jeu_set_match_menu)
 	]
 	
-	widgets[0].place(x = 240, y = 10)
-	k = 0
+	widgets[0].place(x = 267, y = 10)
+	k = 1
 	for i in range(1, len(widgets)):
 		widgets[i].place(relx=0.5, y= font_size * 3 + 10 + (font_size * 2 + 10) * i + 10 + k, anchor="center")
 		k+=10
