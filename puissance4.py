@@ -346,10 +346,10 @@ def game_clicks(event):
 
 	if turn:
 		canvas.itemconfig(visu, fill = COLOR_PLAYER_1)
-		widgets[0]["text"] = "Au tour de " + NAME_PLAYER_2
+		widgets[0]["text"] = "Au tour de : " + NAME_PLAYER_2
 	else:
 		canvas.itemconfig(visu, fill = COLOR_PLAYER_2)
-		widgets[0]["text"] = "Au tour de " + NAME_PLAYER_1
+		widgets[0]["text"] = "Au tour de : " + NAME_PLAYER_1
 
 	tokens_pos.append(pos)
 	tokens_speed.append(np.array((0, 0)))
@@ -448,12 +448,19 @@ def game_physics():
 				# Dans le cas où il y a assez de jetons alignés pour un puissance 4 :
 				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
 					if turn == True:
-						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_1 + " !!!", fg="red", font=("Small Fonts", 35), bg=BACKGROUND))
-						widgets[-1].place(x=10,y=80)
+						widgets.append(tk.Label(canvas, text = "Victoire pour : ", fg="red", font=("Small Fonts", 25), bg=BACKGROUND))
+						widgets[-1].place(x=10,y=180)
+
+						widgets.append(tk.Label(canvas, text=NAME_PLAYER_1 + " !!", fg="black", font=("Small Fonts", 21), bg=BACKGROUND))
+						widgets[-1].place(x=10, y=240)
 						SCORE_PLAYER_1+=1
 					else: 
-						widgets.append(tk.Label(canvas, text = "Victoire de " + NAME_PLAYER_2 + " !!!", fg="red", font=("Small Fonts", 35), bg=BACKGROUND))
-						widgets[-1].place(x=10,y=80)
+						widgets.append(tk.Label(canvas, text = "Victoire pour : ", fg="red", font=("Small Fonts", 25), bg=BACKGROUND))
+						widgets[-1].place(x=10,y=180)
+
+						widgets.append(tk.Label(canvas, text=NAME_PLAYER_2 + " !!", fg="black", font=("Small Fonts", 21), bg=BACKGROUND))
+						widgets[-1].place(x=10, y=240)
+
 						SCORE_PLAYER_2+=1					
 					if N_SET!=0:
 						widgets.append(tk.Label(canvas, text = " SCORE: " + str(SCORE_PLAYER_1) + " - " + str(SCORE_PLAYER_2) + " ", font = ("Small Fonts", 18), highlightthickness=3, highlightbackground = "white", bg = BACKGROUND))
