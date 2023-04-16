@@ -546,6 +546,8 @@ def credits():
 	delete_widgets()
 	canvas.delete("all")
 
+	canvas.create_image(0, 0, anchor = "nw", image = image_invaders_tk)
+
 	credits_font = ("Small Fonts", 20)
 	credits_font_title = ("Small Fonts", 38, "bold")
 	credits_font_subtitle = ("Small Fonts", 24, "bold")
