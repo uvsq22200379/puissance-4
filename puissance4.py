@@ -76,6 +76,12 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 image_play=Image.open("background.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
+image_invaders = Image.open("invader_background.png")
+image_invaders = image_invaders.resize(WINDOW_SIZE)
+image_invaders_tk = ImageTk.PhotoImage(image_invaders) 
+invaders_background = None
+
+
 # Propriétés du fondu sur l'écran de lancement
 fade_delay = 1500
 fade_duration = 500
@@ -311,6 +317,7 @@ def game_clicks(event):
 	global NAME_PLAYER_1
 	global NAME_PLAYER_2
 	global GRID_SIZE
+	global invaders_background
 
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
@@ -332,6 +339,8 @@ def game_clicks(event):
 	# Création d'un nouveau jeton
 
 	visu = oval(pos, SLOT_SIZE)
+
+	canvas.lower(invaders_background)
 
 	if turn:
 		canvas.itemconfig(visu, fill = COLOR_PLAYER_1)
@@ -470,6 +479,10 @@ def game_visu():
 	'''
 	global SCORE_PLAYER_1
 	global SCORE_PLAYER_2
+	global invaders_background
+
+	invaders_background = canvas.create_image(0, 0, image = image_invaders_tk, anchor = "nw")
+
 
 	for y in range(GRID_DIMS[1]):
 		for x in range(GRID_DIMS[0]):
