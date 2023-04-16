@@ -872,8 +872,8 @@ def winning_streak_menu():
 	canvas.delete("all")
 	delete_widgets()
 
-	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK), font = ("Small Fonts", 12)))
-	widgets[0].place(x = 10, y = 10)
+	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK), font = ("Small Fonts", 28)))
+	widgets[0].place(x = 260, y = 40)
 
 	
 
@@ -900,16 +900,19 @@ def winning_streak_menu():
 		widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg = j: add_figure(str(arg))))
 		
 		if j != 9:
-			widgets[j + 1].place(x = 10 + (j%3) * 50, y = 120 + int(j/3) * 50)
+			widgets[j + 1].place(x = 280 + (j%3) * 50, y = 200 + int(j/3) * 50)
 		else:
-			widgets[j + 1].place(x = 10 + 50, y = 120 + int(j/3) * 50)
+			widgets[j + 1].place(x = 280 + 50, y = 200 + int(j/3) * 50)
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", font = ("Small Fonts", 12), command = lambda: remove_figure()))
-	widgets[-1].place(x = 510, y = 120)
+	widgets[-1].place(x = 510, y = 400)
+
+	widgets.append(tk.Label(text="Vous avez choisi : ", font=("Small Fonts", 28)))
+	widgets[-1].place(x=10, y=40)
 
 
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Small Fonts", 28), command = validate_winning_streak))
-	widgets[-1].place(x = 10, y = 350)
+	widgets[-1].place(x = 10, y = 400)
 
 def jeu_set_match_menu():
 	'''
@@ -920,8 +923,8 @@ def jeu_set_match_menu():
 	canvas.delete("all")
 	delete_widgets()
 
-	widgets.append(tk.Label(canvas,text="Choisissez le nombre de set ", font=("Small Fonts", 25)))
-	widgets[-1].place(x=200, y=10)
+	widgets.append(tk.Label(canvas,text="Choisissez le nombre de set : ", font=("Small Fonts", 25)))
+	widgets[-1].place(x=200, y=50)
 
 	#(fonctions à améliorer après)
 	def set_3():
@@ -930,7 +933,7 @@ def jeu_set_match_menu():
 		retourner()
 	set3 = tk.Button(canvas, text = "3", font = ("Small Fonts", 25), command = set_3)
 	widgets.append(set3)
-	set3.place(x = 390, y = 120)
+	set3.place(x = 265, y = 200)
 
 	def set_5():
 		global N_SET
@@ -938,7 +941,7 @@ def jeu_set_match_menu():
 		retourner()
 	set5 = tk.Button(canvas, text = "5", font = ("Small Fonts", 25), command = set_5)
 	widgets.append(set5)
-	set5.place(x = 450, y = 120)
+	set5.place(x = 325, y = 200)
 	
 	def set_7():
 		global N_SET
@@ -947,7 +950,7 @@ def jeu_set_match_menu():
 
 	set7 = tk.Button(canvas, text = "7", font = ("Small Fonts", 25), command = set_7)
 	widgets.append(set7)
-	set7.place(x = 510, y = 120)
+	set7.place(x = 385, y = 200)
 	
 
 def menu_perso_jeu():
