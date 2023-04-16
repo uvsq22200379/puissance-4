@@ -83,6 +83,7 @@ image_invaders_tk = ImageTk.PhotoImage(image_invaders)
 invaders_background = None
 
 
+
 # Propriétés du fondu sur l'écran de lancement
 fade_delay = 1500
 fade_duration = 500
@@ -786,7 +787,6 @@ def grid_dimensions_menu():
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), font = ("Small Fonts", 15)))
 	widgets[-1].place(x = 270, y = 225)
 
-
 	choix_longueur=tk.Label(canvas, text="Choix de la longueur de la grille : ", font=("Small Fonts", 15))
 	choix_longueur.place(x = 10, y = 175)
 
@@ -794,7 +794,9 @@ def grid_dimensions_menu():
 	choix_hauteur.place(x = 10, y = 225)
 
 	
+	
 
+	
 
 	def add_figure(index, fig):
 		widgets[index]["text"] += fig
