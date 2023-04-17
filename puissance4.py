@@ -31,7 +31,7 @@ COLOR_PALETTE          = {
 
 }
 WINDOW_SIZE            = np.array([700, 600])
-BACKGROUND             = "snow3"
+BACKGROUND             = "#000650"
 GRID_DIMS              = np.array([7, 6])
 GRID_POS               = WINDOW_SIZE / 4
 GRID_SIZE              = WINDOW_SIZE / 2
@@ -78,10 +78,6 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 
 image_play = Image.open("background.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
-
-image_flou = Image.open("grille floutée.jpg") 
-image_flou = image_flou.resize(WINDOW_SIZE)
-image_flou_tk = ImageTk.PhotoImage(image_flou)
 
 image_invaders = Image.open("invader_background.png")
 image_invaders = image_invaders.resize(WINDOW_SIZE)
@@ -857,8 +853,6 @@ def grid_dimensions_menu():
 
 	canvas.delete("all")
 	delete_widgets()
-
-	canvas.create_image(0,0, anchor="nw", image=image_flou_tk)
 	
 
 	def validate_dims():
