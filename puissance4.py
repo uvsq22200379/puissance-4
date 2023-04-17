@@ -88,13 +88,72 @@ image_invaders = image_invaders.resize(WINDOW_SIZE)
 image_invaders_tk = ImageTk.PhotoImage(image_invaders) 
 invaders_background = None
 
-
+image_bouton_pressed = Image.open("boutons/pressed.png")
+image_bouton_released = Image.open("boutons/rest.png")
+image_bouton_hovered = Image.open("boutons/hovered.png")
 
 # Propriétés du fondu sur l'écran de lancement
 fade_delay = 1500
 fade_duration = 500
 
 #Outils
+
+# Bouton
+
+bouton_model = {
+	"position" : np.array((0, 0)),
+	"taille" : np.array((100, 30)),
+	"texte" : None,
+	"image_pressed" : None,
+	"image_released" : None,
+	"image_hovered" : None,
+	"visual" : None,
+	"fonction" : None
+}
+boutons = []
+
+def clicked(bouton):
+	canvas.itemconfig(bouton["visual"], image = bouton["image_pressed"])
+	canvas.coords(bouton["texte"], bouton["position"][0], int(bouton["position"][1] + bouton["taille"][1]/8))
+	root.after(100, lambda: canvas.coords(bouton["texte"], bouton["position"][0], bouton["position"][1]))
+	root.after(100, lambda arg0 = bouton["visual"], arg1 = bouton["image_released"]: canvas.itemconfig(arg0, image = arg1))
+	root.after(200, bouton["fonction"])
+
+
+def creer_bouton(pos, taille, text = "Appuyez", command = lambda: print("Button clicked !")):
+	nouveau_bouton = bouton_model.copy()
+	nouveau_bouton["position"] = pos
+	nouveau_bouton["taille"] = taille
+	nouveau_bouton["fonction"] = command
+	nouveau_bouton["image_pressed"] = ImageTk.PhotoImage(image_bouton_pressed.resize(taille))
+	nouveau_bouton["image_released"] = ImageTk.PhotoImage(image_bouton_released.resize(taille))
+	nouveau_bouton["image_hovered"] = ImageTk.PhotoImage(image_bouton_hovered.resize(taille))
+	nouveau_bouton["visual"] = canvas.create_image(pos[0], pos[1], image = nouveau_bouton["image_released"], anchor = "center")
+	nouveau_bouton["texte"] = canvas.create_text(pos[0], pos[1], text = text, anchor = "center", font = ("Small Fonts", int(taille[1]/3)), fill = COLOR_PALETTE["Yellow"])
+
+	boutons.append(nouveau_bouton)
+
+def hover_boutons(event):
+
+	for b in boutons:
+		if event.x > b["position"][0] - b["taille"][0]/2 and\
+		   event.x < b["position"][0] + b["taille"][0]/2 and\
+		   event.y > b["position"][1] - b["taille"][1]/2 and\
+		   event.y < b["position"][1] + b["taille"][1]/2:
+
+		   canvas.itemconfig(b["visual"], image = b["image_hovered"])
+		else:
+		   canvas.itemconfig(b["visual"], image = b["image_released"])
+
+def click_boutons(event):
+
+	for b in boutons:
+		if event.x > b["position"][0] - b["taille"][0]/2 and\
+		   event.x < b["position"][0] + b["taille"][0]/2 and\
+		   event.y > b["position"][1] - b["taille"][1]/2 and\
+		   event.y < b["position"][1] + b["taille"][1]/2:
+
+		   clicked(b)
 
 # Fonctions permettant d'utiliser des tableaux numpy 1x2 (Vecteurs) pour créer des formes
 def rectangle(pos, size):
@@ -283,7 +342,7 @@ def load(path):
 	except:
 		return False # Le fichier n'a pas pu être lu.
 
-def launch_load(path):
+def launch_load():
 
 	delete_widgets()
 
@@ -590,6 +649,10 @@ def main_menu_visu():
 	'''
 
 	canvas.delete("all")
+	boutons.clear()
+
+	canvas.bind("<Button-1>", click_boutons)
+	canvas.bind("<Motion>", hover_boutons)
 
 	canvas.create_image(WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2, image=image_play_tk)
 
@@ -624,15 +687,22 @@ def main_menu_visu():
 
 	# Boutons du menu principal 
 
-	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Small Fonts", 25), command = lambda: launch_load("saved_games/test.game"))
-
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Small Fonts", 25), command = instructions)
-
 	quitter_jeu=tk.Button(canvas,text="QUITTER",fg="red",font = ("Small Fonts", 15), command = quitter)
 	quitter_jeu.place(x=WINDOW_SIZE[0]-110, y=WINDOW_SIZE[1]-50)
 
 	retour = tk.Button(canvas, text="RETOURNER AU MENU PRINCIPAL", font = ("Small Fonts", 12), command = retourner)
 	retour.place(x=25, y=WINDOW_SIZE[1]-50)
+
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 100), (150, 50), text = "Jouer", command = game)
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 160), (150, 50), text = "Options", command = menu_perso_jeu)
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 220), (150, 50), text = "Credits", command = credits)
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 280), (150, 50), text = "Charger", command = launch_load)
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 340), (150, 50), text = "Instructions", command = instructions)
+
+'''
+	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Small Fonts", 25), command = lambda: launch_load("saved_games/test.game"))
+
+	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Small Fonts", 25), command = instructions)
 
 	jouer = tk.Button(canvas, text = "Jouer", font = ("Small Fonts", 25), command = game)
 
@@ -647,12 +717,12 @@ def main_menu_visu():
 		boutons_main_menu_centre[i].place(relx=0.5, y= font_size * 3 + (font_size * 2 + 10) * i + 100 + k, anchor="center")
 		k+=10
 
-	widgets.append(jouer)
+	#widgets.append(jouer)
 	widgets.append(instructions_jeu)
 	widgets.append(charger_jeu)
 	widgets.append(options)
 	widgets.append(show_credits)
-
+'''
 
 def main_menu():
 	'''
