@@ -79,6 +79,10 @@ logo_imagetk = ImageTk.PhotoImage(logo_image)
 image_play = Image.open("background.jpeg") # Fond d'écran du menu principal
 image_play_tk = ImageTk.PhotoImage(image_play)
 
+image_flou = Image.open("grille floutée.jpg") 
+image_flou = image_flou.resize(WINDOW_SIZE)
+image_flou_tk = ImageTk.PhotoImage(image_flou)
+
 image_invaders = Image.open("invader_background.png")
 image_invaders = image_invaders.resize(WINDOW_SIZE)
 image_invaders_tk = ImageTk.PhotoImage(image_invaders) 
@@ -784,6 +788,9 @@ def grid_dimensions_menu():
 	canvas.delete("all")
 	delete_widgets()
 
+	canvas.create_image(0,0, anchor="nw", image=image_flou_tk)
+	
+
 	def validate_dims():
 		global GRID_DIMS
 		global SLOT_SIZE
@@ -812,17 +819,6 @@ def grid_dimensions_menu():
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), font = ("Small Fonts", 15)))
 	widgets[-1].place(x = 270, y = 225)
 
-	choix_longueur=tk.Label(canvas, text="Choix de la longueur de la grille : ", font=("Small Fonts", 15))
-	choix_longueur.place(x = 10, y = 175)
-
-	choix_hauteur=tk.Label(canvas, text="Choix de la hauteur de la grille : ", font=("Small Fonts", 15))
-	choix_hauteur.place(x = 10, y = 225)
-
-	
-	
-
-	
-
 	def add_figure(index, fig):
 		widgets[index]["text"] += fig
 	def remove_figure(index):
@@ -834,6 +830,12 @@ def grid_dimensions_menu():
 		for j in range(10):
 			widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
 			widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 270 + i * 50)
+
+	widgets.append(tk.Label(canvas, text ="Choix de la longueur de la grille : " , font = ("Small Fonts", 15)))
+	widgets[-1].place(x = 10, y = 175)
+
+	widgets.append(tk.Label(canvas, text = "Choix de la hauteur de la grille : ", font = ("Small Fonts", 15)))
+	widgets[-1].place(x = 10, y = 225)
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", font = ("Small Fonts", 12), command = lambda: remove_figure(0)))
 	widgets[-1].place(x = 510, y = 270)
