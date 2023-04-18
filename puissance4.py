@@ -162,6 +162,7 @@ def click_boutons(event):
 		   event.y < b["position"][1] + b["taille"][1]/2:
 
 		   clicked(b)
+		   return True
 
 # Fonctions permettant d'utiliser des tableaux numpy 1x2 (Vecteurs) pour créer des formes
 def rectangle(pos, size):
@@ -398,6 +399,8 @@ def game_clicks(event):
 	global GRID_SIZE
 	global invaders_background
 
+	if click_boutons(event):
+		return;
 
 	if event.x <= GRID_POS[0] or event.x >= GRID_POS[0] + GRID_SIZE[0]:
 		return # Si le clique est en dehors de la grille, on ne crée pas de jeton
@@ -476,6 +479,7 @@ def jeu_set_match(N_SET):
 		widgets[-1].place(relx = 0.5, y = 90, anchor='center')
 
 
+
 def game_physics():
 	'''
 		Comportement physique des jetons (gravité, rebonds et collisions)
@@ -518,7 +522,7 @@ def game_physics():
 		if not collides_another and tokens_pos[i][1] + tokens_speed[i][1] + SLOT_SIZE[1] <= GRID_POS[1] + GRID_SIZE[1]:
 			tokens_pos[i] += tokens_speed[i]
 		else: # Sinon
-			tokens_speed[i][1] = -1/2 * tokens_speed[i][1]
+			tokens_speed[i][1] = -1/3 * tokens_speed[i][1]
 			if abs(tokens_speed[i][1]) < 1: # Si la vitesse absolue du jeton est trop faible, on met sa position à la case la plus proche (évite qu'un jeton ne soit entre deux cases)
 				tokens_pos[i][1] = GRID_POS[1] + SLOT_SIZE[1] * int( (tokens_pos[i][1] - GRID_POS[1]) /SLOT_SIZE[1])
 
