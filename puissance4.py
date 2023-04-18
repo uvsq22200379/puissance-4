@@ -33,8 +33,8 @@ COLOR_PALETTE          = {
 WINDOW_SIZE            = np.array([700, 600])
 BACKGROUND             = "#000650"
 GRID_DIMS              = np.array([7, 6])
-GRID_POS               = WINDOW_SIZE / 4
-GRID_SIZE              = WINDOW_SIZE / 2
+GRID_POS               = WINDOW_SIZE / 8
+GRID_SIZE              = 6*WINDOW_SIZE / 8
 SLOT_SIZE              = GRID_SIZE / GRID_DIMS
 TOKEN_BOX              = SLOT_SIZE * 4/5
 TOKEN_COLLISION_RADIUS = SLOT_SIZE[1] / 2
@@ -472,6 +472,14 @@ def game_physics():
 	global SCORE_PLAYER_2
 	global N_SET
 
+	try:
+		if turn:
+			widgets[0]["text"] = "Au tour de : " + NAME_PLAYER_2
+		else:
+			widgets[0]["text"] = "Au tour de : " + NAME_PLAYER_1
+	except:
+		pass
+
 	for i in range(len(tokens_pos)):
 
 		if is_static[i]:
@@ -882,8 +890,7 @@ def grid_dimensions_menu():
 
 		SLOT_SIZE = GRID_SIZE / GRID_DIMS
 
-		slot_image = slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1])))
-		slot_imagetk = ImageTk.PhotoImage(slot_image)
+		slot_imagetk = ImageTk.PhotoImage(slot_image.resize((int(SLOT_SIZE[0]), int(SLOT_SIZE[1]))))
 
 		root.after(1, retourner)
 
