@@ -109,6 +109,9 @@ bouton_model = {
 boutons = []
 
 def clicked(bouton):
+	'''
+		Est appelée lorsque que "bouton" est cliqué.
+	'''
 	canvas.itemconfig(bouton["visual"], image = bouton["image_pressed"])
 	canvas.coords(bouton["texte"], bouton["position"][0], int(bouton["position"][1] + bouton["taille"][1]/8))
 	root.after(100, lambda: canvas.coords(bouton["texte"], bouton["position"][0], bouton["position"][1]))
@@ -117,6 +120,9 @@ def clicked(bouton):
 
 
 def creer_bouton(pos, taille, text = "Appuyez", command = lambda: print("Button clicked !")):
+	'''
+		Crée un bouton sur le canvas.
+	'''
 	nouveau_bouton = bouton_model.copy()
 	nouveau_bouton["position"] = pos
 	nouveau_bouton["taille"] = taille
@@ -130,6 +136,9 @@ def creer_bouton(pos, taille, text = "Appuyez", command = lambda: print("Button 
 	boutons.append(nouveau_bouton)
 
 def hover_boutons(event):
+	'''
+		Change l'image du boutons qui est en dessous du curseur de la souris.
+	'''
 
 	for b in boutons:
 		if event.x > b["position"][0] - b["taille"][0]/2 and\
@@ -142,6 +151,9 @@ def hover_boutons(event):
 		   canvas.itemconfig(b["visual"], image = b["image_released"])
 
 def click_boutons(event):
+	'''
+		Vérifie si un est sur un bouton.
+	'''
 
 	for b in boutons:
 		if event.x > b["position"][0] - b["taille"][0]/2 and\
@@ -340,6 +352,9 @@ def load(path):
 		return False # Le fichier n'a pas pu être lu.
 
 def launch_load():
+	'''
+		Charge une partie puis la lance.
+	'''
 
 	delete_widgets()
 
