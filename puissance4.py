@@ -1025,8 +1025,11 @@ def winning_streak_menu():
 	widgets.append(tk.Label(text="Vous avez choisi : ", font=("Small Fonts", 23)))
 	widgets[-1].place(x=10, y=170)
 
-	widgets.append(tk.Label(text="Veuillez choisir un nombre  ", fg="#efbd20", font=("Small Fonts", 23), bg=BACKGROUND))
-	widgets[-1].place(x=270, y=10)
+	widgets.append(tk.Label(text="Veuillez choisir un nombre qui est en accord  ", fg="#efbd20", font=("Small Fonts", 23), bg=BACKGROUND))
+	widgets[-1].place(x=140, y=10)
+
+	widgets.append(tk.Label(text="avec la taille de votre grille  ", fg="#efbd20", font=("Small Fonts", 23), bg=BACKGROUND))
+	widgets[-1].place(x=215, y=40)
 
 
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Small Fonts", 25), command = validate_winning_streak))
