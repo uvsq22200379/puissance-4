@@ -114,6 +114,7 @@ def clicked(bouton):
 	root.after(100, lambda: canvas.coords(bouton["texte"], bouton["position"][0], bouton["position"][1]))
 	root.after(100, lambda arg0 = bouton["visual"], arg1 = bouton["image_released"]: canvas.itemconfig(arg0, image = arg1))
 	root.after(200, bouton["fonction"])
+	root.after(180, boutons.clear)
 
 
 def creer_bouton(pos, taille, text = "Appuyez", command = lambda: print("Button clicked !")):
@@ -645,7 +646,6 @@ def main_menu_visu():
 	'''
 
 	canvas.delete("all")
-	boutons.clear()
 
 	canvas.bind("<Button-1>", click_boutons)
 	canvas.bind("<Motion>", hover_boutons)
@@ -787,6 +787,16 @@ def menu_perso_jeu():
 	canvas.delete("all")
 	delete_widgets()
 
+	widgets = [tk.Label (canvas, text = "Options", font = ("Small Fonts", 32),fg="#efbd20", bg=BACKGROUND)]
+	widgets[0].place(x = WINDOW_SIZE[0]/2, y = 100, anchor = "center")
+
+	creer_bouton((WINDOW_SIZE[0]/2, 200), (200, 50), text = "Player names", command = player_name_menu)
+	creer_bouton((WINDOW_SIZE[0]/2, 260), (200, 50), text = "Grid dimensions", command = grid_dimensions_menu)
+	creer_bouton((WINDOW_SIZE[0]/2, 320), (200, 50), text = "Tokens color", command = tokens_color_menu)
+	creer_bouton((WINDOW_SIZE[0]/2, 380), (200, 50), text = "Winning streak", command = winning_streak_menu)
+	creer_bouton((WINDOW_SIZE[0]/2, 440), (200, 50), text = "Set/Match", command = jeu_set_match_menu)
+
+	'''
 	font_size = int(WINDOW_SIZE[1]/25)
 	
 	widgets = [
@@ -803,6 +813,7 @@ def menu_perso_jeu():
 	for i in range(1, len(widgets)):
 		widgets[i].place(relx=0.5, y= font_size * 3 + 10 + (font_size * 2 + 10) * i + 10 + k, anchor="center")
 		k+=10
+	'''
 
 def player_name_menu():
 	'''
@@ -878,10 +889,10 @@ def grid_dimensions_menu():
 
 
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[0]), font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 270, y = 175)
+	widgets[-1].place(x = 400, y = 175)
 
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 270, y = 225)
+	widgets[-1].place(x = 400, y = 225)
 
 	def add_figure(index, fig):
 		widgets[index]["text"] += fig
@@ -972,7 +983,7 @@ def winning_streak_menu():
 	delete_widgets()
 
 	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK), font = ("Small Fonts", 23)))
-	widgets[0].place(x = 240, y = 170)
+	widgets[0].place(x = 400, y = 170)
 
 
 	def validate_winning_streak():
