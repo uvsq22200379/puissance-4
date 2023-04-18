@@ -114,7 +114,6 @@ def clicked(bouton):
 	root.after(100, lambda: canvas.coords(bouton["texte"], bouton["position"][0], bouton["position"][1]))
 	root.after(100, lambda arg0 = bouton["visual"], arg1 = bouton["image_released"]: canvas.itemconfig(arg0, image = arg1))
 	root.after(200, bouton["fonction"])
-	root.after(180, boutons.clear)
 
 
 def creer_bouton(pos, taille, text = "Appuyez", command = lambda: print("Button clicked !")):
@@ -184,6 +183,7 @@ def delete_widgets():
 		Supprime tous les widgets
 	'''
 
+	boutons.clear()
 	for i in range(len(widgets)):
 		widgets[i].place_forget()
 	widgets.clear()
@@ -846,8 +846,8 @@ def player_name_menu():
 	widgets = [
 		tk.Label (canvas, text = "Veuillez saisir vos noms", fg="#efbd20", font = ("Small Fonts", 30, "bold"), bg=BACKGROUND),
 		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, highlightbackground = "white", bg = "white"),
-		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, highlightbackground = "white", bg = "white"),
-		tk.Button(canvas, text = "Valider", font = ("Small Fonts", 23), command = validate_names)
+		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, highlightbackground = "white", bg = "white")# ,
+		# tk.Button(canvas, text = "Valider", font = ("Small Fonts", 23), command = validate_names)
 	]
 	widgets[0].place(x = WINDOW_SIZE[0]/2, y = WINDOW_SIZE[1]/4, anchor = "n")
 	widgets[1].insert(0, NAME_PLAYER_1)
@@ -856,8 +856,10 @@ def player_name_menu():
 	for i in range(1, 3):
 		widgets[i].place(relx = 0.25, y = WINDOW_SIZE[1]/4 + i * 66)
 
-	widgets[3].place(relx = 0.5, y = WINDOW_SIZE[1]/8*5, anchor = "center")
+	#widgets[3].place(relx = 0.5, y = WINDOW_SIZE[1]/8*5, anchor = "center")
 	
+	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1] * 5/8), (150, 80), text = "Valider", command = validate_names)
+
 def grid_dimensions_menu():
 	'''
 		Menu pour changer les dimensions de la grille
@@ -910,8 +912,9 @@ def grid_dimensions_menu():
 	# Clavier de saisie
 	for i in range(2):
 		for j in range(10):
-			widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
-			widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 270 + i * 50)
+			#widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
+			#widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 270 + i * 50)
+			creer_bouton((30 + j * 50, 295 + i * 50), (50, 50), text = str(j), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1)))
 
 	widgets.append(tk.Label(canvas, text ="Choix de la longueur de la grille : " , font = ("Small Fonts", 15)))
 	widgets[-1].place(x = 10, y = 175)
@@ -1012,12 +1015,15 @@ def winning_streak_menu():
 
 	# Clavier de saisie
 	for j in range(10):
-		widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg = j: add_figure(str(arg))))
+		#widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg = j: add_figure(str(arg))))
 		
 		if j != 9:
-			widgets[j + 1].place(x = 280 + (j%3) * 50, y = 240 + int(j/3) * 50)
+			#widgets[j + 1].place(x = 280 + (j%3) * 50, y = 240 + int(j/3) * 50)
+			creer_bouton((280 + (j%3) * 50, 240 + int(j/3) * 50), (50, 50), text = str(j), command = lambda arg = j: add_figure(str(arg)))
 		else:
-			widgets[j + 1].place(x = 280 + 50, y = 240 + int(j/3) * 50)
+			#widgets[j + 1].place(x = 280 + 50, y = 240 + int(j/3) * 50)
+			creer_bouton((280 + 50, 240 + int(j/3) * 50), (50, 50), text = '9', command = lambda: add_figure('9'))
+
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", font = ("Small Fonts", 12), command = lambda: remove_figure()))
 	widgets[-1].place(x = 510, y = 400)
