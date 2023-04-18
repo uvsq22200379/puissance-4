@@ -491,6 +491,8 @@ def game_physics():
 	global SCORE_PLAYER_2
 	global N_SET
 
+	canvas.lower(invaders_background)
+
 	try:
 		if turn:
 			widgets[0]["text"] = "Au tour de : " + NAME_PLAYER_2
