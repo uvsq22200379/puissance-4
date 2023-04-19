@@ -378,6 +378,7 @@ def launch_load(): #fonction qui permet de charger une partie
 	path = filedialog.askopenfilename()
 	if load(path):
 		root.after(1, game)
+		root.after(100, lambda: canvas.lower(invaders_background))
 	else:
 		widgets.append(tk.Label(canvas, text = "Erreur : Le fichier \"" + str(path) + "\" n'a pas pu être chargé !", fg = "red"))
 		widgets.append(tk.Button(canvas, text = "OK", command = retourner))
@@ -549,15 +550,18 @@ def game_physics():
 				is_static[i] = True # On fixe le jeton
 
 				# On lance les différents rayons pour compter le nombre de jetons autour
-				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0)) 
+
+
+				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0))\
 				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
-				verti = raycast(tokens_pos[i] + TOKEN_BOX/2, (0, SLOT_SIZE[1])) 
+				verti = raycast(tokens_pos[i] + TOKEN_BOX/2, (0, SLOT_SIZE[1]))\
 				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (0, -SLOT_SIZE[1])) - 1
-				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1])) 
+				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1]))\
 				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
-				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1])) 
+				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1]))\
 				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
+				
 				# Dans le cas où il y a assez de jetons alignés pour un puissance 4 :
 				if horiz >= WINNING_STREAK or verti >= WINNING_STREAK or diag1 >= WINNING_STREAK or diag2 >= WINNING_STREAK:
 					if turn == True:
