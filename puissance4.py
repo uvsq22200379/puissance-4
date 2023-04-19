@@ -552,14 +552,14 @@ def game_physics():
 				# On lance les différents rayons pour compter le nombre de jetons autour
 
 
-				horiz = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], 0))\
-				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], 0)) - 1
-				verti = raycast(tokens_pos[i] + TOKEN_BOX/2, (0, SLOT_SIZE[1]))\
-				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (0, -SLOT_SIZE[1])) - 1
-				diag1 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], SLOT_SIZE[1]))\
-				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
-				diag2 = raycast(tokens_pos[i] + TOKEN_BOX/2, (SLOT_SIZE[0], -SLOT_SIZE[1]))\
-				+ raycast(tokens_pos[i] + TOKEN_BOX/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
+				horiz = raycast(tokens_pos[i] + SLOT_SIZE/2, (SLOT_SIZE[0], 0))\
+				+ raycast(tokens_pos[i] + SLOT_SIZE/2, (-SLOT_SIZE[0], 0)) - 1
+				verti = raycast(tokens_pos[i] + SLOT_SIZE/2, (0, SLOT_SIZE[1]))\
+				+ raycast(tokens_pos[i] + SLOT_SIZE/2, (0, -SLOT_SIZE[1])) - 1
+				diag1 = raycast(tokens_pos[i] + SLOT_SIZE/2, (SLOT_SIZE[0], SLOT_SIZE[1]))\
+				+ raycast(tokens_pos[i] + SLOT_SIZE/2, (-SLOT_SIZE[0], -SLOT_SIZE[1])) - 1
+				diag2 = raycast(tokens_pos[i] + SLOT_SIZE/2, (SLOT_SIZE[0], -SLOT_SIZE[1]))\
+				+ raycast(tokens_pos[i] + SLOT_SIZE/2, (-SLOT_SIZE[0], SLOT_SIZE[1])) - 1
 
 				
 				# Dans le cas où il y a assez de jetons alignés pour un puissance 4 :
