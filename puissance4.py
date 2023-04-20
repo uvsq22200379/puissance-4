@@ -912,25 +912,6 @@ def menu_perso_jeu():
 	creer_bouton((WINDOW_SIZE[0]/2, 440), (200, 50), \
 	      text = "Set/Match", command = jeu_set_match_menu)
 
-	'''
-	font_size = int(WINDOW_SIZE[1]/25)
-	
-	widgets = [
-		tk.Label (canvas, text = "Options", font = ("Small Fonts", font_size * 2),fg="#efbd20", bg=BACKGROUND)
-	,	  tk.Button(canvas, text = "  Player names  ", font = ("Small Fonts", font_size), command = player_name_menu)
-	, 	  tk.Button(canvas, text = "Grid dimensions", font = ("Small Fonts", font_size), command = grid_dimensions_menu)
-	, 	  tk.Button(canvas, text = "Tokens color", font = ("Small Fonts", font_size), command = tokens_color_menu)
-	, 	  tk.Button(canvas, text = "Winning streak", font = ("Small Fonts", font_size), command = winning_streak_menu)
-	,     tk.Button(canvas, text = "Set / Match", font = ("Small Fonts", font_size), command = jeu_set_match_menu)
-	]
-	
-	widgets[0].place(x = 267, y = 10)
-	k = 1
-	for i in range(1, len(widgets)):
-		widgets[i].place(relx=0.5, y= font_size * 3 + 10 + (font_size * 2 + 10) * i + 10 + k, anchor="center")
-		k+=10
-	'''
-
 
 def player_name_menu():
 	'''
@@ -961,7 +942,6 @@ def player_name_menu():
 	    highlightbackground = "white", bg = "white"),
 		tk.Entry(canvas, font = ("Small Fonts", 25), highlightthickness=5, \
 	   highlightbackground = "white", bg = "white") ,
-		# tk.Button(canvas, text = "Valider", font = ("Small Fonts", 23), command = validate_names)
 	]
 	widgets[0].place(x = WINDOW_SIZE[0]/2, y = WINDOW_SIZE[1]/4, anchor = "n")
 	widgets[1].insert(0, NAME_PLAYER_1)
@@ -970,7 +950,6 @@ def player_name_menu():
 	for i in range(1, 3):
 		widgets[i].place(relx = 0.25, y = WINDOW_SIZE[1]/4 + i * 66)
 
-	#widgets[3].place(relx = 0.5, y = WINDOW_SIZE[1]/8*5, anchor = "center")
 	
 	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1] * 5/8), (150, 80), 
 	      text = "Valider", command = validate_names)
@@ -1015,12 +994,14 @@ def grid_dimensions_menu(): #menu pour choisisr les dimensions de la grille
 
 
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[0]), \
-			 font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 400, y = 175)
+			 font = ("Small Fonts", 15), highlightthickness=3, \
+	    	 highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(x = 430, y = 175)
 
 	widgets.append(tk.Label(canvas, text = str(GRID_DIMS[1]), \
-			 font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 400, y = 225)
+			 font = ("Small Fonts", 15), highlightthickness=3, \
+	    	  highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(x = 430, y = 225)
 
 	def add_figure(index, fig):
 		widgets[index]["text"] += fig
@@ -1032,41 +1013,41 @@ def grid_dimensions_menu(): #menu pour choisisr les dimensions de la grille
 	# Clavier de saisie
 	for i in range(2):
 		for j in range(10):
-			#widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg0 = i, arg1 = j: add_figure(arg0, str(arg1))))
-			#widgets[10 * i + j + 2].place(x = 10 + j * 50, y = 270 + i * 50)
-			creer_bouton((30 + j * 50, 295 + i * 50), (50, 50), \
+			creer_bouton((55 + j * 50, 295 + i * 50), (50, 50), \
 		 text = str(j), command = lambda arg0 = i, \
 		 arg1 = j: add_figure(arg0, str(arg1)))
 
 	widgets.append(tk.Label(canvas,\
-			  text ="Choix de la longueur de la grille : ", \
-			  font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 10, y = 175)
+			  text =" Choix de la longueur de la grille :", \
+			  font = ("Small Fonts", 15), highlightthickness=3, \
+	    	  highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(x = 120, y = 175)
 
 	widgets.append(tk.Label(canvas, \
-			  text = "Choix de la hauteur de la grille : ", \
-			  font = ("Small Fonts", 15)))
-	widgets[-1].place(x = 10, y = 225)
+			  text = "  Choix de la hauteur de la grille :  ", \
+			  font = ("Small Fonts", 15), highlightthickness=3, \
+	    	  highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(x = 120, y = 225)
 
 	widgets.append(tk.Label(canvas,text="Veuillez entrer les tailles",  \
 			 fg="#efbd20",font = ("Small Fonts", 28), bg=BACKGROUND))
-	widgets[-1].place(x=200, y=10)
+	widgets[-1].place(relx = 0.5, y=50, anchor = "center")
 
 	widgets.append(tk.Label(canvas,text="que vous souhaitez",\
 			  fg="#efbd20", font = ("Small Fonts", 28), bg=BACKGROUND))
-	widgets[-1].place(x=230, y=55)
+	widgets[-1].place(relx = 0.5, y=100, anchor = "center")
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", \
 			  font = ("Small Fonts", 12), command = lambda: remove_figure(0)))
-	widgets[-1].place(x = 510, y = 270)
+	widgets[-1].place(x = 550, y = 275)
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", \
 			  font = ("Small Fonts", 12), command = lambda: remove_figure(1)))
-	widgets[-1].place(x = 510, y = 320)
+	widgets[-1].place(x = 550, y = 325)
 
 	widgets.append(tk.Button(canvas, text = "Valider", \
 			  font = ("Small Fonts", 28), command = validate_dims))
-	widgets[-1].place(x = 10, y = 390)
+	widgets[-1].place(relx = 0.5, y = 450, anchor = "center")
 
 
 def tokens_color_menu():  # menu pour choisir la couleur des jetons 
@@ -1080,13 +1061,13 @@ def tokens_color_menu():  # menu pour choisir la couleur des jetons
 	canvas.delete("all")
 	delete_widgets()
 	
-	# carré pour montrer quelles couleurs ont été choisi
-	widgets.append(tk.Canvas(canvas, width = 50, height = 50, \
+	# carré pour montrer quelles couleurs ont été choisies
+	widgets.append(tk.Canvas(canvas, width = 25, height = 25, \
 			  bg = COLOR_PLAYER_1, relief = "flat", bd = 10))
-	widgets[-1].place(x = 10, y = 200)
-	widgets.append(tk.Canvas(canvas, width = 50, height = 50, \
+	widgets[-1].place(x = 175, y = 200)
+	widgets.append(tk.Canvas(canvas, width = 25, height = 25, \
 			  bg = COLOR_PLAYER_2, relief = "flat", bd = 10))
-	widgets[-1].place(x = 10, y = 350)
+	widgets[-1].place(x = 175, y = 350)
 
 	def validate_colors():
 		global COLOR_PLAYER_1
@@ -1105,23 +1086,25 @@ def tokens_color_menu():  # menu pour choisir la couleur des jetons
 			widgets.append(tk.Button(canvas, relief = "sunken", \
 			     bd = 8, bg = COLOR_PALETTE[list(COLOR_PALETTE.keys())[j]],\
 				 command = lambda arg0 = i, arg1 = j: change_color(arg0, arg1)))
-			widgets[-1].place(x = 350 + j * 48, y = 200 + i * 150)
+			widgets[-1].place(x = 265 + j * 48, y = 200 + i * 150)
 
 	widgets.append(tk.Label(canvas, text = "COULEURS", fg="#efbd20", \
 			 font = ("Small Fonts", 45, "bold"), bg=BACKGROUND))
-	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 10, anchor = "n")
+	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 20, anchor = "n")
 
 	widgets.append(tk.Label(canvas, text = "Couleur pour player 1 :", \
-			 font = ("Small Fonts", 24)))
-	widgets[-1].place(x = 10, y = 150)
+			 font = ("Small Fonts", 24), highlightthickness=3, \
+	    	 highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(relx = 0.5, y = 150, anchor = "center")
 
-	widgets.append(tk.Label(canvas, text = "Couleurs pour player 2 :", \
-			 font = ("Small Fonts", 24)))
-	widgets[-1].place(x = 10, y = 300)
+	widgets.append(tk.Label(canvas, text = "Couleur pour player 2 :", \
+			 font = ("Small Fonts", 24), highlightthickness=3, \
+	    	 highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(relx = 0.5, y = 300, anchor = "center")
 
 	widgets.append(tk.Button(canvas, text = "Valider", font = ("Small Fonts", 25), \
 			   command = validate_colors))
-	widgets[-1].place(x = 10, y = 450)
+	widgets[-1].place(relx = 0.5, y = 470, anchor = "center")
 
 
 def winning_streak_menu():  # menu pour le choix du nombre de jeton gagnants 
@@ -1135,8 +1118,9 @@ def winning_streak_menu():  # menu pour le choix du nombre de jeton gagnants
 	delete_widgets()
 
 	widgets.append(tk.Label(canvas, text = str(WINNING_STREAK), \
-			 font = ("Small Fonts", 23)))
-	widgets[0].place(x = 400, y = 170)
+			 font = ("Small Fonts", 20), highlightthickness=3, \
+	    	 highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[0].place(x = 450, y = 130)
 
 
 	def validate_winning_streak():
@@ -1158,38 +1142,39 @@ def winning_streak_menu():  # menu pour le choix du nombre de jeton gagnants
 
 	# Clavier de saisie
 	for j in range(10):
-		#widgets.append(tk.Button(canvas, text = str(j), font = ("Small Fonts", 12), command = lambda arg = j: add_figure(str(arg))))
 		
 		if j != 9:
-			#widgets[j + 1].place(x = 280 + (j%3) * 50, y = 240 + int(j/3) * 50)
-			creer_bouton((280 + (j%3) * 50, 240 + int(j/3) * 50), (50, 50), text = str(j),
+			creer_bouton((300 + (j%3) * 50, 220 + int(j/3) * 50), (50, 50), text = str(j),
 		 command = lambda arg = j: add_figure(str(arg)))
 		else:
-			#widgets[j + 1].place(x = 280 + 50, y = 240 + int(j/3) * 50)
-			creer_bouton((280 + 50, 240 + int(j/3) * 50), (50, 50), text = '9',
+			creer_bouton((300 + 50, 220 + int(j/3) * 50), (50, 50), text = '9',
 		 command = lambda: add_figure('9'))
 
+	widgets.append(tk.Label(canvas, text = "NOMBRE DE JETONS POUR GAGNER", fg="#efbd20", \
+			 font = ("Small Fonts", 25, "bold"), bg=BACKGROUND))
+	widgets[-1].place(x = WINDOW_SIZE[0]/2, y = 40, anchor = "n")
 
 	widgets.append(tk.Button(canvas, text = "Remove figure", \
 			  font = ("Small Fonts", 12), command = lambda: remove_figure()))
-	widgets[-1].place(x = 510, y = 400)
+	widgets[-1].place(x = 510, y = 250)
 
 	widgets.append(tk.Label(text="Vous avez choisi : ", \
-			 font=("Small Fonts", 23)))
-	widgets[-1].place(x=10, y=170)
+			 font=("Small Fonts", 20), highlightthickness=3, \
+	    	 highlightbackground = "white", bg = BACKGROUND, fg = "white"))
+	widgets[-1].place(x = 200, y = 130)
 
-	widgets.append(tk.Label(text="Veuillez choisir un nombre qui est en accord ", \
-			  fg="#efbd20", font=("Small Fonts", 23), bg=BACKGROUND))
-	widgets[-1].place(x=140, y=10)
+	widgets.append(tk.Label(text = "Veuillez choisir un nombre qui est en accord ", \
+			  fg = "#efbd20", font = ("Small Fonts", 12), bg=BACKGROUND))
+	widgets[-1].place(relx = 0.5, y = WINDOW_SIZE[1] - 120, anchor = "center")
 
 	widgets.append(tk.Label(text="avec la taille de votre grille ", \
-			 fg="#efbd20", font=("Small Fonts", 23), bg=BACKGROUND))
-	widgets[-1].place(x=215, y=40)
+			 fg="#efbd20", font=("Small Fonts", 12), bg=BACKGROUND))
+	widgets[-1].place(relx=0.5, y = WINDOW_SIZE[1] - 95, anchor = "center")
 
 
 	widgets.append(tk.Button(canvas, text = "Valider", \
-			  font = ("Small Fonts", 25),command = validate_winning_streak))
-	widgets[-1].place(x = 10, y = 430)
+			  font = ("Small Fonts", 15), command = validate_winning_streak))
+	widgets[-1].place(relx = 0.5, y = 440, anchor = "center")
 
 
 def jeu_set_match_menu():  # menu pour le choix du nombre de set 
@@ -1201,9 +1186,9 @@ def jeu_set_match_menu():  # menu pour le choix du nombre de set
 	canvas.delete("all")
 	delete_widgets()
 
-	widgets.append(tk.Label(canvas,text="Choisissez le nombre de set : ", \
-			 fg="#efbd20", font=("Small Fonts", 25), bg=BACKGROUND))
-	widgets[-1].place(x=200, y=50)
+	widgets.append(tk.Label(canvas,text = "Choisissez le nombre de set: ", \
+			 fg ="#efbd20", font = ("Small Fonts", 25), bg = BACKGROUND))
+	widgets[-1].place(relx = 0.5, y = 250, anchor = "center")
 
 
 	def set_3():   #3 set
@@ -1226,17 +1211,17 @@ def jeu_set_match_menu():  # menu pour le choix du nombre de set
 	set3 = tk.Button(canvas, text = "3", font = ("Small Fonts", 25), \
 		  command = set_3)
 	widgets.append(set3)
-	set3.place(x = 265, y = 200)
+	set3.place(x = 265, y = 300)
 
 	set5 = tk.Button(canvas, text = "5", font = ("Small Fonts", 25), \
 		  command = set_5)
 	widgets.append(set5)
-	set5.place(x = 325, y = 200)
+	set5.place(x = 325, y = 300)
 
 	set7 = tk.Button(canvas, text = "7", font = ("Small Fonts", 25), \
 		  command = set_7)
 	widgets.append(set7)
-	set7.place(x = 385, y = 200)
+	set7.place(x = 385, y = 300)
 	
 
 
