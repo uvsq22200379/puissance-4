@@ -608,18 +608,14 @@ def game_physics():
 			       " - " +  str(SCORE_PLAYER_2) + " ", font = ("Small Fonts", 18), \
 					  highlightthickness=3, highlightbackground = "white", bg = "white"))
 						widgets[-1].place(relx = 0.5, y = 120, anchor='center')
-						jeu_set_match(N_SET)
-					if SCORE_PLAYER_1 or SCORE_PLAYER_2 >= (N_SET/2):
-						break
-					else: 
-						root.after(2000, nouvelle_manche)
 
-		
+						jeu_set_match(N_SET)
+						if SCORE_PLAYER_1 or SCORE_PLAYER_2 < (N_SET/2): #Si personne emporte le set, on commence une nouvelle manche
+							root.after(2500, nouvelle_manche)
+
 		tokens_speed[i][1] += GRAVITY
 		set_pos(tokens_visu[i], tokens_pos[i], SLOT_SIZE)
 	
-
-
 	if playing:
 		root.after(int(1000/60), game_physics)
 
@@ -795,32 +791,6 @@ def main_menu_visu():
 	      text = "Charger", command = launch_load)
 	creer_bouton((WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/5 + 340), (150, 50),\
 	      text = "Instructions", command = instructions)
-
-'''
-	charger_jeu=tk.Button(canvas,text="Charger", fg="black",font = ("Small Fonts", 25), command = lambda: launch_load("saved_games/test.game"))
-
-	instructions_jeu = tk.Button(canvas, text="Instructions", font=("Small Fonts", 25), command = instructions)
-
-	jouer = tk.Button(canvas, text = "Jouer", font = ("Small Fonts", 25), command = game)
-
-	options = tk.Button(canvas, text = "Options", font = ("Small Fonts", 24), command = menu_perso_jeu)
-
-	show_credits = tk.Button(canvas, text = "Credits", font = ("Small Fonts", 25), command = credits)
-
-	boutons_main_menu_centre = [jouer, charger_jeu, options, instructions_jeu, show_credits]
-
-	k = 20
-	for i in range(0, len(boutons_main_menu_centre)):
-		boutons_main_menu_centre[i].place(relx=0.5, y= font_size * 3 + (font_size * 2 + 10) * i + 100 + k, anchor="center")
-		k+=10
-
-	#widgets.append(jouer)
-	widgets.append(instructions_jeu)
-	widgets.append(charger_jeu)
-	widgets.append(options)
-	widgets.append(show_credits)
-'''
-
 
 def main_menu():
 	'''
